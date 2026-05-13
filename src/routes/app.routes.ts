@@ -1,35 +1,29 @@
+// export default router;
+
 import { Router } from "express";
 import { z } from "zod";
+import { createApp, listApps } from "../services/app.service";
 import {
-  createApp,
   getAppSchema,
   createTable,
+  alterTable,
   insertRow,
   getRows,
-  listApps,
   updateRow,
   deleteRow,
-  alterTable,
-} from "../services/app.service";
+} from "../services/table.service";
 import { upload } from "../middleware/upload.middleware";
 import { requireAppToken } from "../middleware/auth.middleware";
 
 const router = Router();
 
+// Validates the request body for creating a new app
 const createAppSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
 });
 
-const alterTableSchema = z.object({
-  columns: z.array(
-    z.object({
-      name: z.string().min(1),
-      type: z.enum(["TEXT", "INTEGER", "REAL", "BOOLEAN"]),
-    })
-  ),
-});
-
+// Validates the request body for creating a new table
 const createTableSchema = z.object({
   tableName: z.string().min(1),
   columns: z.array(
@@ -40,6 +34,17 @@ const createTableSchema = z.object({
   ),
 });
 
+// Validates the request body for altering an existing table
+const alterTableSchema = z.object({
+  columns: z.array(
+    z.object({
+      name: z.string().min(1),
+      type: z.enum(["TEXT", "INTEGER", "REAL", "BOOLEAN"]),
+    })
+  ),
+});
+
+// Lists all created apps
 router.get("/", (req, res) => {
   const apps = listApps();
 
@@ -49,6 +54,7 @@ router.get("/", (req, res) => {
   });
 });
 
+// Creates a new app and returns its app id and API token
 router.post("/", (req, res) => {
   const result = createAppSchema.safeParse(req.body);
 
@@ -64,6 +70,7 @@ router.post("/", (req, res) => {
   return res.status(201).json(app);
 });
 
+// Returns the database schema for a specific app
 router.get("/:id/schema", requireAppToken, (req, res) => {
   try {
     const schema = getAppSchema(req.params.id);
@@ -79,6 +86,7 @@ router.get("/:id/schema", requireAppToken, (req, res) => {
   }
 });
 
+// Creates a new table inside an app database
 router.post("/:id/tables", requireAppToken, (req, res) => {
   const result = createTableSchema.safeParse(req.body);
 
@@ -100,6 +108,33 @@ router.post("/:id/tables", requireAppToken, (req, res) => {
   }
 });
 
+// Adds new columns to an existing table
+router.put("/:id/tables/:table", requireAppToken, (req, res) => {
+  const result = alterTableSchema.safeParse(req.body);
+
+  if (!result.success) {
+    return res.status(400).json({
+      error: "Invalid alter table definition",
+      details: result.error.flatten(),
+    });
+  }
+
+  try {
+    const response = alterTable(
+      req.params.id,
+      req.params.table,
+      result.data.columns
+    );
+
+    return res.json(response);
+  } catch (error: any) {
+    return res.status(400).json({
+      error: error.message,
+    });
+  }
+});
+
+// Queries rows from a table with optional where, order, and limit parameters
 router.get("/:id/tables/:table/rows", requireAppToken, (req, res) => {
   try {
     const rows = getRows(req.params.id, req.params.table, {
@@ -125,6 +160,7 @@ router.get("/:id/tables/:table/rows", requireAppToken, (req, res) => {
   }
 });
 
+// Inserts a new row into a table
 router.post("/:id/tables/:table/rows", requireAppToken, (req, res) => {
   try {
     const response = insertRow(req.params.id, req.params.table, req.body);
@@ -137,6 +173,50 @@ router.post("/:id/tables/:table/rows", requireAppToken, (req, res) => {
   }
 });
 
+// Updates a specific row by id
+router.put(
+  "/:id/tables/:table/rows/:rowId",
+  requireAppToken,
+  (req, res) => {
+    try {
+      const response = updateRow(
+        req.params.id,
+        req.params.table,
+        req.params.rowId,
+        req.body
+      );
+
+      return res.json(response);
+    } catch (error: any) {
+      return res.status(400).json({
+        error: error.message,
+      });
+    }
+  }
+);
+
+// Deletes a specific row by id
+router.delete(
+  "/:id/tables/:table/rows/:rowId",
+  requireAppToken,
+  (req, res) => {
+    try {
+      const response = deleteRow(
+        req.params.id,
+        req.params.table,
+        req.params.rowId
+      );
+
+      return res.json(response);
+    } catch (error: any) {
+      return res.status(400).json({
+        error: error.message,
+      });
+    }
+  }
+);
+
+// Returns the local upload endpoint for the selected app
 router.post("/:id/upload-url", requireAppToken, (req, res) => {
   return res.json({
     appId: req.params.id,
@@ -147,6 +227,7 @@ router.post("/:id/upload-url", requireAppToken, (req, res) => {
   });
 });
 
+// Handles file upload for the selected app
 router.post(
   "/:id/files",
   requireAppToken,
@@ -169,72 +250,5 @@ router.post(
     });
   }
 );
-
-router.put(
-  "/:id/tables/:table/rows/:rowId",
-  requireAppToken,
-  (req, res) => {
-    try {
-      const response = updateRow(
-        req.params.id,
-        req.params.table,
-        req.params.rowId,
-        req.body
-      );
-
-      return res.json(response);
-    } catch (error: any) {
-      return res.status(400).json({
-        error: error.message,
-      });
-    }
-  }
-);
-
-router.delete(
-  "/:id/tables/:table/rows/:rowId",
-  requireAppToken,
-  (req, res) => {
-    try {
-      const response = deleteRow(
-        req.params.id,
-        req.params.table,
-        req.params.rowId
-      );
-
-      return res.json(response);
-    } catch (error: any) {
-      return res.status(400).json({
-        error: error.message,
-      });
-    }
-  }
-);
-
-
-router.put("/:id/tables/:table", requireAppToken, (req, res) => {
-  const result = alterTableSchema.safeParse(req.body);
-
-  if (!result.success) {
-    return res.status(400).json({
-      error: "Invalid alter table definition",
-      details: result.error.flatten(),
-    });
-  }
-
-  try {
-    const response = alterTable(
-      req.params.id,
-      req.params.table,
-      result.data.columns
-    );
-
-    return res.json(response);
-  } catch (error: any) {
-    return res.status(400).json({
-      error: error.message,
-    });
-  }
-});
 
 export default router;

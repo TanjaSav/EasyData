@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>EasyData Fetch Demo</title>
+</head>
+
+<body>
+  <h1>EasyData Fetch Demo</h1>
+
+  <button onclick="createApp()">1. Create App</button>
+  <button onclick="createTable()">2. Create Table</button>
+  <button onclick="insertRow()">3. Insert Row</button>
+  <button onclick="getRows()">4. Get Rows</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    const API_BASE = window.location.origin;
+
+    let appId = "";
+    let apiToken = "";
+
+    function print(data) {
+      document.getElementById("output").textContent =
+        JSON.stringify(data, null, 2);
+    }
+
+    async function createApp() {
+      const res = await fetch(`${API_BASE}/apps`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name: "Browser Demo App",
+          description: "Created from browser fetch demo"
+        })
+      });
+
+      const data = await res.json();
+
+      appId = data.id;
+      apiToken = data.apiToken;
+
+      print(data);
+    }
+
+    async function createTable() {
+      const res = await fetch(`${API_BASE}/apps/${appId}/tables`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiToken}`
+        },
+        body: JSON.stringify({
+          tableName: "submissions",
+          columns: [
+            { name: "student_name", type: "TEXT" },
+            { name: "photo_url", type: "TEXT" }
+          ]
+        })
+      });
+
+      print(await res.json());
+    }
+
+    async function insertRow() {
+      const res = await fetch(`${API_BASE}/apps/${appId}/tables/submissions/rows`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiToken}`
+        },
+        body: JSON.stringify({
+          student_name: "Browser Student",
+          photo_url: "/uploads/demo.jpg"
+        })
+      });
+
+      print(await res.json());
+    }
+
+    async function getRows() {
+      const res = await fetch(`${API_BASE}/apps/${appId}/tables/submissions/rows`, {
+        method: "GET",
+        headers: {
+          "Authorization": `Bearer ${apiToken}`
+        }
+      });
+
+      print(await res.json());
+    }
+  </script>
+</body>
+
+</html>

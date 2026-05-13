@@ -5,18 +5,27 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import appRoutes from "./routes/app.routes";
 
+// Load environment variables from .env
 dotenv.config();
 
 const app = express();
-
 const PORT = Number(process.env.PORT) || 3000;
 
-app.use(helmet());
+// Core middleware
+app.use(
+  helmet({
+    contentSecurityPolicy: false, // Disabled only for the Phase 1 browser fetch demo
+  })
+);
 app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
-app.use("/uploads", express.static("uploads"));
 
+// Static file serving
+app.use("/uploads", express.static("uploads"));
+app.use("/public", express.static("public"));
+
+// Basic API info endpoint
 app.get("/", (req, res) => {
   res.json({
     name: "EasyData",
@@ -25,6 +34,7 @@ app.get("/", (req, res) => {
   });
 });
 
+// Health check endpoint
 app.get("/health", (req, res) => {
   res.json({
     ok: true,
@@ -32,6 +42,7 @@ app.get("/health", (req, res) => {
   });
 });
 
+// Main EasyData API routes
 app.use("/apps", appRoutes);
 
 app.listen(PORT, "0.0.0.0", () => {
