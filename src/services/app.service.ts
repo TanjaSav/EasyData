@@ -3,7 +3,7 @@ import path from "path";
 import crypto from "crypto";
 import Database from "better-sqlite3";
 import { v4 as uuidv4 } from "uuid";
-import { EasyDataApp } from "../types/app.types";
+import { type EasyDataApp } from "../types/app.types.js";
 
 const DATA_DIR = process.env.DATA_DIR || "./data/apps";
 
@@ -24,7 +24,7 @@ export function createApp(name: string, description?: string): EasyDataApp {
   const app: EasyDataApp = {
     id,
     name,
-    description,
+    description: description ?? "",
     apiToken: createToken("app"),
     createdAt: new Date().toISOString(),
   };

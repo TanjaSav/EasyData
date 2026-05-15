@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import Database from "better-sqlite3";
-import { CreateTableInput } from "../types/table.types";
+import type { CreateTableInput } from "../types/table.types.js";
 
 const DATA_DIR = process.env.DATA_DIR || "./data/apps";
 

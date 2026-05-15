@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from "express";
-import { validateAppToken } from "../services/app.service";
+import type { Request, Response, NextFunction } from "express";
+import { validateAppToken } from "../services/app.service.js";
 
 // Protects app-specific routes using Authorization: Bearer app_xxx
 export function requireAppToken(
@@ -7,7 +7,7 @@ export function requireAppToken(
   res: Response,
   next: NextFunction
 ) {
-  const appId = req.params.id;
+  const appId = req.params.id as string;
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
@@ -25,7 +25,7 @@ export function requireAppToken(
   }
 
   try {
-    const valid = validateAppToken(appId, token);
+    const valid = validateAppToken(appId as string, token);
 
     if (!valid) {
       return res.status(403).json({

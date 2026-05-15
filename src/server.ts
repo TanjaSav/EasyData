@@ -3,7 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import dotenv from "dotenv";
-import appRoutes from "./routes/app.routes";
+import appRoutes from "./routes/app.routes.js";
 
 // Load environment variables from .env
 dotenv.config();

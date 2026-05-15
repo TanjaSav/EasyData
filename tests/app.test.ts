@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import request from "supertest";
 import express from "express";
-import appRoutes from "../src/routes/app.routes";
+import appRoutes from "../src/routes/app.routes.js";
 
 const app = express();
 

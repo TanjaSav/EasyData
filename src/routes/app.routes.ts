@@ -2,7 +2,7 @@
 
 import { Router } from "express";
 import { z } from "zod";
-import { createApp, listApps } from "../services/app.service";
+import { createApp, listApps } from "../services/app.service.js";
 import {
   getAppSchema,
   createTable,
@@ -11,9 +11,9 @@ import {
   getRows,
   updateRow,
   deleteRow,
-} from "../services/table.service";
-import { upload } from "../middleware/upload.middleware";
-import { requireAppToken } from "../middleware/auth.middleware";
+} from "../services/table.service.js";
+import { upload } from "../middleware/upload.middleware.js";
+import { requireAppToken } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
@@ -73,10 +73,10 @@ router.post("/", (req, res) => {
 // Returns the database schema for a specific app
 router.get("/:id/schema", requireAppToken, (req, res) => {
   try {
-    const schema = getAppSchema(req.params.id);
+    const schema = getAppSchema(req.params.id as string);
 
     return res.json({
-      appId: req.params.id,
+      appId: req.params.id as string,
       schema,
     });
   } catch (error: any) {
@@ -98,7 +98,7 @@ router.post("/:id/tables", requireAppToken, (req, res) => {
   }
 
   try {
-    const response = createTable(req.params.id, result.data);
+    const response = createTable(req.params.id as string, result.data);
 
     return res.status(201).json(response);
   } catch (error: any) {
@@ -121,8 +121,8 @@ router.put("/:id/tables/:table", requireAppToken, (req, res) => {
 
   try {
     const response = alterTable(
-      req.params.id,
-      req.params.table,
+      req.params.id as string,
+      req.params.table as string,
       result.data.columns
     );
 
@@ -137,15 +137,15 @@ router.put("/:id/tables/:table", requireAppToken, (req, res) => {
 // Queries rows from a table with optional where, order, and limit parameters
 router.get("/:id/tables/:table/rows", requireAppToken, (req, res) => {
   try {
-    const rows = getRows(req.params.id, req.params.table, {
-      where: req.query.where as string | undefined,
-      order: req.query.order as string | undefined,
-      limit: req.query.limit as string | undefined,
+    const rows = getRows(req.params.id as string, req.params.table as string, {
+      ...(req.query.where && { where: req.query.where as string }),
+      ...(req.query.order && { order: req.query.order as string }),
+      ...(req.query.limit && { limit: req.query.limit as string }),
     });
 
     return res.json({
-      appId: req.params.id,
-      table: req.params.table,
+      appId: req.params.id as string,
+      table: req.params.table as string,
       query: {
         where: req.query.where ?? null,
         order: req.query.order ?? null,
@@ -163,7 +163,7 @@ router.get("/:id/tables/:table/rows", requireAppToken, (req, res) => {
 // Inserts a new row into a table
 router.post("/:id/tables/:table/rows", requireAppToken, (req, res) => {
   try {
-    const response = insertRow(req.params.id, req.params.table, req.body);
+    const response = insertRow(req.params.id as string, req.params.table as string, req.body);
 
     return res.status(201).json(response);
   } catch (error: any) {
@@ -180,9 +180,9 @@ router.put(
   (req, res) => {
     try {
       const response = updateRow(
-        req.params.id,
-        req.params.table,
-        req.params.rowId,
+        req.params.id as string,
+        req.params.table as string,
+        req.params.rowId as string,
         req.body
       );
 
@@ -202,9 +202,9 @@ router.delete(
   (req, res) => {
     try {
       const response = deleteRow(
-        req.params.id,
-        req.params.table,
-        req.params.rowId
+        req.params.id as string,
+        req.params.table as string,
+        req.params.rowId as string
       );
 
       return res.json(response);
@@ -219,8 +219,8 @@ router.delete(
 // Returns the local upload endpoint for the selected app
 router.post("/:id/upload-url", requireAppToken, (req, res) => {
   return res.json({
-    appId: req.params.id,
-    uploadUrl: `/apps/${req.params.id}/files`,
+    appId: req.params.id as string,
+    uploadUrl: `/apps/${req.params.id as string}/files`,
     method: "POST",
     fieldName: "file",
     note: "Local storage mode. Upload the file using multipart/form-data.",
@@ -241,7 +241,7 @@ router.post(
 
     return res.status(201).json({
       success: true,
-      appId: req.params.id,
+      appId: req.params.id as string,
       file: {
         originalName: req.file.originalname,
         fileName: req.file.filename,
