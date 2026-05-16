@@ -4,7 +4,6 @@ import crypto from "crypto";
 import Database from "better-sqlite3";
 import { v4 as uuidv4 } from "uuid";
 import { type EasyDataApp } from "../types/app.types.js";
-
 const DATA_DIR = process.env.DATA_DIR || "./data/apps";
 
 // Generates a random API token for each app

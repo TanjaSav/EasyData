@@ -1,6 +1,3 @@
-process.on("uncaughtException", (err: Error) => { process.stderr.write("UNCAUGHT: " + err.message + "\n"); process.exit(1); });
-process.on("unhandledRejection", (err: unknown) => { process.stderr.write("UNHANDLED: " + String(err) + "\n"); process.exit(1); });
-
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
