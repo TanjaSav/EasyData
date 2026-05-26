@@ -53,6 +53,7 @@ export function createTable(appId: string, input: CreateTableInput) {
   const dbPath = ensureAppDb(appId);
   const db = new Database(dbPath);
 
+  // Column identifiers come from validated API/MCP schemas; values are parameterized below.
   const columnsSql = input.columns
     .map((column) => `${column.name} ${column.type}`)
     .join(", ");
@@ -120,6 +121,7 @@ export function insertRow(
     throw new Error("No data provided");
   }
 
+  // Bind row values separately so user data is not interpolated into SQL.
   const placeholders = columns.map(() => "?").join(", ");
 
   const sql = `
@@ -162,6 +164,7 @@ export function getRows(
       throw new Error("Invalid where format. Use column:value");
     }
 
+    // Keep filter values parameterized while allowing a simple column:value query format.
     sql += ` WHERE ${column} = ?`;
     params.push(value);
   }
@@ -214,6 +217,7 @@ export function updateRow(
 
   const db = new Database(dbPath);
 
+  // Build the SET clause dynamically, then bind the provided values in order.
   const setSql = columns.map((column) => `${column} = ?`).join(", ");
 
   const sql = `
