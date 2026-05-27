@@ -223,3 +223,7 @@ The current implementation uses local uploads with `multipart/form-data`. Upload
 - `limit` is capped at 500 rows.
 - File uploads use local disk storage, not presigned object storage yet.
 - Table names and column names should be generated from trusted assistant logic and kept simple: lowercase letters, numbers, and underscores.
+
+## Connecting to ChatGPT
+
+For setup steps, see [Connect EasyData MCP to ChatGPT](chatgpt-mcp.md).
