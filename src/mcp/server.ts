@@ -337,7 +337,9 @@ export function createEasyDataMcpServer() {
       html: z
         .string()
         .min(1)
-        .describe("A complete single-file HTML app to publish as index.html"),
+        .describe(
+          "A complete single-file HTML app to publish as index.html. Browser fetch() calls must use relative EasyData REST URLs: GET/POST /apps/{appId}/tables/{tableName}/rows, PUT /apps/{appId}/tables/{tableName}/rows/{rowId}, DELETE /apps/{appId}/tables/{tableName}/rows/{rowId}. Include Authorization: Bearer {apiToken}. Do not use /api, /api/apps, /api/{appId}, or PATCH."
+        ),
     },
     async ({ appId, html }) => {
       const appUrl = writeGeneratedApp(appId, html);

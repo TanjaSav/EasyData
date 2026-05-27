@@ -107,6 +107,12 @@ app.use("/apps", appRoutes);
 app.use("/api/v1/apps", appRoutes);
 // Compatibility alias for generated clients that use /api/rows/:appId/:table.
 app.use("/api/rows", legacyRowsRouter);
+// Compatibility aliases for generated clients that build /api/{appId}/... or /api/apps/{appId}/... URLs.
+app.use("/api/apps", appRoutes);
+app.use("/api", appRoutes);
+// Compatibility aliases for generated clients that omit /tables and address rows directly.
+app.use("/api/apps", legacyRowsRouter);
+app.use("/api", legacyRowsRouter);
 app.use("/ai", aiRoutes);
 
 app.listen(PORT, "0.0.0.0", () => {

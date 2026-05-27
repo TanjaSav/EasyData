@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Movie Watchlist</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f0f13;
+    --surface: #1a1a24;
+    --surface2: #22222f;
+    --border: #2e2e3f;
+    --accent: #7c6af7;
+    --accent2: #a78bfa;
+    --text: #e8e8f0;
+    --muted: #888899;
+    --success: #34d399;
+    --warning: #fbbf24;
+    --danger: #f87171;
+    --radius: 12px;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  header h1 {
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent2), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+  }
+
+  header p {
+    color: var(--muted);
+    margin-top: 0.4rem;
+    font-size: 0.95rem;
+  }
+
+  .container { max-width: 960px; margin: 0 auto; }
+
+  /* FORM CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .card h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.2rem;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+
+  label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  input, select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.65rem 0.9rem;
+    color: var(--text);
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+
+  select option { background: var(--surface2); }
+
+  .form-actions { margin-top: 1.2rem; display: flex; gap: 0.75rem; align-items: center; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.65rem 1.4rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent2); }
+
+  .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; border-radius: 6px; }
+
+  .btn-edit { background: rgba(124,106,247,0.15); color: var(--accent2); border: 1px solid rgba(124,106,247,0.3); }
+  .btn-edit:hover { background: rgba(124,106,247,0.3); }
+
+  .btn-delete { background: rgba(248,113,113,0.12); color: var(--danger); border: 1px solid rgba(248,113,113,0.25); }
+  .btn-delete:hover { background: rgba(248,113,113,0.25); }
+
+  /* TABLE */
+  .table-wrap { overflow-x: auto; }
+
+  .stats-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .stat-pill {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .stat-pill span { color: var(--accent2); font-weight: 700; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+
+  thead tr { border-bottom: 2px solid var(--border); }
+
+  th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+
+  td { padding: 0.85rem 1rem; vertical-align: middle; }
+
+  .movie-title { font-weight: 600; color: var(--text); }
+  .genre-badge {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: rgba(124,106,247,0.15);
+    color: var(--accent2);
+  }
+
+  .stars { color: var(--warning); font-size: 0.85rem; letter-spacing: 1px; }
+
+  .status-badge {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+  .status-watched { background: rgba(52,211,153,0.15); color: var(--success); }
+  .status-watching { background: rgba(251,191,36,0.15); color: var(--warning); }
+  .status-want { background: rgba(124,106,247,0.15); color: var(--accent2); }
+
+  .actions-cell { display: flex; gap: 0.4rem; }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--muted);
+  }
+  .empty-state svg { opacity: 0.3; margin-bottom: 1rem; }
+
+  /* TOAST */
+  #toast {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    padding: 0.75rem 1.2rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: var(--text);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 100;
+    max-width: 280px;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+  #toast.error { border-left-color: var(--danger); }
+
+  .loader {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>🎬 Movie Watchlist</h1>
+    <p>Track movies you've watched, are watching, or want to see</p>
+  </header>
+
+  <!-- ADD / EDIT FORM -->
+  <div class="card">
+    <h2 id="form-title">➕ Add a Movie</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="movie_title">Movie Title</label>
+        <input type="text" id="movie_title" placeholder="e.g. Oppenheimer" />
+      </div>
+      <div class="form-group">
+        <label for="genre">Genre</label>
+        <select id="genre">
+          <option value="">Select genre…</option>
+          <option>Action</option><option>Adventure</option><option>Animation</option>
+          <option>Comedy</option><option>Crime</option><option>Documentary</option>
+          <option>Drama</option><option>Fantasy</option><option>Horror</option>
+          <option>Mystery</option><option>Romance</option><option>Sci-Fi</option>
+          <option>Thriller</option><option>Western</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="rating">Rating (1–10)</label>
+        <input type="number" id="rating" min="1" max="10" placeholder="8" />
+      </div>
+      <div class="form-group">
+        <label for="watch_status">Watch Status</label>
+        <select id="watch_status">
+          <option value="">Select status…</option>
+          <option>Watched</option>
+          <option>Currently Watching</option>
+          <option>Want to Watch</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" id="submit-btn" onclick="submitForm()">
+        <span id="submit-label">Add Movie</span>
+      </button>
+      <button class="btn btn-ghost" id="cancel-btn" style="display:none" onclick="cancelEdit()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- TABLE CARD -->
+  <div class="card">
+    <h2>📋 All Movies</h2>
+    <div class="stats-row" id="stats-row"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Rating</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="movies-tbody">
+          <tr><td colspan="6"><div class="empty-state">Loading…</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  const APP_ID = 'b8b8baf1-aa05-4dd3-933b-1cd6dfa0c2e8';
+  const API_TOKEN = 'app_6039d45f50ba62f61c07d22964a4b58f741dc0dbe91ede8b';
+  const BASE = '';
+  const TABLE = 'movies';
+
+  let editingId = null;
+
+  const headers = () => ({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${API_TOKEN}`
+  });
+
+  async function fetchMovies() {
+    const res = await fetch(`${BASE}/apps/${APP_ID}/tables/${TABLE}/rows`, { headers: headers() });
+    const json = await res.json();
+    return json.rows || [];
+  }
+
+  async function loadMovies() {
+    try {
+      const movies = await fetchMovies();
+      renderTable(movies);
+      renderStats(movies);
+    } catch(e) {
+      showToast('Failed to load movies', true);
+    }
+  }
+
+  function renderStats(movies) {
+    const watched = movies.filter(m => m.watch_status === 'Watched').length;
+    const watching = movies.filter(m => m.watch_status === 'Currently Watching').length;
+    const want = movies.filter(m => m.watch_status === 'Want to Watch').length;
+    const avgRating = movies.length ? (movies.reduce((s,m) => s + (m.rating||0), 0) / movies.length).toFixed(1) : '—';
+    document.getElementById('stats-row').innerHTML = `
+      <div class="stat-pill">Total: <span>${movies.length}</span></div>
+      <div class="stat-pill">✅ Watched: <span>${watched}</span></div>
+      <div class="stat-pill">▶️ Watching: <span>${watching}</span></div>
+      <div class="stat-pill">🔖 Want to Watch: <span>${want}</span></div>
+      <div class="stat-pill">⭐ Avg Rating: <span>${avgRating}</span></div>
+    `;
+  }
+
+  function stars(n) {
+    const full = Math.round(n / 2);
+    return '★'.repeat(full) + '☆'.repeat(5 - full) + ` <small style="color:var(--muted)">${n}/10</small>`;
+  }
+
+  function statusClass(s) {
+    if (s === 'Watched') return 'status-watched';
+    if (s === 'Currently Watching') return 'status-watching';
+    return 'status-want';
+  }
+
+  function renderTable(movies) {
+    const tbody = document.getElementById('movies-tbody');
+    if (!movies.length) {
+      tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 4v16l5-3 5 3V4H7z"/></svg>
+        <p>No movies yet. Add your first one above!</p>
+      </div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = movies.map((m, i) => `
+      <tr>
+        <td style="color:var(--muted);font-size:0.8rem">${i + 1}</td>
+        <td class="movie-title">${esc(m.movie_title || '—')}</td>
+        <td><span class="genre-badge">${esc(m.genre || '—')}</span></td>
+        <td><span class="stars">${m.rating ? stars(m.rating) : '—'}</span></td>
+        <td><span class="status-badge ${statusClass(m.watch_status)}">${esc(m.watch_status || '—')}</span></td>
+        <td>
+          <div class="actions-cell">
+            <button class="btn btn-sm btn-edit" onclick="startEdit(${m.id}, ${JSON.stringify(m).replace(/"/g,'&quot;')})">✏️ Edit</button>
+            <button class="btn btn-sm btn-delete" onclick="deleteMovie(${m.id})">🗑️ Delete</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function esc(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  async function submitForm() {
+    const title = document.getElementById('movie_title').value.trim();
+    const genre = document.getElementById('genre').value;
+    const rating = parseInt(document.getElementById('rating').value);
+    const status = document.getElementById('watch_status').value;
+
+    if (!title) return showToast('Please enter a movie title', true);
+    if (!genre) return showToast('Please select a genre', true);
+    if (!rating || rating < 1 || rating > 10) return showToast('Rating must be 1–10', true);
+    if (!status) return showToast('Please select a watch status', true);
+
+    const btn = document.getElementById('submit-btn');
+    btn.innerHTML = '<span class="loader"></span>';
+    btn.disabled = true;
+
+    try {
+      if (editingId) {
+        await fetch(`${BASE}/apps/${APP_ID}/tables/${TABLE}/rows/${editingId}`, {
+          method: 'PUT',
+          headers: headers(),
+          body: JSON.stringify({ movie_title: title, genre, rating, watch_status: status })
+        });
+        showToast('Movie updated!');
+        cancelEdit();
+      } else {
+        await fetch(`${BASE}/apps/${APP_ID}/tables/${TABLE}/rows`, {
+          method: 'POST',
+          headers: headers(),
+          body: JSON.stringify({ movie_title: title, genre, rating, watch_status: status })
+        });
+        showToast('Movie added!');
+        clearForm();
+      }
+      await loadMovies();
+    } catch(e) {
+      showToast('Something went wrong', true);
+    } finally {
+      btn.innerHTML = '<span id="submit-label">' + (editingId ? 'Save Changes' : 'Add Movie') + '</span>';
+      btn.disabled = false;
+    }
+  }
+
+  function startEdit(id, movie) {
+    editingId = id;
+    document.getElementById('movie_title').value = movie.movie_title || '';
+    document.getElementById('genre').value = movie.genre || '';
+    document.getElementById('rating').value = movie.rating || '';
+    document.getElementById('watch_status').value = movie.watch_status || '';
+    document.getElementById('form-title').textContent = '✏️ Edit Movie';
+    document.getElementById('submit-label').textContent = 'Save Changes';
+    document.getElementById('cancel-btn').style.display = 'inline-flex';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function cancelEdit() {
+    editingId = null;
+    clearForm();
+    document.getElementById('form-title').textContent = '➕ Add a Movie';
+    document.getElementById('submit-label').textContent = 'Add Movie';
+    document.getElementById('cancel-btn').style.display = 'none';
+  }
+
+  function clearForm() {
+    ['movie_title','genre','rating','watch_status'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+  }
+
+  async function deleteMovie(id) {
+    if (!confirm('Delete this movie from your watchlist?')) return;
+    try {
+      await fetch(`${BASE}/apps/${APP_ID}/tables/${TABLE}/rows/${id}`, {
+        method: 'DELETE',
+        headers: headers()
+      });
+      showToast('Movie deleted');
+      await loadMovies();
+    } catch(e) {
+      showToast('Failed to delete', true);
+    }
+  }
+
+  let toastTimer;
+  function showToast(msg, error = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'show' + (error ? ' error' : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.className = '', 3000);
+  }
+
+  loadMovies();
+</script>
+</body>
+</html>

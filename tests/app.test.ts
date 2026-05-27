@@ -1,7 +1,9 @@
 import { describe, it, expect } from "vitest";
+import fs from "fs";
 import request from "supertest";
 import express from "express";
 import appRoutes, { legacyRowsRouter } from "../src/routes/app.routes.js";
+import { writeGeneratedApp } from "../src/services/generated-app.service.js";
 
 const app = express();
 
@@ -169,6 +171,36 @@ describe("EasyData API", () => {
     expect(res.status).toBe(400);
     expect(res.body.error).toBe("File too large");
     expect(res.body.maxFileSizeBytes).toBe(5 * 1024 * 1024);
+  });
+
+  it("normalizes generated HTML API routes before publishing", () => {
+    const generatedAppId = "00000000-0000-4000-8000-000000000000";
+    const html = [
+      "<script>",
+      "const APP_ID = \"" + generatedAppId + "\";",
+      "const TABLE_NAME = \"workouts\";",
+      "const BASE = \"https://easydata.is/api\";",
+      "fetch(`/api/apps/${APP_ID}/tables/${TABLE_NAME}/rows`);",
+      "fetch(`/api/${APP_ID}/${TABLE_NAME}`);",
+      "fetch(`/apps/${APP_ID}/api/${TABLE_NAME}`);",
+      "fetch(BASE + \"/\" + APP_ID + \"/tables/\" + TABLE_NAME + \"/rows\", { method: \"PATCH\" });",
+      "</script>",
+    ].join("\n");
+
+    const appUrl = writeGeneratedApp(generatedAppId, html);
+    const outputPath = `public${appUrl}index.html`;
+    const saved = fs.readFileSync(outputPath, "utf8");
+
+    expect(saved).not.toContain("https://easydata.is/api");
+    expect(saved).not.toContain("/api/apps");
+    expect(saved).not.toContain("/api/${");
+    expect(saved).not.toContain("/api/rows");
+    expect(saved).not.toContain("/api/${TABLE_NAME}");
+    expect(saved).not.toContain("PATCH");
+    expect(saved).toContain("/apps/${");
+    expect(saved).toContain("method: 'PUT'");
+
+    fs.rmSync(`public/generated/${generatedAppId}`, { recursive: true, force: true });
   });
 
 });

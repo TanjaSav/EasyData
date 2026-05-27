@@ -219,6 +219,28 @@ router.put(
   }
 );
 
+// Compatibility update route for generated clients that use PATCH for edits.
+router.patch(
+  "/:id/tables/:table/rows/:rowId",
+  requireAppToken,
+  (req, res) => {
+    try {
+      const response = updateRow(
+        req.params.id as string,
+        req.params.table as string,
+        req.params.rowId as string,
+        req.body
+      );
+
+      return res.json(response);
+    } catch (error: any) {
+      return res.status(400).json({
+        error: error.message,
+      });
+    }
+  }
+);
+
 // Deletes a specific row by id
 router.delete(
   "/:id/tables/:table/rows/:rowId",
@@ -321,6 +343,21 @@ legacyRowsRouter.post("/:id/:table", requireAppToken, (req, res) => {
 });
 
 legacyRowsRouter.put("/:id/:table/:rowId", requireAppToken, (req, res) => {
+  try {
+    const response = updateRow(
+      req.params.id as string,
+      req.params.table as string,
+      req.params.rowId as string,
+      req.body
+    );
+
+    return res.json(response);
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
+});
+
+legacyRowsRouter.patch("/:id/:table/:rowId", requireAppToken, (req, res) => {
   try {
     const response = updateRow(
       req.params.id as string,

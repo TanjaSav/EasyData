@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workout Tracker</title>
+<style>
+  :root {
+    --orange: #f97316;
+    --orange-dark: #ea6c0a;
+    --orange-pale: #fff7ed;
+    --orange-soft: #fed7aa;
+    --green: #16a34a;
+    --green-bg: #dcfce7;
+    --yellow: #ca8a04;
+    --yellow-bg: #fef9c3;
+    --red: #dc2626;
+    --red-bg: #fee2e2;
+    --blue: #2563eb;
+    --blue-bg: #eff6ff;
+    --blue-border: #bfdbfe;
+    --text: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --bg: #f9fafb;
+    --card: #ffffff;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--orange);
+    color: white;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 2px 8px rgba(249,115,22,0.3);
+  }
+  .topbar-icon { font-size: 1.5rem; }
+  .topbar h1 { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.3px; }
+  .topbar p { font-size: 0.8rem; opacity: 0.85; margin-top: 0.1rem; }
+
+  /* ── STATS STRIP ── */
+  .stats-strip {
+    background: var(--orange);
+    padding: 0 1.5rem 1.25rem;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .stat-chip {
+    background: rgba(255,255,255,0.18);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    color: white;
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+  }
+  .stat-chip strong { font-size: 1.25rem; font-weight: 800; line-height: 1; }
+
+  /* ── MAIN ── */
+  .main { max-width: 860px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--orange);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--orange-soft);
+  }
+
+  /* ── FORM ── */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+  }
+  @media(max-width:520px){ .form-grid { grid-template-columns: 1fr; } }
+
+  .full { grid-column: 1/-1; }
+
+  .fg { display: flex; flex-direction: column; gap: 0.35rem; }
+
+  .fg label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+  }
+
+  .fg input, .fg select {
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.92rem;
+    font-family: inherit;
+    color: var(--text);
+    background: var(--bg);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    width: 100%;
+  }
+  .fg input:focus, .fg select:focus {
+    outline: none;
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
+  }
+
+  .btn-row { display: flex; gap: 0.6rem; margin-top: 1rem; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1.3rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: transform 0.12s, box-shadow 0.12s, background 0.15s;
+  }
+  .btn:active { transform: scale(0.97); }
+
+  .btn-primary {
+    background: var(--orange);
+    color: white;
+    box-shadow: 0 2px 6px rgba(249,115,22,0.35);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--orange-dark);
+    box-shadow: 0 4px 12px rgba(249,115,22,0.4);
+  }
+  .btn-primary:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  .btn-ghost {
+    background: white;
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+  }
+  .btn-ghost:hover { color: var(--orange); border-color: var(--orange); }
+
+  .btn-sm { padding: 0.3rem 0.7rem; font-size: 0.76rem; border-radius: 6px; }
+
+  .btn-edit {
+    background: var(--blue-bg);
+    color: var(--blue);
+    border: 1.5px solid var(--blue-border);
+  }
+  .btn-edit:hover { background: #dbeafe; }
+
+  .btn-del {
+    background: var(--red-bg);
+    color: var(--red);
+    border: 1.5px solid #fecaca;
+  }
+  .btn-del:hover { background: #fecaca; }
+
+  /* ── TABLE ── */
+  .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  table { width: 100%; border-collapse: collapse; min-width: 520px; font-size: 0.88rem; }
+
+  thead tr { border-bottom: 2px solid var(--border); }
+  th {
+    padding: 0.6rem 0.85rem;
+    text-align: left;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--orange-pale); }
+
+  td { padding: 0.8rem 0.85rem; vertical-align: middle; }
+
+  .exercise-cell { font-weight: 600; }
+
+  .dur-wrap { display: flex; align-items: center; gap: 0.5rem; }
+  .dur-track {
+    height: 5px; width: 60px; border-radius: 99px;
+    background: var(--orange-soft);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .dur-fill { height: 100%; background: var(--orange); border-radius: 99px; }
+  .dur-label { font-size: 0.82rem; color: var(--muted); font-weight: 500; white-space: nowrap; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 99px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .badge-Easy     { background: var(--green-bg);  color: var(--green); }
+  .badge-Moderate { background: var(--yellow-bg); color: var(--yellow); }
+  .badge-Hard     { background: var(--red-bg);    color: var(--red); }
+
+  .date-cell { color: var(--muted); font-size: 0.82rem; white-space: nowrap; }
+
+  .act-cell { display: flex; gap: 0.35rem; }
+
+  .empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--muted);
+  }
+  .empty-emoji { font-size: 2.5rem; margin-bottom: 0.5rem; opacity: 0.4; }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(12px);
+    background: #111827;
+    color: #f9fafb;
+    padding: 0.65rem 1.25rem;
+    border-radius: 99px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    transition: all 0.28s cubic-bezier(.34,1.5,.64,1);
+    pointer-events: none;
+    z-index: 999;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.22);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  #toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .spin {
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.5s linear infinite;
+    display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-icon">🏋️</div>
+  <div>
+    <h1>Workout Tracker</h1>
+    <p>Log and manage your fitness sessions</p>
+  </div>
+</div>
+
+<div class="stats-strip">
+  <div class="stat-chip"><strong id="s-total">—</strong>Workouts</div>
+  <div class="stat-chip"><strong id="s-mins">—</strong>Minutes</div>
+  <div class="stat-chip"><strong id="s-avg">—</strong>Avg Min</div>
+  <div class="stat-chip"><strong id="s-hard">—</strong>Hard</div>
+</div>
+
+<div class="main">
+
+  <!-- FORM -->
+  <div class="card">
+    <div class="section-label" id="form-label">Add a Workout</div>
+    <div class="form-grid">
+      <div class="fg full">
+        <label for="f-name">Exercise Name</label>
+        <input id="f-name" type="text" placeholder="e.g. Morning Run, Cycling, HIIT…">
+      </div>
+      <div class="fg">
+        <label for="f-dur">Duration (minutes)</label>
+        <input id="f-dur" type="number" min="1" max="600" placeholder="30">
+      </div>
+      <div class="fg">
+        <label for="f-diff">Difficulty</label>
+        <select id="f-diff">
+          <option value="">Select…</option>
+          <option>Easy</option>
+          <option>Moderate</option>
+          <option>Hard</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label for="f-date">Date</label>
+        <input id="f-date" type="date">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="submit-btn" onclick="submitForm()">
+        <span id="submit-inner">＋ Add Workout</span>
+      </button>
+      <button class="btn btn-ghost" id="cancel-btn" style="display:none" onclick="cancelEdit()">✕ Cancel</button>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="card">
+    <div class="section-label">All Workouts</div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Exercise</th>
+            <th>Duration</th>
+            <th>Difficulty</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr><td colspan="6"><div class="empty"><div class="empty-emoji">⏳</div>Loading…</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const APP   = '03831902-742d-4ef8-b491-6de8a4ed13c4';
+const TOKEN = 'app_af7827ac7384690539c4df359033b01c3c8b692b3ac0dd6c';
+const BASE  = '/apps';
+const TABLE = 'workouts';
+let editId  = null;
+let tTimer;
+
+const h = () => ({ 'Content-Type':'application/json', 'Authorization':`Bearer ${TOKEN}` });
+
+// default date to today
+document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+
+/* ── LOAD ── */
+async function load() {
+  try {
+    const r = await fetch(`${BASE}/${APP}/tables/${TABLE}/rows?order=id:desc`, { headers: h() });
+    const { rows = [] } = await r.json();
+    stats(rows);
+    render(rows);
+  } catch { toast('Failed to load workouts', '❌'); }
+}
+
+/* ── STATS ── */
+function stats(rows) {
+  const total = rows.length;
+  const mins  = rows.reduce((s,r) => s + (r.duration_minutes||0), 0);
+  const avg   = total ? Math.round(mins/total) : 0;
+  const hard  = rows.filter(r => r.difficulty === 'Hard').length;
+  document.getElementById('s-total').textContent = total;
+  document.getElementById('s-mins').textContent  = mins;
+  document.getElementById('s-avg').textContent   = avg || '—';
+  document.getElementById('s-hard').textContent  = hard;
+}
+
+/* ── RENDER ── */
+const diffIcon = { Easy:'🟢', Moderate:'🟡', Hard:'🔴' };
+
+function fmtDate(d) {
+  if (!d) return '—';
+  const dt = new Date(d + 'T00:00:00');
+  return dt.toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+}
+
+function render(rows) {
+  const tb = document.getElementById('tbody');
+  if (!rows.length) {
+    tb.innerHTML = `<tr><td colspan="6"><div class="empty"><div class="empty-emoji">🏃</div>No workouts yet — add one above!</div></td></tr>`;
+    return;
+  }
+  tb.innerHTML = rows.map((r, i) => {
+    const pct = Math.min(100, Math.round(((r.duration_minutes||0)/90)*100));
+    const icon = diffIcon[r.difficulty] || '';
+    return `<tr>
+      <td style="color:var(--muted);font-size:0.78rem">${i+1}</td>
+      <td class="exercise-cell">${esc(r.exercise_name||'—')}</td>
+      <td>
+        <div class="dur-wrap">
+          <div class="dur-track"><div class="dur-fill" style="width:${pct}%"></div></div>
+          <span class="dur-label">${r.duration_minutes||0} min</span>
+        </div>
+      </td>
+      <td><span class="badge badge-${r.difficulty||'Easy'}">${icon} ${esc(r.difficulty||'—')}</span></td>
+      <td class="date-cell">📅 ${fmtDate(r.workout_date)}</td>
+      <td class="act-cell">
+        <button class="btn btn-sm btn-edit" onclick='startEdit(${r.id},${safe(r)})'>✏️ Edit</button>
+        <button class="btn btn-sm btn-del" onclick="del(${r.id})">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+const esc  = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const safe = o => JSON.stringify(o).replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/'/g,'\\u0027').replace(/&/g,'\\u0026');
+
+/* ── SUBMIT ── */
+async function submitForm() {
+  const name = document.getElementById('f-name').value.trim();
+  const dur  = parseInt(document.getElementById('f-dur').value);
+  const diff = document.getElementById('f-diff').value;
+  const date = document.getElementById('f-date').value;
+
+  if (!name)          return toast('Enter an exercise name', '⚠️');
+  if (!dur || dur<1)  return toast('Enter a valid duration', '⚠️');
+  if (!diff)          return toast('Select a difficulty', '⚠️');
+  if (!date)          return toast('Pick a date', '⚠️');
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  document.getElementById('submit-inner').innerHTML = '<span class="spin"></span>';
+
+  const body = { exercise_name:name, duration_minutes:dur, difficulty:diff, workout_date:date };
+
+  try {
+    if (editId) {
+      await fetch(`${BASE}/${APP}/tables/${TABLE}/rows/${editId}`, { method: 'PUT', headers:h(), body:JSON.stringify(body) });
+      toast('Workout updated! 💪', '✅');
+      cancelEdit();
+    } else {
+      await fetch(`${BASE}/${APP}/tables/${TABLE}/rows`, { method:'POST', headers:h(), body:JSON.stringify(body) });
+      toast('Workout logged! 🎉', '✅');
+      clearForm();
+    }
+    await load();
+  } catch { toast('Something went wrong', '❌'); }
+  finally {
+    btn.disabled = false;
+    document.getElementById('submit-inner').textContent = editId ? 'Save Changes' : '＋ Add Workout';
+  }
+}
+
+/* ── EDIT ── */
+function startEdit(id, row) {
+  editId = id;
+  document.getElementById('f-name').value = row.exercise_name || '';
+  document.getElementById('f-dur').value  = row.duration_minutes || '';
+  document.getElementById('f-diff').value = row.difficulty || '';
+  document.getElementById('f-date').value = row.workout_date || '';
+  document.getElementById('form-label').textContent  = 'Edit Workout';
+  document.getElementById('submit-inner').textContent = 'Save Changes';
+  document.getElementById('cancel-btn').style.display = 'inline-flex';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function cancelEdit() {
+  editId = null;
+  clearForm();
+  document.getElementById('form-label').textContent   = 'Add a Workout';
+  document.getElementById('submit-inner').textContent  = '＋ Add Workout';
+  document.getElementById('cancel-btn').style.display  = 'none';
+}
+
+function clearForm() {
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-dur').value  = '';
+  document.getElementById('f-diff').value = '';
+  document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+}
+
+/* ── DELETE ── */
+async function del(id) {
+  if (!confirm('Remove this workout?')) return;
+  try {
+    await fetch(`${BASE}/${APP}/tables/${TABLE}/rows/${id}`, { method:'DELETE', headers:h() });
+    toast('Deleted', '🗑️');
+    await load();
+  } catch { toast('Failed to delete', '❌'); }
+}
+
+/* ── TOAST ── */
+function toast(msg, icon='') {
+  const el = document.getElementById('toast');
+  el.innerHTML = icon ? `<span>${icon}</span><span>${msg}</span>` : msg;
+  el.classList.add('show');
+  clearTimeout(tTimer);
+  tTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+load();
+</script>
+</body>
+</html>

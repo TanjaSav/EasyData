@@ -196,7 +196,7 @@ async function saveEdit() {
     description: document.getElementById("e-desc").value.trim(),
     status: document.getElementById("e-status").value
   };
-  await fetch(`${BASE}/rows/${editingId}`, { method: "PATCH", headers: HEADERS, body: JSON.stringify(body) });
+  await fetch(`${BASE}/rows/${editingId}`, { method: 'PUT', headers: HEADERS, body: JSON.stringify(body) });
   closeModal();
   toast("Task updated ✓");
   loadTasks();

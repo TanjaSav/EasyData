@@ -146,8 +146,13 @@ JSON shape:
   "html": "<!doctype html>..."
 }
 
-The html must be a complete single-file app. It must load Tailwind CSS with <script src="https://cdn.tailwindcss.com"></script> in the <head> and use Tailwind utility classes for layout, spacing, typography, forms, buttons, cards, and tables. Avoid custom <style> blocks unless a tiny amount of app-specific CSS is truly necessary. It should use fetch() against this same origin, for example:
-${baseUrl}/apps/{appId}/tables/{tableName}/rows
+The html must be a complete single-file app. It must load Tailwind CSS with <script src="https://cdn.tailwindcss.com"></script> in the <head> and use Tailwind utility classes for layout, spacing, typography, forms, buttons, cards, and tables. Avoid custom <style> blocks unless a tiny amount of app-specific CSS is truly necessary. It must use fetch() against this same origin with these exact EasyData routes:
+- List rows: GET /apps/{appId}/tables/{tableName}/rows
+- Create row: POST /apps/{appId}/tables/{tableName}/rows
+- Update row: PUT /apps/{appId}/tables/{tableName}/rows/{rowId}
+- Delete row: DELETE /apps/{appId}/tables/{tableName}/rows/{rowId}
+
+Use relative URLs built as "/apps/" + appId + "/tables/" + tableName + "/rows". Do not use /api/apps, /apps/{appId}/api, or /api/{appId} routes; those paths do not exist and return HTML instead of JSON.
 
 The html may embed the created appId and apiToken so the page works immediately. Keep the UI simple, useful, and focused on the requested workflow. Do not include explanations outside JSON.
 
