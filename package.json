@@ -7,9 +7,10 @@
   "scripts": {
     "test": "vitest",
     "dev": "tsx src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js",
-    "mcp": "tsx src/mcp/server.ts"
+    "build": "npm run typecheck",
+    "start": "tsx src/server.ts",
+    "mcp": "tsx src/mcp/server.ts",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="EasyData is a simple hosted data API for apps, files, and structured tables." />
+  <title>EasyData | Data APIs for fast-moving apps</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { ink: '#17202a', muted: '#586574', line: '#d9e4e8', soft: '#f5f8f8', teal: '#0f766e', ocean: '#246b91', ambered: '#c98725' } } }
+    };
+  </script>
+</head>
+<body class="bg-white text-ink antialiased">
+  <header class="fixed inset-x-0 top-0 z-20 border-b border-ink/10 bg-white/85 backdrop-blur-md">
+    <nav class="mx-4 flex min-h-16 max-w-[1180px] sm:mx-auto items-center justify-between gap-6" aria-label="Main navigation">
+      <a class="inline-flex items-center gap-2.5 text-xl font-extrabold no-underline" href="/">
+        <span class="grid size-8 place-items-center rounded-lg bg-ink text-base font-black text-white">E</span>
+        <span>EasyData</span>
+      </a>
+      <div class="hidden items-center gap-6 text-sm font-bold text-muted sm:flex">
+        <a class="hover:text-ink" href="#features">Features</a>
+        <a class="hover:text-ink" href="#workflow">Workflow</a>
+        <a class="inline-flex min-h-10 items-center rounded-lg border border-ink bg-ink px-4 text-white" href="/health">API Status</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="grid min-h-[92vh] items-center border-b border-line bg-[linear-gradient(90deg,rgba(255,255,255,.96)_0%,rgba(255,255,255,.88)_42%,rgba(255,255,255,.35)_78%),url('/assets/easydata-hero.png')] bg-cover bg-center bg-no-repeat pb-14 pt-32">
+      <div class="mx-4 max-w-[1180px] sm:mx-auto">
+        <div class="max-w-2xl">
+          <p class="mb-5 inline-flex items-center gap-2 text-xs font-extrabold uppercase text-ocean before:block before:size-2 before:rounded-full before:bg-ambered">Hosted from easydata.is</p>
+          <h1 class="max-w-2xl text-5xl font-black leading-[.96] tracking-normal sm:text-7xl lg:text-8xl">Simple databases for classroom apps.</h1>
+          <p class="mt-6 max-w-xl text-lg leading-8 text-muted sm:text-xl">EasyData lets teachers and small teams create data-backed web apps without managing servers, dashboards, or database credentials.</p>
+          <div class="mt-8 flex flex-wrap gap-3" aria-label="Primary actions">
+            <a class="inline-flex min-h-11 items-center justify-center rounded-lg border border-ink bg-ink px-5 font-extrabold text-white" href="/create.html">Create with Codex</a>
+            <a class="inline-flex min-h-11 items-center justify-center rounded-lg border border-line bg-white/85 px-5 font-extrabold text-ink" href="/public/test-client.html">Try the browser demo</a>
+            <a class="inline-flex min-h-11 items-center justify-center rounded-lg border border-line bg-white/85 px-5 font-extrabold text-ink" href="#workflow">View API example</a>
+          </div>
+          <div class="mt-11 grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-3" aria-label="EasyData capabilities">
+            <div class="border-t border-ink/20 py-4"><strong class="block text-3xl leading-none">SQLite</strong><span class="mt-2 block text-sm leading-5 text-muted">One database file per app</span></div>
+            <div class="border-t border-ink/20 py-4"><strong class="block text-3xl leading-none">MCP</strong><span class="mt-2 block text-sm leading-5 text-muted">Claude and Codex can create schemas</span></div>
+            <div class="border-t border-ink/20 py-4"><strong class="block text-3xl leading-none">REST</strong><span class="mt-2 block text-sm leading-5 text-muted">Simple fetch calls from any page</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-soft py-20" id="features">
+      <div class="mx-4 max-w-[1180px] sm:mx-auto">
+        <div class="mb-9 max-w-3xl">
+          <h2 class="text-4xl font-black leading-tight sm:text-5xl">Built for small useful tools, not database administration.</h2>
+          <p class="mt-4 text-lg leading-8 text-muted">Create tables, store rows, upload files, and query results through a compact API that AI tools can operate safely.</p>
+        </div>
+        <div class="grid gap-5 md:grid-cols-3">
+          <article class="min-h-52 rounded-lg border border-line bg-white p-6"><div class="mb-5 grid size-11 place-items-center rounded-lg bg-teal/10 font-black text-teal">01</div><h3 class="text-xl font-extrabold">Create apps from natural language</h3><p class="mt-3 leading-7 text-muted">A teacher describes the workflow, then the assistant creates the app, tables, and usable HTML.</p></article>
+          <article class="min-h-52 rounded-lg border border-line bg-white p-6"><div class="mb-5 grid size-11 place-items-center rounded-lg bg-teal/10 font-black text-teal">02</div><h3 class="text-xl font-extrabold">Keep data in simple tables</h3><p class="mt-3 leading-7 text-muted">Each app receives its own SQLite database with token-protected CRUD endpoints.</p></article>
+          <article class="min-h-52 rounded-lg border border-line bg-white p-6"><div class="mb-5 grid size-11 place-items-center rounded-lg bg-teal/10 font-black text-teal">03</div><h3 class="text-xl font-extrabold">Share static frontends</h3><p class="mt-3 leading-7 text-muted">Generated apps are plain HTML pages that can be opened immediately or hosted anywhere.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-20" id="workflow">
+      <div class="mx-4 grid max-w-[1180px] sm:mx-auto gap-11 lg:grid-cols-[.9fr_1.1fr]">
+        <div>
+          <div class="mb-8"><h2 class="text-4xl font-black leading-tight sm:text-5xl">The API stays small enough to explain.</h2><p class="mt-4 text-lg leading-8 text-muted">AI tools use the same endpoints that a browser app uses, so the generated code remains inspectable.</p></div>
+          <ol class="space-y-4">
+            <li class="flex gap-4"><span class="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-sm font-black text-white">1</span><p class="m-0 leading-7 text-muted"><strong class="text-ink">Create an app.</strong> EasyData returns an app id and token.</p></li>
+            <li class="flex gap-4"><span class="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-sm font-black text-white">2</span><p class="m-0 leading-7 text-muted"><strong class="text-ink">Define tables.</strong> Add columns for the teacher's workflow.</p></li>
+            <li class="flex gap-4"><span class="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-sm font-black text-white">3</span><p class="m-0 leading-7 text-muted"><strong class="text-ink">Use fetch.</strong> Insert, update, query, and delete rows from the generated page.</p></li>
+          </ol>
+        </div>
+        <div class="overflow-hidden rounded-lg border border-slate-800 bg-slate-950 text-slate-100 shadow-sm" aria-label="API example">
+          <div class="flex gap-2 border-b border-white/10 px-4 py-3"><span class="size-3 rounded-full bg-red-400"></span><span class="size-3 rounded-full bg-yellow-400"></span><span class="size-3 rounded-full bg-green-400"></span></div>
+          <pre class="m-0 overflow-auto p-5 text-sm leading-7"><code>await fetch('/apps/{appId}/tables/submissions/rows', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer app_token'
+  },
+  body: JSON.stringify({
+    student_name: 'Alex',
+    photo_url: '/uploads/project.jpg'
+  })
+});</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-y border-line bg-soft py-14"><div class="mx-4 flex max-w-[1180px] sm:mx-auto flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"><div><h2 class="text-3xl font-black">Ready to test the API?</h2><p class="mt-2 text-muted">Open the browser demo and run the full create-table-insert-query flow.</p></div><a class="inline-flex min-h-11 items-center justify-center rounded-lg border border-ink bg-ink px-5 font-extrabold text-white" href="/public/test-client.html">Open demo</a></div></section>
+  </main>
+
+  <footer class="py-6 text-sm text-muted"><div class="mx-4 max-w-[1180px] sm:mx-auto">EasyData API available at <code class="rounded bg-soft px-1.5 py-0.5">/apps</code>. Health check at <code class="rounded bg-soft px-1.5 py-0.5">/health</code>.</div></footer>
+</body>
+</html>

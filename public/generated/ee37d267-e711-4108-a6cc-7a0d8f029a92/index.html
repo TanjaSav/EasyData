@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Riverside Learning School</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <div id="root"></div>
+  <script type="text/babel" data-presets="react,typescript">
+    const APP_ID = "ee37d267-e711-4108-a6cc-7a0d8f029a92";
+    const API_TOKEN = "app_4bd8ac6398d823e2961e018dc3ec46a980bb89045f3ebdae";
+    const BASE_URL = "https://easydata.is/apps/" + APP_ID + "/tables";
+
+    type Row = { id?: number | string; [key: string]: any };
+    type Field = { key: string; label: string; type?: string; required?: boolean; textarea?: boolean; placeholder?: string };
+
+    const tables = {
+      announcements: "announcements",
+      projects: "student_projects",
+      homework: "homework",
+      contacts: "contact_messages"
+    };
+
+    function headers() {
+      return { "Content-Type": "application/json", "Authorization": "Bearer " + API_TOKEN, "x-api-token": API_TOKEN };
+    }
+
+    async function api(table: string, options: RequestInit = {}, id?: string | number) {
+      const url = BASE_URL + "/" + table + "/rows" + (id ? "/" + id : "");
+      const res = await fetch(url, { ...options, headers: { ...headers(), ...(options.headers || {}) } });
+      if (!res.ok) throw new Error("EasyData request failed: " + res.status);
+      if (res.status === 204) return null;
+      const text = await res.text();
+      return text ? JSON.parse(text) : null;
+    }
+
+    function normalizeRows(data: any): Row[] {
+      if (Array.isArray(data)) return data;
+      if (Array.isArray(data?.rows)) return data.rows;
+      if (Array.isArray(data?.data)) return data.data;
+      return [];
+    }
+
+    function useRows(table: string) {
+      const [rows, setRows] = React.useState<Row[]>([]);
+      const [loading, setLoading] = React.useState(true);
+      const [error, setError] = React.useState("");
+      const load = React.useCallback(async () => {
+        setLoading(true); setError("");
+        try { setRows(normalizeRows(await api(table))); }
+        catch (e: any) { setError(e.message || "Could not load data."); }
+        finally { setLoading(false); }
+      }, [table]);
+      React.useEffect(() => { load(); }, [load]);
+      const create = async (payload: Row) => { await api(table, { method: "POST", body: JSON.stringify(payload) }); await load(); };
+      const update = async (id: string | number, payload: Row) => { await api(table, { method: "PUT", body: JSON.stringify(payload) }, id); await load(); };
+      const remove = async (id: string | number) => { await api(table, { method: "DELETE" }, id); await load(); };
+      return { rows, loading, error, load, create, update, remove };
+    }
+
+    function Nav({ page, setPage }: { page: string; setPage: (p: string) => void }) {
+      const items = [["home","Home"],["announcements","Announcements"],["projects","Student Projects"],["homework","Homework Tracker"],["contact","Contact"]];
+      return <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <button onClick={() => setPage("home")} className="text-left text-xl font-bold text-blue-800">Riverside Learning School</button>
+          <nav className="flex gap-2 overflow-x-auto pb-1 sm:pb-0">
+            {items.map(([id,label]) => <button key={id} onClick={() => setPage(id)} className={(page===id ? "bg-blue-700 text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200") + " whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium"}>{label}</button>)}
+          </nav>
+        </div>
+      </header>;
+    }
+
+    function LoadingError({ loading, error }: { loading: boolean; error: string }) {
+      if (loading) return <div className="rounded-lg border border-slate-200 bg-white p-6 text-slate-600">Loading latest school data...</div>;
+      if (error) return <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">{error}</div>;
+      return null;
+    }
+
+    function FieldInput({ field, value, onChange }: { field: Field; value: string; onChange: (v: string) => void }) {
+      const cls = "mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+      return <label className="block text-sm font-medium text-slate-700">{field.label}{field.required && <span className="text-red-600"> *</span>}
+        {field.textarea ? <textarea className={cls} rows={3} value={value || ""} placeholder={field.placeholder || ""} onChange={e => onChange(e.target.value)} /> : <input className={cls} type={field.type || "text"} value={value || ""} placeholder={field.placeholder || ""} onChange={e => onChange(e.target.value)} />}
+      </label>;
+    }
+
+    function DataManager({ title, table, fields, renderCard, asTable=false }: { title: string; table: string; fields: Field[]; renderCard: (r: Row) => React.ReactNode; asTable?: boolean }) {
+      const { rows, loading, error, create, update, remove } = useRows(table);
+      const empty = Object.fromEntries(fields.map(f => [f.key, ""]));
+      const [form, setForm] = React.useState<Row>(empty);
+      const [editing, setEditing] = React.useState<Row | null>(null);
+      const [formError, setFormError] = React.useState("");
+      async function submit(e: React.FormEvent) {
+        e.preventDefault(); setFormError("");
+        const missing = fields.find(f => f.required && !String(form[f.key] || "").trim());
+        if (missing) { setFormError(missing.label + " is required."); return; }
+        if (editing?.id) await update(editing.id, form); else await create(form);
+        setForm(empty); setEditing(null);
+      }
+      function startEdit(row: Row) { setEditing(row); setForm(Object.fromEntries(fields.map(f => [f.key, row[f.key] || ""]))); window.scrollTo({top:0, behavior:"smooth"}); }
+      return <section className="mx-auto max-w-7xl px-4 py-8">
+        <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"><div><h1 className="text-3xl font-bold">{title}</h1><p className="text-slate-600">Add, edit, and delete records stored in EasyData.</p></div></div>
+        <form onSubmit={submit} className="mb-8 rounded-lg border border-slate-200 bg-white p-4 shadow-sm">
+          <div className="grid gap-4 md:grid-cols-2">{fields.map(f => <FieldInput key={f.key} field={f} value={form[f.key]} onChange={v => setForm({...form, [f.key]: v})} />)}</div>
+          {formError && <p className="mt-3 text-sm text-red-700">{formError}</p>}
+          <div className="mt-4 flex gap-2"><button className="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800">{editing ? "Save changes" : "Add record"}</button>{editing && <button type="button" onClick={() => { setEditing(null); setForm(empty); }} className="rounded-lg bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700">Cancel</button>}</div>
+        </form>
+        <LoadingError loading={loading} error={error} />
+        {!loading && !error && (asTable ? <div className="overflow-x-auto rounded-lg border border-slate-200 bg-white"><table className="min-w-full divide-y divide-slate-200 text-sm"><thead className="bg-slate-100"><tr>{fields.map(f => <th key={f.key} className="px-4 py-3 text-left font-semibold">{f.label}</th>)}<th className="px-4 py-3 text-left font-semibold">Actions</th></tr></thead><tbody className="divide-y divide-slate-100">{rows.map(r => <tr key={r.id}>{fields.map(f => <td key={f.key} className="px-4 py-3 align-top">{r[f.key]}</td>)}<td className="px-4 py-3"><div className="flex gap-2"><button onClick={() => startEdit(r)} className="rounded bg-slate-100 px-3 py-1 font-medium">Edit</button><button onClick={() => remove(r.id!)} className="rounded bg-red-50 px-3 py-1 font-medium text-red-700">Delete</button></div></td></tr>)}</tbody></table></div> : <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">{rows.map(r => <article key={r.id} className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm">{renderCard(r)}<div className="mt-4 flex gap-2"><button onClick={() => startEdit(r)} className="rounded bg-slate-100 px-3 py-1 text-sm font-medium">Edit</button><button onClick={() => remove(r.id!)} className="rounded bg-red-50 px-3 py-1 text-sm font-medium text-red-700">Delete</button></div></article>)}</div>)}
+      </section>;
+    }
+
+    function Home({ setPage }: { setPage: (p: string) => void }) {
+      const announcements = useRows(tables.announcements);
+      return <main><section className="bg-gradient-to-br from-blue-800 to-cyan-700 text-white"><div className="mx-auto grid max-w-7xl gap-8 px-4 py-14 md:grid-cols-2 md:items-center"><div><p className="font-semibold uppercase tracking-wide text-cyan-100">Welcome students, families, and teachers</p><h1 className="mt-3 text-4xl font-bold sm:text-5xl">Riverside Learning School</h1><p className="mt-4 max-w-xl text-lg text-blue-50">A clean, connected school hub for announcements, projects, homework, and family communication.</p><div className="mt-6 flex flex-wrap gap-3"><button onClick={() => setPage("homework")} className="rounded-lg bg-white px-4 py-2 font-semibold text-blue-800">Student homework</button><button onClick={() => setPage("contact")} className="rounded-lg bg-blue-900/40 px-4 py-2 font-semibold text-white ring-1 ring-white/40">Parent contact</button></div></div><img className="h-72 w-full rounded-lg object-cover shadow-lg" src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=80" alt="Students walking on a school campus" /></div></section><section className="mx-auto max-w-7xl px-4 py-8"><h2 className="text-2xl font-bold">Quick Links</h2><div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">{[["Announcements","announcements"],["Student Projects","projects"],["Homework Tracker","homework"],["Contact Office","contact"]].map(([label,id]) => <button key={id} onClick={() => setPage(id)} className="rounded-lg border border-slate-200 bg-white p-5 text-left font-semibold shadow-sm hover:border-blue-300 hover:text-blue-800">{label}<span className="mt-2 block text-sm font-normal text-slate-600">Open {label.toLowerCase()}</span></button>)}</div></section><section className="mx-auto max-w-7xl px-4 pb-10"><div className="mb-4 flex items-center justify-between"><h2 className="text-2xl font-bold">Latest News</h2><button onClick={() => setPage("announcements")} className="text-sm font-semibold text-blue-700">View all</button></div><LoadingError loading={announcements.loading} error={announcements.error} />{!announcements.loading && !announcements.error && <div className="grid gap-4 md:grid-cols-3">{announcements.rows.slice(0,3).map(a => <article key={a.id} className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"><p className="text-sm text-slate-500">{a.publish_date}</p><h3 className="mt-2 text-lg font-bold">{a.title}</h3><p className="mt-2 text-sm text-slate-600">{a.description}</p></article>)}</div>}</section></main>;
+    }
+
+    function Contact() {
+      const { rows, loading, error, create, remove } = useRows(tables.contacts);
+      const [form, setForm] = React.useState({name:"", email:"", message:""});
+      const [formError, setFormError] = React.useState("");
+      async function submit(e: React.FormEvent) { e.preventDefault(); setFormError(""); if (!form.name.trim() || !form.email.includes("@") || !form.message.trim()) { setFormError("Enter a name, valid email, and message."); return; } await create({...form, created_at:new Date().toISOString()}); setForm({name:"", email:"", message:""}); }
+      return <main className="mx-auto max-w-7xl px-4 py-8"><h1 className="text-3xl font-bold">Contact</h1><div className="mt-6 grid gap-6 lg:grid-cols-2"><section className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm"><h2 className="text-xl font-bold">School Office</h2><div className="mt-4 space-y-2 text-slate-700"><p><strong>Address:</strong> 125 Learning Lane, Springfield, ST 12345</p><p><strong>Phone:</strong> (555) 014-2026</p><p><strong>Email:</strong> office@riversideschool.example</p></div><form onSubmit={submit} className="mt-6 space-y-4"><FieldInput field={{key:"name",label:"Name",required:true}} value={form.name} onChange={v=>setForm({...form,name:v})}/><FieldInput field={{key:"email",label:"Email",type:"email",required:true}} value={form.email} onChange={v=>setForm({...form,email:v})}/><FieldInput field={{key:"message",label:"Message",textarea:true,required:true}} value={form.message} onChange={v=>setForm({...form,message:v})}/>{formError && <p className="text-sm text-red-700">{formError}</p>}<button className="rounded-lg bg-blue-700 px-4 py-2 font-semibold text-white">Send message</button></form></section><section><h2 className="mb-3 text-xl font-bold">Recent Messages</h2><LoadingError loading={loading} error={error}/><div className="space-y-3">{rows.map(m => <article key={m.id} className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm"><div className="flex items-start justify-between gap-3"><div><h3 className="font-bold">{m.name}</h3><p className="text-sm text-slate-500">{m.email}</p></div><button onClick={()=>remove(m.id!)} className="rounded bg-red-50 px-3 py-1 text-sm font-medium text-red-700">Delete</button></div><p className="mt-2 text-sm text-slate-700">{m.message}</p></article>)}</div></section></div></main>;
+    }
+
+    function SchemaPage() {
+      return <main className="mx-auto max-w-7xl px-4 py-8"><h1 className="text-3xl font-bold">Database Schema</h1><div className="mt-4 grid gap-4 md:grid-cols-2">{Object.entries({announcements:["id","title","description","publish_date"], student_projects:["id","image_url","student_name","project_title","description"], homework:["id","subject","homework_text","due_date","teacher_name"], contact_messages:["id","name","email","message","created_at"]}).map(([t,cols]) => <div key={t} className="rounded-lg border border-slate-200 bg-white p-4"><h2 className="font-bold">{t}</h2><p className="mt-2 text-sm text-slate-600">{(cols as string[]).join(", ")}</p></div>)}</div></main>;
+    }
+
+    function App() {
+      const [page, setPage] = React.useState("home");
+      return <><Nav page={page} setPage={setPage}/>{page==="home" && <Home setPage={setPage}/>} {page==="announcements" && <DataManager title="Announcements" table={tables.announcements} asTable fields={[{key:"title",label:"Title",required:true},{key:"publish_date",label:"Publish Date",type:"date",required:true},{key:"description",label:"Description",textarea:true,required:true}]} renderCard={r => <><p className="text-sm text-slate-500">{r.publish_date}</p><h3 className="mt-2 text-lg font-bold">{r.title}</h3><p className="mt-2 text-sm text-slate-600">{r.description}</p></>} />} {page==="projects" && <DataManager title="Student Projects" table={tables.projects} fields={[{key:"image_url",label:"Image URL",type:"url",required:true},{key:"student_name",label:"Student Name",required:true},{key:"project_title",label:"Project Title",required:true},{key:"description",label:"Description",textarea:true,required:true}]} renderCard={r => <><img className="mb-4 h-44 w-full rounded-lg object-cover" src={r.image_url} alt={r.project_title}/><p className="text-sm font-semibold text-blue-700">{r.student_name}</p><h3 className="mt-1 text-lg font-bold">{r.project_title}</h3><p className="mt-2 text-sm text-slate-600">{r.description}</p></>} />} {page==="homework" && <DataManager title="Homework Tracker" table={tables.homework} asTable fields={[{key:"subject",label:"Subject",required:true},{key:"homework_text",label:"Homework Text",textarea:true,required:true},{key:"due_date",label:"Due Date",type:"date",required:true},{key:"teacher_name",label:"Teacher Name",required:true}]} renderCard={r => <><h3 className="text-lg font-bold">{r.subject}</h3><p>{r.homework_text}</p></>} />} {page==="contact" && <Contact/>}<footer className="border-t border-slate-200 bg-white px-4 py-6 text-center text-sm text-slate-500"><button onClick={()=>setPage("schema")} className="font-semibold text-blue-700">View generated tables</button><span className="mx-2">|</span>Run locally by saving this HTML as index.html and opening it in a browser, or serve it with any static server.</footer>{page==="schema" && <SchemaPage/>}</>;
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")!).render(<App />);
+  </script>
+</body>
+</html>

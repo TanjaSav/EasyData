@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test Contact List</title>
+  <style>
+    :root { font-family: Arial, sans-serif; color: #1f2937; background: #f7f7f5; }
+    body { margin: 0; padding: 24px; }
+    main { max-width: 720px; margin: 0 auto; }
+    h1 { margin: 0 0 18px; font-size: 28px; }
+    form { background: #ffffff; border: 1px solid #d9d9d2; border-radius: 8px; padding: 16px; display: grid; gap: 12px; }
+    label { display: grid; gap: 6px; font-weight: 700; }
+    input, textarea { font: inherit; border: 1px solid #b9b9b0; border-radius: 6px; padding: 10px; background: #fff; }
+    textarea { min-height: 84px; resize: vertical; }
+    button { justify-self: start; border: 0; border-radius: 6px; padding: 10px 14px; background: #2563eb; color: #fff; font-weight: 700; cursor: pointer; }
+    button:disabled { background: #8aa8e8; cursor: wait; }
+    .status { min-height: 22px; margin: 12px 0; color: #4b5563; }
+    .list { display: grid; gap: 10px; margin-top: 12px; }
+    .contact { background: #ffffff; border: 1px solid #d9d9d2; border-radius: 8px; padding: 14px; }
+    .contact strong { display: block; font-size: 18px; margin-bottom: 6px; }
+    .contact p { margin: 0; white-space: pre-wrap; color: #374151; }
+    .empty { color: #6b7280; padding: 12px 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Test Contact List</h1>
+    <form id="contactForm">
+      <label>Name<input id="name" name="name" autocomplete="name" required></label>
+      <label>Note<textarea id="note" name="note" required></textarea></label>
+      <button id="saveButton" type="submit">Save contact</button>
+    </form>
+    <div id="status" class="status"></div>
+    <section id="contacts" class="list" aria-live="polite"></section>
+  </main>
+  <script>
+    const appId = '349114ab-a627-4eaf-80d7-88eda8b72098';
+    const apiToken = 'app_a5522efacd10ac29e1aa224b4c7557702fff08126f07246d';
+    const tableName = 'contacts';
+    const baseUrl = `https://easydata.is/apps/${appId}/tables/${tableName}/rows`;
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiToken}`,
+      'x-api-token': apiToken
+    };
+    const form = document.getElementById('contactForm');
+    const nameInput = document.getElementById('name');
+    const noteInput = document.getElementById('note');
+    const saveButton = document.getElementById('saveButton');
+    const statusEl = document.getElementById('status');
+    const contactsEl = document.getElementById('contacts');
+
+    function setStatus(message) { statusEl.textContent = message || ''; }
+
+    function renderContacts(rows) {
+      contactsEl.innerHTML = '';
+      if (!rows.length) {
+        contactsEl.innerHTML = '<div class="empty">No contacts saved yet.</div>';
+        return;
+      }
+      rows.forEach(row => {
+        const item = document.createElement('article');
+        item.className = 'contact';
+        const name = document.createElement('strong');
+        name.textContent = row.name || 'Unnamed contact';
+        const note = document.createElement('p');
+        note.textContent = row.note || '';
+        item.append(name, note);
+        contactsEl.appendChild(item);
+      });
+    }
+
+    async function loadContacts() {
+      setStatus('Loading contacts...');
+      const response = await fetch(baseUrl, { headers });
+      if (!response.ok) throw new Error('Could not load contacts.');
+      const data = await response.json();
+      const rows = Array.isArray(data) ? data : (data.rows || []);
+      renderContacts(rows);
+      setStatus('');
+    }
+
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      const name = nameInput.value.trim();
+      const note = noteInput.value.trim();
+      if (!name || !note) return;
+      saveButton.disabled = true;
+      setStatus('Saving contact...');
+      try {
+        const response = await fetch(baseUrl, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ name, note })
+        });
+        if (!response.ok) throw new Error('Could not save contact.');
+        form.reset();
+        nameInput.focus();
+        await loadContacts();
+      } catch (error) {
+        setStatus(error.message);
+      } finally {
+        saveButton.disabled = false;
+      }
+    });
+
+    loadContacts().catch(error => setStatus(error.message));
+  </script>
+</body>
+</html>

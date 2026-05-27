@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book Collection</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-100 text-slate-900">
+  <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+    <div class="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 class="text-3xl font-bold tracking-tight text-slate-950">Book Collection</h1>
+        <p class="mt-1 text-sm text-slate-600">Add, update, and manage classroom books.</p>
+      </div>
+      <div id="status" class="text-sm font-medium text-slate-600" aria-live="polite"></div>
+    </div>
+
+    <section class="mb-8 rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+      <h2 id="formTitle" class="mb-4 text-lg font-semibold text-slate-950">Add a New Book</h2>
+      <form id="bookForm" class="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+        <input type="hidden" id="bookId">
+        <label class="block lg:col-span-1">
+          <span class="mb-1 block text-sm font-medium text-slate-700">Title</span>
+          <input id="title" name="title" type="text" required class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200">
+        </label>
+        <label class="block lg:col-span-1">
+          <span class="mb-1 block text-sm font-medium text-slate-700">Author</span>
+          <input id="author" name="author" type="text" required class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200">
+        </label>
+        <label class="block lg:col-span-1">
+          <span class="mb-1 block text-sm font-medium text-slate-700">Genre</span>
+          <input id="genre" name="genre" type="text" required class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200">
+        </label>
+        <label class="block lg:col-span-1">
+          <span class="mb-1 block text-sm font-medium text-slate-700">Reading Status</span>
+          <select id="reading_status" name="reading_status" required class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200">
+            <option value="Available">Available</option>
+            <option value="Currently Reading">Currently Reading</option>
+            <option value="Finished">Finished</option>
+            <option value="On Hold">On Hold</option>
+          </select>
+        </label>
+        <div class="flex items-end gap-2 lg:col-span-1">
+          <button id="submitButton" type="submit" class="w-full rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-300">Add Book</button>
+          <button id="cancelButton" type="button" class="hidden rounded-md border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200">Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
+      <div class="border-b border-slate-200 px-5 py-4">
+        <h2 class="text-lg font-semibold text-slate-950">All Books</h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200 text-sm">
+          <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-600">
+            <tr>
+              <th class="px-5 py-3">Title</th>
+              <th class="px-5 py-3">Author</th>
+              <th class="px-5 py-3">Genre</th>
+              <th class="px-5 py-3">Reading Status</th>
+              <th class="px-5 py-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="booksTable" class="divide-y divide-slate-100 bg-white"></tbody>
+        </table>
+      </div>
+      <div id="emptyState" class="hidden px-5 py-8 text-center text-sm text-slate-500">No books yet. Add the first book above.</div>
+    </section>
+  </main>
+
+  <script>
+    const appId = 'f1a5e3d4-d315-4c17-9c15-df6c242ff845';
+    const apiToken = 'app_f291e4895cf33e36f1f6712e401c8d04f893abc3a82c50b2';
+    const tableName = 'books';
+    const baseUrl = `https://easydata.is/apps/${appId}/tables/${tableName}/rows`;
+
+    const form = document.getElementById('bookForm');
+    const formTitle = document.getElementById('formTitle');
+    const submitButton = document.getElementById('submitButton');
+    const cancelButton = document.getElementById('cancelButton');
+    const tableBody = document.getElementById('booksTable');
+    const emptyState = document.getElementById('emptyState');
+    const statusEl = document.getElementById('status');
+    let books = [];
+
+    function setStatus(message, isError = false) {
+      statusEl.textContent = message;
+      statusEl.className = `text-sm font-medium ${isError ? 'text-red-600' : 'text-slate-600'}`;
+    }
+
+    async function apiRequest(url, options = {}) {
+      const response = await fetch(url, {
+        ...options,
+        headers: {
+          'Authorization': `Bearer ${apiToken}`,
+          'Content-Type': 'application/json',
+          ...(options.headers || {})
+        }
+      });
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || 'Request failed');
+      }
+      return response.json();
+    }
+
+    function getFormData() {
+      return {
+        title: document.getElementById('title').value.trim(),
+        author: document.getElementById('author').value.trim(),
+        genre: document.getElementById('genre').value.trim(),
+        reading_status: document.getElementById('reading_status').value
+      };
+    }
+
+    function resetForm() {
+      form.reset();
+      document.getElementById('bookId').value = '';
+      formTitle.textContent = 'Add a New Book';
+      submitButton.textContent = 'Add Book';
+      cancelButton.classList.add('hidden');
+    }
+
+    function startEdit(book) {
+      document.getElementById('bookId').value = book.id;
+      document.getElementById('title').value = book.title || '';
+      document.getElementById('author').value = book.author || '';
+      document.getElementById('genre').value = book.genre || '';
+      document.getElementById('reading_status').value = book.reading_status || 'Available';
+      formTitle.textContent = 'Edit Book';
+      submitButton.textContent = 'Save Changes';
+      cancelButton.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderBooks() {
+      tableBody.innerHTML = '';
+      emptyState.classList.toggle('hidden', books.length !== 0);
+
+      books.forEach((book) => {
+        const row = document.createElement('tr');
+        row.className = 'hover:bg-slate-50';
+        row.innerHTML = `
+          <td class="px-5 py-4 font-medium text-slate-950"></td>
+          <td class="px-5 py-4 text-slate-700"></td>
+          <td class="px-5 py-4 text-slate-700"></td>
+          <td class="px-5 py-4 text-slate-700"></td>
+          <td class="px-5 py-4 text-right">
+            <button class="edit-btn rounded-md border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50">Edit</button>
+            <button class="delete-btn ml-2 rounded-md bg-red-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-700">Delete</button>
+          </td>
+        `;
+        row.children[0].textContent = book.title || '';
+        row.children[1].textContent = book.author || '';
+        row.children[2].textContent = book.genre || '';
+        row.children[3].textContent = book.reading_status || '';
+        row.querySelector('.edit-btn').addEventListener('click', () => startEdit(book));
+        row.querySelector('.delete-btn').addEventListener('click', () => deleteBook(book.id));
+        tableBody.appendChild(row);
+      });
+    }
+
+    async function loadBooks() {
+      setStatus('Loading books...');
+      try {
+        const data = await apiRequest(baseUrl);
+        books = data.rows || [];
+        renderBooks();
+        setStatus(`${books.length} book${books.length === 1 ? '' : 's'} loaded`);
+      } catch (error) {
+        setStatus('Could not load books.', true);
+      }
+    }
+
+    async function saveBook(event) {
+      event.preventDefault();
+      const id = document.getElementById('bookId').value;
+      const book = getFormData();
+      const isEditing = Boolean(id);
+
+      try {
+        await apiRequest(isEditing ? `${baseUrl}/${id}` : baseUrl, {
+          method: isEditing ? 'PUT' : 'POST',
+          body: JSON.stringify(book)
+        });
+        resetForm();
+        await loadBooks();
+        setStatus(isEditing ? 'Book updated.' : 'Book added.');
+      } catch (error) {
+        setStatus('Could not save the book.', true);
+      }
+    }
+
+    async function deleteBook(id) {
+      if (!confirm('Delete this book?')) return;
+      try {
+        await apiRequest(`${baseUrl}/${id}`, { method: 'DELETE' });
+        await loadBooks();
+        setStatus('Book deleted.');
+      } catch (error) {
+        setStatus('Could not delete the book.', true);
+      }
+    }
+
+    form.addEventListener('submit', saveBook);
+    cancelButton.addEventListener('click', resetForm);
+    loadBooks();
+  </script>
+</body>
+</html>

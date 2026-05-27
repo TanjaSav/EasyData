@@ -1,98 +1,48 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>EasyData Fetch Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-
-<body>
-  <h1>EasyData Fetch Demo</h1>
-
-  <button onclick="createApp()">1. Create App</button>
-  <button onclick="createTable()">2. Create Table</button>
-  <button onclick="insertRow()">3. Insert Row</button>
-  <button onclick="getRows()">4. Get Rows</button>
-
-  <pre id="output"></pre>
+<body class="min-h-screen bg-slate-50 text-slate-950 antialiased">
+  <main class="mx-4 max-w-[920px] sm:mx-auto py-10">
+    <a href="/" class="text-sm font-bold text-slate-600 hover:text-slate-950">EasyData</a>
+    <div class="mt-5 rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+      <h1 class="text-3xl font-black tracking-tight">EasyData Fetch Demo</h1>
+      <p class="mt-2 max-w-2xl leading-7 text-slate-600">Run each request in order to create an app, create a table, insert a row, and read it back through the EasyData API.</p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <button class="rounded-lg bg-slate-950 px-4 py-2.5 font-bold text-white hover:bg-slate-800" onclick="createApp()">1. Create App</button>
+        <button class="rounded-lg bg-slate-950 px-4 py-2.5 font-bold text-white hover:bg-slate-800" onclick="createTable()">2. Create Table</button>
+        <button class="rounded-lg bg-slate-950 px-4 py-2.5 font-bold text-white hover:bg-slate-800" onclick="insertRow()">3. Insert Row</button>
+        <button class="rounded-lg bg-slate-950 px-4 py-2.5 font-bold text-white hover:bg-slate-800" onclick="getRows()">4. Get Rows</button>
+      </div>
+    </div>
+    <pre id="output" class="mt-5 min-h-80 overflow-auto rounded-lg border border-slate-200 bg-slate-950 p-5 text-sm leading-7 text-slate-100">Click "1. Create App" to begin.</pre>
+  </main>
 
   <script>
     const API_BASE = window.location.origin;
-
     let appId = "";
     let apiToken = "";
-
-    function print(data) {
-      document.getElementById("output").textContent =
-        JSON.stringify(data, null, 2);
-    }
-
+    function print(data) { document.getElementById("output").textContent = JSON.stringify(data, null, 2); }
     async function createApp() {
-      const res = await fetch(`${API_BASE}/apps`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name: "Browser Demo App",
-          description: "Created from browser fetch demo"
-        })
-      });
-
-      const data = await res.json();
-
-      appId = data.id;
-      apiToken = data.apiToken;
-
-      print(data);
+      const res = await fetch(API_BASE + "/apps", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: "Browser Demo App", description: "Created from browser fetch demo" }) });
+      const data = await res.json(); appId = data.id; apiToken = data.apiToken; print(data);
     }
-
     async function createTable() {
-      const res = await fetch(`${API_BASE}/apps/${appId}/tables`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiToken}`
-        },
-        body: JSON.stringify({
-          tableName: "submissions",
-          columns: [
-            { name: "student_name", type: "TEXT" },
-            { name: "photo_url", type: "TEXT" }
-          ]
-        })
-      });
-
+      const res = await fetch(API_BASE + "/apps/" + appId + "/tables", { method: "POST", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + apiToken }, body: JSON.stringify({ tableName: "submissions", columns: [{ name: "student_name", type: "TEXT" }, { name: "photo_url", type: "TEXT" }] }) });
       print(await res.json());
     }
-
     async function insertRow() {
-      const res = await fetch(`${API_BASE}/apps/${appId}/tables/submissions/rows`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiToken}`
-        },
-        body: JSON.stringify({
-          student_name: "Browser Student",
-          photo_url: "/uploads/demo.jpg"
-        })
-      });
-
+      const res = await fetch(API_BASE + "/apps/" + appId + "/tables/submissions/rows", { method: "POST", headers: { "Content-Type": "application/json", "Authorization": "Bearer " + apiToken }, body: JSON.stringify({ student_name: "Browser Student", photo_url: "/uploads/demo.jpg" }) });
       print(await res.json());
     }
-
     async function getRows() {
-      const res = await fetch(`${API_BASE}/apps/${appId}/tables/submissions/rows`, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${apiToken}`
-        }
-      });
-
+      const res = await fetch(API_BASE + "/apps/" + appId + "/tables/submissions/rows", { method: "GET", headers: { "Authorization": "Bearer " + apiToken } });
       print(await res.json());
     }
   </script>
 </body>
-
 </html>

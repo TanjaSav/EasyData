@@ -1,6 +1,8 @@
 // export default router;
 
 import { Router } from "express";
+import type { NextFunction, Request, Response } from "express";
+import multer from "multer";
 import { z } from "zod";
 import { createApp, listApps } from "../services/app.service.js";
 import {
@@ -12,10 +14,12 @@ import {
   updateRow,
   deleteRow,
 } from "../services/table.service.js";
-import { upload } from "../middleware/upload.middleware.js";
+import { upload, uploadConfig } from "../middleware/upload.middleware.js";
 import { requireAppToken } from "../middleware/auth.middleware.js";
 
 const router = Router();
+export const legacyRowsRouter = Router();
+
 
 // Validates the request body for creating a new app
 const createAppSchema = z.object({
@@ -43,6 +47,26 @@ const alterTableSchema = z.object({
     })
   ),
 });
+
+const uploadSingleFile = (req: Request, res: Response, next: NextFunction) => {
+  upload.single("file")(req, res, (error) => {
+    if (!error) {
+      next();
+      return;
+    }
+
+    if (error instanceof multer.MulterError && error.code === "LIMIT_FILE_SIZE") {
+      return res.status(400).json({
+        error: "File too large",
+        maxFileSizeBytes: uploadConfig.maxFileSizeBytes,
+      });
+    }
+
+    return res.status(400).json({
+      error: error.message,
+    });
+  });
+};
 
 // Lists all created apps
 router.get("/", (req, res) => {
@@ -224,6 +248,11 @@ router.post("/:id/upload-url", requireAppToken, (req, res) => {
     method: "POST",
     fieldName: "file",
     note: "Local storage mode. Upload the file using multipart/form-data.",
+    limits: {
+      maxFileSizeBytes: uploadConfig.maxFileSizeBytes,
+      allowedMimeTypes: uploadConfig.allowedMimeTypes,
+      allowedExtensions: uploadConfig.allowedExtensions,
+    },
   });
 });
 
@@ -231,7 +260,7 @@ router.post("/:id/upload-url", requireAppToken, (req, res) => {
 router.post(
   "/:id/files",
   requireAppToken,
-  upload.single("file"),
+  uploadSingleFile,
   (req, res) => {
     if (!req.file) {
       return res.status(400).json({
@@ -239,16 +268,85 @@ router.post(
       });
     }
 
+    const url = `/uploads/${req.file.filename}`;
+
     return res.status(201).json({
       success: true,
       appId: req.params.id as string,
+      url,
+      fileUrl: url,
+      file_url: url,
+      path: url,
       file: {
         originalName: req.file.originalname,
         fileName: req.file.filename,
-        url: `/uploads/${req.file.filename}`,
+        url,
       },
     });
   }
 );
+
+// Compatibility routes for generated clients that use /api/rows/:appId/:table.
+legacyRowsRouter.get("/:id/:table", requireAppToken, (req, res) => {
+  try {
+    const rows = getRows(req.params.id as string, req.params.table as string, {
+      ...(req.query.where && { where: req.query.where as string }),
+      ...(req.query.order && { order: req.query.order as string }),
+      ...(req.query.limit && { limit: req.query.limit as string }),
+    });
+
+    return res.json({
+      appId: req.params.id as string,
+      table: req.params.table as string,
+      query: {
+        where: req.query.where ?? null,
+        order: req.query.order ?? null,
+        limit: req.query.limit ?? null,
+      },
+      rows,
+    });
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
+});
+
+legacyRowsRouter.post("/:id/:table", requireAppToken, (req, res) => {
+  try {
+    const response = insertRow(req.params.id as string, req.params.table as string, req.body);
+
+    return res.status(201).json(response);
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
+});
+
+legacyRowsRouter.put("/:id/:table/:rowId", requireAppToken, (req, res) => {
+  try {
+    const response = updateRow(
+      req.params.id as string,
+      req.params.table as string,
+      req.params.rowId as string,
+      req.body
+    );
+
+    return res.json(response);
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
+});
+
+legacyRowsRouter.delete("/:id/:table/:rowId", requireAppToken, (req, res) => {
+  try {
+    const response = deleteRow(
+      req.params.id as string,
+      req.params.table as string,
+      req.params.rowId as string
+    );
+
+    return res.json(response);
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
+});
 
 export default router;

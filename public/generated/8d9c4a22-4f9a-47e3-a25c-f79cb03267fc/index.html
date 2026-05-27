@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Publish Test</title>
+<style>
+  body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  th, td { border: 1px solid #ddd; padding: 10px 14px; text-align: left; }
+  th { background: #f4f4f4; }
+  .status { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.85em; background: #d1fae5; color: #065f46; }
+</style>
+</head>
+<body>
+<h1>Tasks</h1>
+<table id="tasks-table">
+  <thead><tr><th>Title</th><th>Status</th></tr></thead>
+  <tbody id="tasks-body"><tr><td colspan="2">Loading...</td></tr></tbody>
+</table>
+<script>
+const APP_ID = "8d9c4a22-4f9a-47e3-a25c-f79cb03267fc";
+const API_TOKEN = "app_5074869f920db5eeeaa2ada945fe981ec1c22c8d93494a69";
+fetch(`https://easydata.is/apps/${APP_ID}/tables/tasks/rows`, {
+  headers: { "Authorization": `Bearer ${API_TOKEN}` }
+})
+.then(r => r.json())
+.then(data => {
+  const rows = data.rows || data;
+  const tbody = document.getElementById("tasks-body");
+  if (!rows.length) { tbody.innerHTML = "<tr><td colspan='2'>No tasks found.</td></tr>"; return; }
+  tbody.innerHTML = rows.map(r =>
+    `<tr><td>${r.title}</td><td><span class="status">${r.status}</span></td></tr>`
+  ).join("");
+})
+.catch(e => {
+  document.getElementById("tasks-body").innerHTML = `<tr><td colspan='2'>Error: ${e.message}</td></tr>`;
+});
+</script>
+</body>
+</html>

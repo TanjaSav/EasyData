@@ -3,7 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import dotenv from "dotenv";
-import appRoutes from "./routes/app.routes.js";
+import appRoutes, { legacyRowsRouter } from "./routes/app.routes.js";
 import aiRoutes from "./routes/ai.routes.js";
 import { createEasyDataMcpServer } from "./mcp/server.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
@@ -42,8 +42,7 @@ app.get("/health", (req, res) => {
   });
 });
 
-// MCP Streamable HTTP endpoint
-app.post("/mcp", async (req, res) => {
+async function handleMcpRequest(req: express.Request, res: express.Response) {
   // Streamable HTTP requests are stateless, so each request gets an isolated MCP server.
   const mcpServer = createEasyDataMcpServer();
   const transport = new StreamableHTTPServerTransport({
@@ -71,7 +70,14 @@ app.post("/mcp", async (req, res) => {
     await transport.close();
     await mcpServer.close();
   }
-});
+}
+
+// MCP Streamable HTTP endpoint. The extra POST aliases support hosted clients
+// that probe root or framework-style paths before settling on an MCP endpoint.
+app.post(
+  ["/mcp", "/", "/api", "/app", "/_next", "/_next/server", "/api/route"],
+  handleMcpRequest
+);
 
 app.get("/mcp", (req, res) => {
   res.status(405).json({
@@ -97,6 +103,10 @@ app.delete("/mcp", (req, res) => {
 
 // Main EasyData API routes
 app.use("/apps", appRoutes);
+// Compatibility alias for generated clients that assume a versioned API prefix.
+app.use("/api/v1/apps", appRoutes);
+// Compatibility alias for generated clients that use /api/rows/:appId/:table.
+app.use("/api/rows", legacyRowsRouter);
 app.use("/ai", aiRoutes);
 
 app.listen(PORT, "0.0.0.0", () => {

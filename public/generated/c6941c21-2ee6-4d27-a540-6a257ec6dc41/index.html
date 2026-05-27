@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recipe Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #faf7f2;
+    --warm-white: #fff9f3;
+    --ink: #1a1208;
+    --brown: #7c4f2a;
+    --amber: #c8722a;
+    --amber-light: #f5e6d3;
+    --sage: #6b7c5c;
+    --sage-light: #edf0e8;
+    --red: #c0392b;
+    --red-light: #fdecea;
+    --border: #e8ddd0;
+    --shadow: 0 2px 12px rgba(124,79,42,0.10);
+    --radius: 12px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--warm-white);
+    border-bottom: 2px solid var(--border);
+    padding: 28px 24px 20px;
+    text-align: center;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 6vw, 3rem);
+    color: var(--brown);
+    letter-spacing: -0.5px;
+  }
+  header p {
+    color: var(--amber);
+    font-size: 0.9rem;
+    font-weight: 300;
+    margin-top: 4px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* LAYOUT */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 16px 64px;
+  }
+
+  /* FORM CARD */
+  .form-card {
+    background: var(--warm-white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 28px 24px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow);
+  }
+  .form-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    color: var(--brown);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .form-grid .full { grid-column: 1 / -1; }
+
+  label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--brown);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  input, select, textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    background: var(--cream);
+    color: var(--ink);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--amber);
+    box-shadow: 0 0 0 3px rgba(200,114,42,0.12);
+  }
+  textarea { resize: vertical; min-height: 72px; }
+
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+  .btn:active { transform: translateY(0); }
+  .btn-primary { background: var(--amber); color: white; }
+  .btn-secondary { background: var(--border); color: var(--ink); }
+  .btn-edit { background: var(--sage-light); color: var(--sage); padding: 6px 12px; font-size: 0.8rem; }
+  .btn-delete { background: var(--red-light); color: var(--red); padding: 6px 12px; font-size: 0.8rem; }
+
+  /* TABLE SECTION */
+  .table-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    color: var(--brown);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .count-badge {
+    background: var(--amber-light);
+    color: var(--amber);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .table-wrap {
+    background: var(--warm-white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; min-width: 560px; }
+  thead { background: var(--amber-light); }
+  thead th {
+    padding: 13px 16px;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--brown);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-bottom: 1.5px solid var(--border);
+    white-space: nowrap;
+  }
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--cream); }
+  tbody td {
+    padding: 12px 16px;
+    font-size: 0.88rem;
+    color: var(--ink);
+    vertical-align: middle;
+  }
+  .td-name { font-weight: 500; color: var(--brown); }
+  .td-ingredients { color: #6b5a46; max-width: 220px; }
+  .td-actions { white-space: nowrap; display: flex; gap: 6px; }
+
+  /* DIFFICULTY BADGE */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+  .badge-easy { background: #e8f5e9; color: #388e3c; }
+  .badge-medium { background: #fff8e1; color: #f57c00; }
+  .badge-hard { background: #fce4ec; color: #c62828; }
+
+  /* TOAST */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--ink);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 0.88rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(.4,0,.2,1);
+    z-index: 999;
+    max-width: 300px;
+  }
+  #toast.show { transform: translateY(0); opacity: 1; }
+  #toast.success { background: var(--sage); }
+  #toast.error { background: var(--red); }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: #a89078;
+  }
+  .empty-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
+  .empty-state p { font-size: 0.95rem; }
+
+  /* LOADING */
+  .loading-row td { text-align: center; padding: 32px; color: #a89078; font-style: italic; }
+
+  /* MODAL OVERLAY for edit */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(26,18,8,0.45);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--warm-white);
+    border-radius: var(--radius);
+    padding: 28px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .modal h2 {
+    font-family: 'Playfair Display', serif;
+    color: var(--brown);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+
+  @media (max-width: 560px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-grid .full { grid-column: 1; }
+    .form-card, .modal { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🍴 Recipe Notes</h1>
+  <p>Your personal kitchen collection</p>
+</header>
+
+<main>
+  <!-- ADD FORM -->
+  <div class="form-card">
+    <h2>✦ Add a Recipe</h2>
+    <div class="form-grid">
+      <div class="full">
+        <label for="recipe_name">Recipe Name</label>
+        <input type="text" id="recipe_name" placeholder="e.g. Lemon Risotto">
+      </div>
+      <div class="full">
+        <label for="ingredients">Ingredients</label>
+        <textarea id="ingredients" placeholder="e.g. Arborio rice, lemon, Parmesan, butter, onion, white wine"></textarea>
+      </div>
+      <div>
+        <label for="cooking_time">Cooking Time</label>
+        <input type="text" id="cooking_time" placeholder="e.g. 30 min">
+      </div>
+      <div>
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty">
+          <option value="">Select…</option>
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" onclick="addRecipe()">＋ Add Recipe</button>
+      <button class="btn btn-secondary" onclick="clearForm()">Clear</button>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-section">
+    <h2>
+      All Recipes
+      <span class="count-badge" id="count-badge">0 recipes</span>
+    </h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Recipe Name</th>
+            <th>Ingredients</th>
+            <th>Time</th>
+            <th>Difficulty</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="recipes-body">
+          <tr class="loading-row"><td colspan="5">Loading recipes…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <h2>✦ Edit Recipe</h2>
+    <input type="hidden" id="edit_id">
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div>
+        <label for="edit_name">Recipe Name</label>
+        <input type="text" id="edit_name">
+      </div>
+      <div>
+        <label for="edit_ingredients">Ingredients</label>
+        <textarea id="edit_ingredients"></textarea>
+      </div>
+      <div>
+        <label for="edit_time">Cooking Time</label>
+        <input type="text" id="edit_time">
+      </div>
+      <div>
+        <label for="edit_difficulty">Difficulty</label>
+        <select id="edit_difficulty">
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  const APP_ID = 'c6941c21-2ee6-4d27-a540-6a257ec6dc41';
+  const API_TOKEN = 'app_1ba0982f4c7e398f4ba0a3cc0f307b041a93100cb63efd3b';
+  const BASE = `https://easydata.is/apps/c6941c21-2ee6-4d27-a540-6a257ec6dc41/tables/recipes/rows`;
+
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${API_TOKEN}`
+  };
+
+  // ── TOAST ──
+  let toastTimer;
+  function toast(msg, type = 'success') {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = `show ${type}`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { el.className = ''; }, 3000);
+  }
+
+  // ── LOAD ──
+  async function loadRecipes() {
+    try {
+      const res = await fetch(BASE, { headers });
+      const data = await res.json();
+      renderTable(data.rows || []);
+    } catch (e) {
+      toast('Failed to load recipes', 'error');
+    }
+  }
+
+  function diffBadge(d) {
+    const cls = { Easy: 'badge-easy', Medium: 'badge-medium', Hard: 'badge-hard' }[d] || 'badge-medium';
+    return `<span class="badge ${cls}">${d || '—'}</span>`;
+  }
+
+  function renderTable(rows) {
+    const badge = document.getElementById('count-badge');
+    badge.textContent = `${rows.length} recipe${rows.length !== 1 ? 's' : ''}`;
+    const tbody = document.getElementById('recipes-body');
+    if (!rows.length) {
+      tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state"><div class="icon">🥄</div><p>No recipes yet. Add your first one above!</p></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = rows.map(r => `
+      <tr>
+        <td class="td-name">${esc(r.recipe_name)}</td>
+        <td class="td-ingredients">${esc(r.ingredients)}</td>
+        <td>${esc(r.cooking_time)}</td>
+        <td>${diffBadge(r.difficulty)}</td>
+        <td><div class="td-actions">
+          <button class="btn btn-edit" onclick="openEdit(${r.id}, ${JSON.stringify(r).replace(/"/g,'&quot;')})">✎ Edit</button>
+          <button class="btn btn-delete" onclick="deleteRecipe(${r.id})">✕ Delete</button>
+        </div></td>
+      </tr>`).join('');
+  }
+
+  function esc(s) {
+    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // ── ADD ──
+  async function addRecipe() {
+    const name = document.getElementById('recipe_name').value.trim();
+    const ingredients = document.getElementById('ingredients').value.trim();
+    const cooking_time = document.getElementById('cooking_time').value.trim();
+    const difficulty = document.getElementById('difficulty').value;
+    if (!name || !ingredients || !cooking_time || !difficulty) {
+      toast('Please fill in all fields', 'error'); return;
+    }
+    try {
+      const res = await fetch(BASE, {
+        method: 'POST', headers,
+        body: JSON.stringify({ recipe_name: name, ingredients, cooking_time, difficulty })
+      });
+      if (!res.ok) throw new Error();
+      toast('Recipe added!');
+      clearForm();
+      loadRecipes();
+    } catch { toast('Failed to add recipe', 'error'); }
+  }
+
+  function clearForm() {
+    ['recipe_name','ingredients','cooking_time'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('difficulty').value = '';
+  }
+
+  // ── DELETE ──
+  async function deleteRecipe(id) {
+    if (!confirm('Delete this recipe?')) return;
+    try {
+      const res = await fetch(`${BASE}/${id}`, { method: 'DELETE', headers });
+      if (!res.ok) throw new Error();
+      toast('Recipe deleted');
+      loadRecipes();
+    } catch { toast('Failed to delete', 'error'); }
+  }
+
+  // ── EDIT MODAL ──
+  function openEdit(id, row) {
+    document.getElementById('edit_id').value = id;
+    document.getElementById('edit_name').value = row.recipe_name || '';
+    document.getElementById('edit_ingredients').value = row.ingredients || '';
+    document.getElementById('edit_time').value = row.cooking_time || '';
+    document.getElementById('edit_difficulty').value = row.difficulty || 'Easy';
+    document.getElementById('edit-modal').classList.add('open');
+  }
+  function closeModal() {
+    document.getElementById('edit-modal').classList.remove('open');
+  }
+  document.getElementById('edit-modal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeModal();
+  });
+
+  async function saveEdit() {
+    const id = document.getElementById('edit_id').value;
+    const data = {
+      recipe_name: document.getElementById('edit_name').value.trim(),
+      ingredients: document.getElementById('edit_ingredients').value.trim(),
+      cooking_time: document.getElementById('edit_time').value.trim(),
+      difficulty: document.getElementById('edit_difficulty').value
+    };
+    if (!data.recipe_name || !data.ingredients || !data.cooking_time || !data.difficulty) {
+      toast('Please fill in all fields', 'error'); return;
+    }
+    try {
+      const res = await fetch(`${BASE}/${id}`, {
+        method: 'PUT', headers, body: JSON.stringify(data)
+      });
+      if (!res.ok) throw new Error();
+      toast('Recipe updated!');
+      closeModal();
+      loadRecipes();
+    } catch { toast('Failed to update recipe', 'error'); }
+  }
+
+  // Init
+  loadRecipes();
+</script>
+</body>
+</html>

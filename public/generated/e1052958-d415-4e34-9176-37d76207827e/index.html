@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Classroom Exit Ticket</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f6f7f9; color: #222; }
+    main { max-width: 860px; margin: 0 auto; padding: 24px; }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    h2 { margin-top: 28px; font-size: 20px; }
+    .panel { background: white; border: 1px solid #ddd; border-radius: 8px; padding: 18px; margin-top: 18px; }
+    label { display: block; margin: 14px 0 6px; font-weight: bold; }
+    input, textarea { width: 100%; box-sizing: border-box; font: inherit; padding: 10px; border: 1px solid #bbb; border-radius: 6px; }
+    textarea { min-height: 90px; resize: vertical; }
+    button { margin-top: 14px; padding: 10px 14px; border: 0; border-radius: 6px; background: #2457c5; color: white; font-weight: bold; cursor: pointer; }
+    button.secondary { background: #555; margin-left: 8px; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    .message { min-height: 22px; margin-top: 12px; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; background: white; }
+    th, td { border-bottom: 1px solid #ddd; text-align: left; padding: 10px; vertical-align: top; }
+    th { background: #eef1f5; }
+    .empty { color: #666; padding: 12px 0; }
+    @media (max-width: 600px) { main { padding: 16px; } th, td { font-size: 14px; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Classroom Exit Ticket</h1>
+    <p>Students submit one short answer. The teacher can refresh the table to see all responses.</p>
+
+    <section class="panel">
+      <h2>Student Submission</h2>
+      <form id="ticketForm">
+        <label for="studentName">Name</label>
+        <input id="studentName" name="studentName" autocomplete="name" required>
+        <label for="answer">Short answer</label>
+        <textarea id="answer" name="answer" maxlength="500" required></textarea>
+        <button id="submitBtn" type="submit">Submit Exit Ticket</button>
+        <div id="formMessage" class="message" aria-live="polite"></div>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Teacher View</h2>
+      <button id="refreshBtn" type="button">Refresh Submissions</button>
+      <div id="tableWrap" class="empty">No submissions loaded yet.</div>
+    </section>
+  </main>
+
+  <script>
+    const appId = 'e1052958-d415-4e34-9176-37d76207827e';
+    const apiToken = 'app_76addd1664cd785abdd7c40b14303698cb727242b0f0da2f';
+    const rowsUrl = `https://easydata.is/apps/${appId}/tables/submissions/rows`;
+    const headers = { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiToken}` };
+
+    const form = document.getElementById('ticketForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const formMessage = document.getElementById('formMessage');
+    const tableWrap = document.getElementById('tableWrap');
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
+    }
+
+    async function loadSubmissions() {
+      tableWrap.textContent = 'Loading submissions...';
+      try {
+        const res = await fetch(rowsUrl, { headers });
+        if (!res.ok) throw new Error('Could not load submissions.');
+        const data = await res.json();
+        const rows = Array.isArray(data) ? data : (data.rows || []);
+        if (!rows.length) {
+          tableWrap.className = 'empty';
+          tableWrap.textContent = 'No submissions yet.';
+          return;
+        }
+        tableWrap.className = '';
+        tableWrap.innerHTML = `<table><thead><tr><th>Name</th><th>Answer</th></tr></thead><tbody>${rows.map(row => `<tr><td>${escapeHtml(row.student_name)}</td><td>${escapeHtml(row.answer)}</td></tr>`).join('')}</tbody></table>`;
+      } catch (err) {
+        tableWrap.className = 'empty';
+        tableWrap.textContent = err.message;
+      }
+    }
+
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      formMessage.textContent = '';
+      submitBtn.disabled = true;
+      const student_name = document.getElementById('studentName').value.trim();
+      const answer = document.getElementById('answer').value.trim();
+      if (!student_name || !answer) {
+        formMessage.textContent = 'Please enter your name and answer.';
+        submitBtn.disabled = false;
+        return;
+      }
+      try {
+        const res = await fetch(rowsUrl, { method: 'POST', headers, body: JSON.stringify({ student_name, answer }) });
+        if (!res.ok) throw new Error('Submission failed. Please try again.');
+        form.reset();
+        formMessage.textContent = 'Submitted. Thank you.';
+        await loadSubmissions();
+      } catch (err) {
+        formMessage.textContent = err.message;
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    refreshBtn.addEventListener('click', loadSubmissions);
+    loadSubmissions();
+  </script>
+</body>
+</html>

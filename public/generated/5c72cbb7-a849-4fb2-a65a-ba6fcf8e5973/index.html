@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photo Upload Check</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --border: #2e2e2e;
+    --green: #00e676;
+    --green-dim: #00e67622;
+    --red: #ff5252;
+    --red-dim: #ff525222;
+    --text: #e8e8e8;
+    --muted: #888;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 36px 32px;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .title {
+    font-family: var(--mono);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--green);
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 28px;
+    font-family: var(--mono);
+  }
+
+  /* DROP ZONE */
+  .drop-zone {
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    margin-bottom: 16px;
+  }
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--green);
+    background: var(--green-dim);
+  }
+  .drop-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+  .drop-icon { font-size: 2rem; margin-bottom: 10px; }
+  .drop-label {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .drop-label strong { color: var(--text); font-weight: 500; }
+  .file-types {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--green);
+    margin-top: 6px;
+  }
+
+  /* SELECTED FILE */
+  #file-info {
+    display: none;
+    background: #111;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 16px;
+    word-break: break-all;
+  }
+  #file-info span { color: var(--text); }
+
+  /* BUTTON */
+  .upload-btn {
+    width: 100%;
+    padding: 13px;
+    background: var(--green);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    letter-spacing: 0.5px;
+  }
+  .upload-btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+  .upload-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+  /* PROGRESS */
+  #progress-wrap {
+    display: none;
+    margin-top: 14px;
+    background: #111;
+    border-radius: 6px;
+    overflow: hidden;
+    height: 6px;
+  }
+  #progress-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--green);
+    transition: width 0.3s ease;
+    border-radius: 6px;
+  }
+
+  /* RESULT */
+  #result {
+    display: none;
+    margin-top: 20px;
+    border-radius: 10px;
+    padding: 16px;
+    border: 1px solid;
+  }
+  #result.success { border-color: var(--green); background: var(--green-dim); }
+  #result.error   { border-color: var(--red);   background: var(--red-dim); }
+
+  .result-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .success .result-label { color: var(--green); }
+  .error   .result-label { color: var(--red); }
+
+  #result-message { font-size: 0.85rem; color: var(--muted); margin-bottom: 10px; }
+
+  #url-box {
+    display: none;
+    background: #0a0a0a;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--green);
+    word-break: break-all;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  #url-box:hover { background: #111; }
+  #url-box::before {
+    content: '🔗 ';
+    font-style: normal;
+  }
+
+  #preview-img {
+    display: none;
+    width: 100%;
+    max-height: 260px;
+    object-fit: contain;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-top: 4px;
+    background: #000;
+  }
+
+  .copy-hint {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    margin-bottom: 8px;
+  }
+
+  footer {
+    margin-top: 28px;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: #444;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="title">▲ Photo Upload Check</div>
+  <div class="subtitle">EasyData · upload endpoint test</div>
+
+  <div class="drop-zone" id="drop-zone">
+    <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+    <div class="drop-icon">📷</div>
+    <div class="drop-label">
+      <strong>Click to choose</strong> or drag & drop<br>
+    </div>
+    <div class="file-types">JPG · PNG · WEBP</div>
+  </div>
+
+  <div id="file-info">Selected: <span id="file-name"></span></div>
+
+  <button class="upload-btn" id="upload-btn" disabled onclick="uploadFile()">Upload Image</button>
+
+  <div id="progress-wrap"><div id="progress-bar"></div></div>
+
+  <div id="result">
+    <div class="result-label" id="result-label"></div>
+    <div id="result-message"></div>
+    <div class="copy-hint" id="copy-hint"></div>
+    <div id="url-box" onclick="copyUrl(this)"></div>
+    <img id="preview-img" alt="Uploaded image preview">
+  </div>
+</div>
+
+<footer>appId: 5c72cbb7-a849-4fb2-a65a-ba6fcf8e5973</footer>
+
+<script>
+  const APP_ID    = '5c72cbb7-a849-4fb2-a65a-ba6fcf8e5973';
+  const API_TOKEN = 'app_470b4dd0da14352caf04f56c98609f3a5849e6844b0f6c34';
+  const UPLOAD_URL = 'https://easydata.is/apps/5c72cbb7-a849-4fb2-a65a-ba6fcf8e5973/files';
+  const ALLOWED = ['image/jpeg', 'image/png', 'image/webp'];
+
+  let selectedFile = null;
+
+  const fileInput   = document.getElementById('file-input');
+  const dropZone    = document.getElementById('drop-zone');
+  const fileInfo    = document.getElementById('file-info');
+  const fileName    = document.getElementById('file-name');
+  const uploadBtn   = document.getElementById('upload-btn');
+  const progressWrap = document.getElementById('progress-wrap');
+  const progressBar = document.getElementById('progress-bar');
+  const result      = document.getElementById('result');
+  const resultLabel = document.getElementById('result-label');
+  const resultMsg   = document.getElementById('result-message');
+  const urlBox      = document.getElementById('url-box');
+  const previewImg  = document.getElementById('preview-img');
+  const copyHint    = document.getElementById('copy-hint');
+
+  // Drag & drop
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    const f = e.dataTransfer.files[0];
+    if (f) handleFile(f);
+  });
+
+  fileInput.addEventListener('change', () => {
+    if (fileInput.files[0]) handleFile(fileInput.files[0]);
+  });
+
+  function handleFile(f) {
+    if (!ALLOWED.includes(f.type)) {
+      showResult('error', '✕ Invalid file type', `"${f.name}" is not a JPG, PNG, or WebP image. Please choose a valid image file.`);
+      uploadBtn.disabled = true;
+      selectedFile = null;
+      return;
+    }
+    selectedFile = f;
+    fileName.textContent = `${f.name} (${(f.size / 1024).toFixed(1)} KB)`;
+    fileInfo.style.display = 'block';
+    uploadBtn.disabled = false;
+    // Reset result
+    result.style.display = 'none';
+    progressWrap.style.display = 'none';
+    progressBar.style.width = '0%';
+  }
+
+  async function uploadFile() {
+    if (!selectedFile) return;
+
+    uploadBtn.disabled = true;
+    progressWrap.style.display = 'block';
+    progressBar.style.width = '30%';
+    result.style.display = 'none';
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+
+    try {
+      progressBar.style.width = '60%';
+
+      const res = await fetch(UPLOAD_URL, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${API_TOKEN}` },
+        body: formData
+      });
+
+      progressBar.style.width = '90%';
+
+      let data;
+      const contentType = res.headers.get('content-type') || '';
+      if (contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(`Unexpected response (HTTP ${res.status}): ${text.slice(0, 200)}`);
+      }
+
+      progressBar.style.width = '100%';
+
+      if (!res.ok) {
+        throw new Error(data.error || data.message || `HTTP ${res.status}`);
+      }
+
+      // Find the URL in the response
+      const fileUrl = data.url || data.fileUrl || data.file_url || data.path || (data.file && data.file.url) || null;
+
+      if (fileUrl) {
+        const absolute = fileUrl.startsWith('http') ? fileUrl : `https://easydata.is${fileUrl}`;
+        showResult('success', '✓ Upload successful', `Your image was uploaded successfully.`);
+        copyHint.textContent = 'Click the URL below to copy it:';
+        urlBox.textContent = absolute;
+        urlBox.dataset.url = absolute;
+        urlBox.style.display = 'block';
+        previewImg.src = absolute;
+        previewImg.style.display = 'block';
+        previewImg.onerror = () => {
+          previewImg.style.display = 'none';
+        };
+      } else {
+        // Upload succeeded but no URL field — show raw response
+        showResult('success', '✓ Upload successful', 'Response received (no URL field returned):');
+        copyHint.textContent = 'Raw response:';
+        urlBox.textContent = JSON.stringify(data, null, 2);
+        urlBox.style.display = 'block';
+      }
+
+    } catch (err) {
+      progressBar.style.width = '100%';
+      progressBar.style.background = '#ff5252';
+      showResult('error', '✕ Upload failed', `Error: ${err.message}`);
+    } finally {
+      uploadBtn.disabled = false;
+      setTimeout(() => {
+        progressWrap.style.display = 'none';
+        progressBar.style.width = '0%';
+        progressBar.style.background = '';
+      }, 800);
+    }
+  }
+
+  function showResult(type, label, message) {
+    result.className = type;
+    result.style.display = 'block';
+    resultLabel.textContent = label;
+    resultMsg.textContent = message;
+    if (type === 'error') {
+      urlBox.style.display = 'none';
+      previewImg.style.display = 'none';
+      copyHint.textContent = '';
+    }
+  }
+
+  function copyUrl(el) {
+    const url = el.dataset.url || el.textContent;
+    navigator.clipboard.writeText(url).then(() => {
+      const orig = el.textContent;
+      el.textContent = '✓ Copied to clipboard!';
+      setTimeout(() => { el.textContent = orig; }, 1800);
+    }).catch(() => {
+      window.open(url, '_blank');
+    });
+  }
+</script>
+</body>
+</html>

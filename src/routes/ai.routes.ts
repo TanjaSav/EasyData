@@ -1,5 +1,8 @@
-import fs from "fs";
-import path from "path";
+import {
+  getGeneratedAppFullUrl,
+  getPublicBaseUrl,
+  writeGeneratedApp,
+} from "../services/generated-app.service.js";
 import { spawn } from "child_process";
 import { Router } from "express";
 import { z } from "zod";
@@ -28,7 +31,7 @@ type CodexUsage = {
 };
 
 function getBaseUrl() {
-  return process.env.PUBLIC_BASE_URL || "https://easydata.is";
+  return getPublicBaseUrl();
 }
 
 function getMcpUrl() {
@@ -75,16 +78,6 @@ function extractJsonObject(text: string) {
   }
 }
 
-// Persists each generated single-file app under a stable public URL.
-function writeGeneratedApp(appId: string, html: string) {
-  const outputDir = path.join("public", "generated", appId);
-  fs.mkdirSync(outputDir, { recursive: true });
-
-  const outputPath = path.join(outputDir, "index.html");
-  fs.writeFileSync(outputPath, html, "utf8");
-
-  return `/generated/${appId}/`;
-}
 
 // Reads Codex JSONL events and keeps only the final assistant message and usage.
 function extractCodexResult(stdout: string) {
@@ -250,8 +243,6 @@ router.post("/create-app", async (req, res) => {
     });
   }
 
-  const baseUrl = getBaseUrl();
-
   try {
     const codexResult = await runCodexCli(buildCodexPrompt(parsed.data.prompt));
     const generated = createAppResponseSchema.parse(extractJsonObject(codexResult.text));
@@ -270,7 +261,7 @@ router.post("/create-app", async (req, res) => {
       summary: generated.summary ?? "",
       schema: generated.schema ?? null,
       appUrl,
-      fullUrl: `${baseUrl}${appUrl}`,
+      fullUrl: getGeneratedAppFullUrl(appUrl),
       codexModel: getCodexModelLabel(),
       codexUsage: codexResult.usage ?? null,
     });

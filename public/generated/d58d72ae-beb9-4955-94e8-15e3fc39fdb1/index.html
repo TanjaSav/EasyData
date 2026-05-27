@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Photo Upload Check</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f0f4f8;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #1a202c;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 460px;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      color: #1a202c;
+    }
+
+    p.subtitle {
+      font-size: 0.9rem;
+      color: #718096;
+      margin-bottom: 1.75rem;
+    }
+
+    .drop-zone {
+      border: 2px dashed #cbd5e0;
+      border-radius: 12px;
+      padding: 2rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      background: #f7fafc;
+      position: relative;
+    }
+
+    .drop-zone:hover, .drop-zone.drag-over {
+      border-color: #4f46e5;
+      background: #eef2ff;
+    }
+
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .drop-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .drop-label {
+      font-size: 0.95rem;
+      color: #4a5568;
+    }
+
+    .drop-hint {
+      font-size: 0.78rem;
+      color: #a0aec0;
+      margin-top: 0.25rem;
+    }
+
+    .file-name {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      color: #4f46e5;
+      font-weight: 500;
+      min-height: 1.2em;
+    }
+
+    button#uploadBtn {
+      margin-top: 1.25rem;
+      width: 100%;
+      padding: 0.75rem;
+      background: #4f46e5;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+    }
+
+    button#uploadBtn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    button#uploadBtn:not(:disabled):hover {
+      background: #4338ca;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .result {
+      margin-top: 1.5rem;
+      display: none;
+    }
+
+    .result.visible { display: block; }
+
+    .result img {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #e2e8f0;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .url-box {
+      background: #f7fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 0.6rem 0.85rem;
+      font-size: 0.82rem;
+      word-break: break-all;
+      color: #2d3748;
+    }
+
+    .url-box a {
+      color: #4f46e5;
+      text-decoration: none;
+    }
+
+    .url-box a:hover { text-decoration: underline; }
+
+    .error-box {
+      margin-top: 1.25rem;
+      background: #fff5f5;
+      border: 1px solid #feb2b2;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.88rem;
+      color: #c53030;
+      display: none;
+    }
+
+    .error-box.visible { display: block; }
+
+    .success-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #276749;
+      background: #f0fff4;
+      border: 1px solid #9ae6b4;
+      border-radius: 20px;
+      padding: 3px 10px;
+      margin-bottom: 0.6rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📸 Photo Upload Check</h1>
+    <p class="subtitle">Select an image to test the EasyData upload endpoint.</p>
+
+    <div class="drop-zone" id="dropZone">
+      <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" />
+      <div class="drop-icon">🖼️</div>
+      <div class="drop-label">Click to choose a photo</div>
+      <div class="drop-hint">JPG, PNG, or WebP · max 10 MB</div>
+    </div>
+    <div class="file-name" id="fileName"></div>
+
+    <button id="uploadBtn" disabled>Upload Image</button>
+
+    <div class="error-box" id="errorBox"></div>
+
+    <div class="result" id="result">
+      <div class="success-badge">✅ Upload successful</div>
+      <img id="previewImg" src="" alt="Uploaded image preview" />
+      <div class="url-box">
+        <strong>File URL:</strong><br />
+        <a id="fileUrl" href="#" target="_blank" rel="noopener"></a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const APP_ID    = "d58d72ae-beb9-4955-94e8-15e3fc39fdb1";
+    const API_TOKEN = "app_7b22a4ca8548940dc447461c5cdf34d6d2ab6f45d99948ac";
+    const UPLOAD_URL = "https://easydata.is/apps/d58d72ae-beb9-4955-94e8-15e3fc39fdb1/files";
+
+    const fileInput  = document.getElementById("fileInput");
+    const dropZone   = document.getElementById("dropZone");
+    const fileName   = document.getElementById("fileName");
+    const uploadBtn  = document.getElementById("uploadBtn");
+    const result     = document.getElementById("result");
+    const previewImg = document.getElementById("previewImg");
+    const fileUrl    = document.getElementById("fileUrl");
+    const errorBox   = document.getElementById("errorBox");
+
+    const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+    const MAX_BYTES = 10 * 1024 * 1024;
+
+    let selectedFile = null;
+
+    function setFile(file) {
+      if (!file) return;
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        showError("Only JPG, PNG, or WebP images are allowed.");
+        return;
+      }
+      if (file.size > MAX_BYTES) {
+        showError("File is too large. Please choose an image under 10 MB.");
+        return;
+      }
+      selectedFile = file;
+      fileName.textContent = `Selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+      uploadBtn.disabled = false;
+      hideError();
+      result.classList.remove("visible");
+    }
+
+    fileInput.addEventListener("change", () => setFile(fileInput.files[0]));
+
+    dropZone.addEventListener("dragover", (e) => { e.preventDefault(); dropZone.classList.add("drag-over"); });
+    dropZone.addEventListener("dragleave", () => dropZone.classList.remove("drag-over"));
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.classList.remove("drag-over");
+      setFile(e.dataTransfer.files[0]);
+    });
+
+    uploadBtn.addEventListener("click", async () => {
+      if (!selectedFile) return;
+
+      uploadBtn.disabled = true;
+      uploadBtn.innerHTML = '<span class="spinner"></span>Uploading…';
+      hideError();
+      result.classList.remove("visible");
+
+      try {
+        const fd = new FormData();
+        fd.append("file", selectedFile);
+
+        const res = await fetch(UPLOAD_URL, {
+          method: "POST",
+          headers: { "Authorization": `Bearer ${API_TOKEN}` },
+          body: fd,
+        });
+
+        const json = await res.json().catch(() => null);
+
+        if (!res.ok) {
+          const msg = json?.error || json?.message || `Server returned ${res.status}`;
+          throw new Error(msg);
+        }
+
+        // Try common response shapes
+        const url = json?.url || json?.fileUrl || json?.file_url || json?.path || json?.data?.url;
+        if (!url) throw new Error("Upload succeeded but no file URL was returned. Raw response: " + JSON.stringify(json));
+
+        const fullUrl = url.startsWith("http") ? url : `https://easydata.is${url}`;
+
+        previewImg.src = fullUrl;
+        fileUrl.href = fullUrl;
+        fileUrl.textContent = fullUrl;
+        result.classList.add("visible");
+      } catch (err) {
+        showError("Upload failed: " + (err.message || "Unknown error."));
+      } finally {
+        uploadBtn.disabled = false;
+        uploadBtn.textContent = "Upload Image";
+      }
+    });
+
+    function showError(msg) {
+      errorBox.textContent = msg;
+      errorBox.classList.add("visible");
+    }
+
+    function hideError() {
+      errorBox.textContent = "";
+      errorBox.classList.remove("visible");
+    }
+  </script>
+</body>
+</html>

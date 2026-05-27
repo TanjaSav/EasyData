@@ -4,6 +4,10 @@ import { pathToFileURL } from "node:url";
 import { z } from "zod";
 import { createApp, listApps } from "../services/app.service.js";
 import {
+  getGeneratedAppFullUrl,
+  writeGeneratedApp,
+} from "../services/generated-app.service.js";
+import {
   getAppSchema,
   createTable,
   alterTable,
@@ -311,6 +315,42 @@ export function createEasyDataMcpServer() {
                 method: "POST",
                 fieldName: "file",
                 note: "Local storage mode. Upload using multipart/form-data.",
+              },
+              null,
+              2
+            ),
+          },
+        ],
+      };
+    }
+  );
+
+  // Exposes a tool that publishes Claude-generated single-file HTML.
+  // Claude can call this after creating an app and tables, then return fullUrl.
+  server.tool(
+    "publish_app",
+    {
+      appId: z
+        .string()
+        .uuid()
+        .describe("The EasyData app id returned by create_app"),
+      html: z
+        .string()
+        .min(1)
+        .describe("A complete single-file HTML app to publish as index.html"),
+    },
+    async ({ appId, html }) => {
+      const appUrl = writeGeneratedApp(appId, html);
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(
+              {
+                appId,
+                appUrl,
+                fullUrl: getGeneratedAppFullUrl(appUrl),
               },
               null,
               2
