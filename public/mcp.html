@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Learn how to connect Model Context Protocol (MCP) servers to Claude using the graphical Connectors interface. Visual step-by-step guide with screenshot slides." />
+  <title>EasyData | Connecting MCP to Claude Guide</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* Reset and Base Styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    :root {
+      --bg-dark: #07090e;
+      --panel-dark: #0f131a;
+      --panel-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent-green: #10b981;
+      --accent-blue: #3b82f6;
+      --accent-purple: #8b5cf6;
+      --gradient-primary: linear-gradient(135deg, #10b981 0%, #3b82f6 50%, #8b5cf6 100%);
+      --glow-purple: rgba(139, 92, 246, 0.15);
+      --font-heading: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'Fira Code', monospace;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Background Glow Effects */
+    .glow-blob {
+      position: absolute;
+      width: 450px;
+      height: 450px;
+      border-radius: 50%;
+      filter: blur(140px);
+      z-index: -1;
+      opacity: 0.45;
+      pointer-events: none;
+    }
+    .glow-1 {
+      top: -100px;
+      right: -50px;
+      background: rgba(59, 130, 246, 0.25);
+    }
+    .glow-2 {
+      top: 500px;
+      left: -150px;
+      background: rgba(139, 92, 246, 0.2);
+    }
+    .glow-3 {
+      bottom: 100px;
+      right: 5%;
+      background: rgba(16, 185, 129, 0.15);
+    }
+
+    /* Navigation */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(7, 9, 14, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--panel-border);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text-main);
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.35rem;
+      transition: transform 0.2s ease;
+    }
+
+    .logo:hover {
+      transform: translateY(-1px);
+    }
+
+    .logo-badge {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: var(--text-main);
+      color: var(--bg-dark);
+      font-weight: 900;
+      font-size: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-main);
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.06);
+      padding: 0.45rem 1.1rem;
+      border-radius: 6px;
+      border: 1px solid var(--panel-border);
+      font-weight: 600 !important;
+      transition: all 0.2s ease;
+    }
+
+    .btn-nav:hover {
+      background: var(--text-main);
+      color: var(--bg-dark) !important;
+      border-color: var(--text-main);
+    }
+
+    /* Main Container */
+    main {
+      max-width: 1200px;
+      margin: 7.5rem auto 4rem;
+      padding: 0 2rem;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .badge-mcp {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #34d399;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: 3.5rem;
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* Steps Layout Container */
+    .steps-container {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 2rem;
+      margin-bottom: 4rem;
+      background: var(--panel-dark);
+      border-radius: 16px;
+      border: 1px solid var(--panel-border);
+      padding: 1.5rem;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+      min-height: 520px;
+    }
+
+    @media (max-width: 968px) {
+      .steps-container {
+        grid-template-columns: 1fr;
+        padding: 1.25rem;
+      }
+    }
+
+    /* Left Sidebar: Steps Menu */
+    .steps-menu {
+      border-right: 1px solid var(--panel-border);
+      padding-right: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    @media (max-width: 968px) {
+      .steps-menu {
+        border-right: none;
+        border-bottom: 1px solid var(--panel-border);
+        padding-right: 0;
+        padding-bottom: 1rem;
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        max-height: none;
+      }
+    }
+
+    .step-item-btn {
+      background: none;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      text-align: left;
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: var(--font-heading);
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    @media (max-width: 968px) {
+      .step-item-btn {
+        width: auto;
+        flex-shrink: 0;
+        padding: 0.5rem 0.85rem;
+      }
+    }
+
+    .step-item-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .step-item-btn.active {
+      color: var(--accent-green);
+      background: rgba(16, 185, 129, 0.08);
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .step-number {
+      font-weight: 800;
+      font-size: 0.95rem;
+      display: inline-grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      font-family: var(--font-mono);
+      transition: all 0.2s ease;
+    }
+
+    .step-item-btn.active .step-number {
+      background: var(--accent-green);
+      color: #fff;
+    }
+
+    .step-title-text {
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    /* Right Side: Showcase Panel */
+    .showcase-panel {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 1100px) {
+      .showcase-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Screenshot Box Mockup */
+    .mockup-frame {
+      background: #040609;
+      border-radius: 12px;
+      border: 1px solid var(--panel-border);
+      padding: 0.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mockup-header {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      margin-bottom: 0.5rem;
+    }
+
+    .mockup-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .mockup-dot.red { background: #ef4444; }
+    .mockup-dot.yellow { background: #f59e0b; }
+    .mockup-dot.green { background: #10b981; }
+
+    .mockup-title {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      margin-left: 0.5rem;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .mockup-image-container {
+      border-radius: 6px;
+      overflow: hidden;
+      background: #07090e;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.02);
+      height: 350px;
+    }
+
+    .mockup-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      opacity: 0;
+      transition: opacity 0.2s ease, transform 0.3s ease;
+      transform: translateY(4px);
+    }
+
+    .mockup-img.loaded {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Explanations & Details Column */
+    .step-details-column {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      min-height: 370px;
+    }
+
+    .step-desc-wrapper {
+      margin-bottom: 1rem;
+    }
+
+    .step-desc-title {
+      font-family: var(--font-heading);
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
+      line-height: 1.25;
+    }
+
+    .step-desc-text {
+      color: var(--text-muted);
+      font-size: 0.925rem;
+      line-height: 1.5;
+    }
+
+    /* Interactive Box (URLs or Prompts) */
+    .interactive-element-box {
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      padding: 0.85rem;
+      margin-top: 0.75rem;
+      display: none;
+    }
+
+    .interactive-element-box.visible {
+      display: block;
+    }
+
+    .code-box-container {
+      position: relative;
+      border-radius: 6px;
+      background: #05070a;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+
+    .code-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.02);
+      padding: 0.3rem 0.75rem;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .btn-copy-code {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--text-muted);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.65rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-copy-code:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-main);
+    }
+
+    .code-box {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      padding: 0.75rem;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+      color: #60a5fa;
+      line-height: 1.4;
+    }
+
+    /* Slider Controls */
+    .slider-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--panel-border);
+      padding-top: 1rem;
+      margin-top: auto;
+    }
+
+    .nav-arrow-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--panel-border);
+      color: var(--text-main);
+      padding: 0.45rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    .nav-arrow-btn:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-arrow-btn:disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+    }
+
+    .nav-dots {
+      display: flex;
+      gap: 0.4rem;
+    }
+
+    .nav-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nav-dot.active {
+      background: var(--accent-green);
+      transform: scale(1.2);
+    }
+
+    /* Info Grid */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 5rem;
+    }
+
+    @media (max-width: 768px) {
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .info-card {
+      background: var(--panel-dark);
+      border-radius: 12px;
+      border: 1px solid var(--panel-border);
+      padding: 1.5rem;
+    }
+
+    .info-card h4 {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .info-card.paths h4 { color: #10b981; }
+    .info-card.trouble h4 { color: #f59e0b; }
+
+    .info-card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .code-tag {
+      font-family: var(--font-mono);
+      background: rgba(255,255,255,0.04);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: #f3f4f6;
+      font-size: 0.8rem;
+      word-break: break-all;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--panel-border);
+      padding: 2rem 0;
+      text-align: center;
+      background: rgba(0,0,0,0.25);
+    }
+
+    footer p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Decorative Glow Blobs -->
+  <div class="glow-blob glow-1"></div>
+  <div class="glow-blob glow-2"></div>
+  <div class="glow-blob glow-3"></div>
+
+  <!-- Header / Navigation -->
+  <header>
+    <div class="nav-container">
+      <a class="logo" href="/">
+        <span class="logo-badge">E</span>
+        <span>EasyData</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#quick-paths" id="nav-paths">Connection Rules</a>
+        <a href="#troubleshooting" id="nav-trouble">Troubleshooting</a>
+        <a class="btn-nav" href="/" id="nav-back">Back to EasyData</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="badge-mcp">Claude GUI Connectors</div>
+      <h1 id="hero-title">Connect MCP via Claude Settings</h1>
+      <p id="hero-desc">Follow the steps below to configure a custom database connection directly within your Claude settings interface using remote MCP URLs.</p>
+    </section>
+
+    <!-- Steps Layout Section -->
+    <section class="steps-container" id="visual-guide">
+      
+      <!-- Left Step Navigation Sidebar -->
+      <div class="steps-menu" role="tablist" aria-label="Walkthrough steps">
+        <!-- Javascript will generate buttons here dynamically -->
+      </div>
+
+      <!-- Right Step Showcase Area -->
+      <div class="showcase-panel">
+        
+        <!-- Mockup Display Frame -->
+        <div class="mockup-frame">
+          <div class="mockup-header">
+            <span class="mockup-dot red"></span>
+            <span class="mockup-dot yellow"></span>
+            <span class="mockup-dot green"></span>
+            <span class="mockup-title" id="mockup-title-text">1-open-claude.png - Claude Connectors</span>
+          </div>
+          <div class="mockup-image-container">
+            <img src="assets/Screenshot-claude-mcp/1-open-claude.png" alt="Setup Screenshot" class="mockup-img" id="walkthrough-image" />
+          </div>
+        </div>
+
+        <!-- Description Details Section -->
+        <div class="step-details-column">
+          <div class="step-desc-wrapper">
+            <h2 class="step-desc-title" id="step-desc-title">Step 1</h2>
+            <p class="step-desc-text" id="step-desc-text">Description</p>
+
+            <!-- Dynamic Interactive Copyable Blocks -->
+            <div class="interactive-element-box" id="url-copy-box">
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">EasyData Remote URL:</span>
+              <div class="code-box-container">
+                <div class="code-box-header">
+                  <span>Connection URL</span>
+                  <button class="btn-copy-code" id="btn-copy-url" onclick="copyText('https://easydata.is/mcp', 'btn-copy-url')">Copy URL</button>
+                </div>
+                <div class="code-box" id="url-content">https://easydata.is/mcp</div>
+              </div>
+            </div>
+
+            <div class="interactive-element-box" id="prompt-copy-box">
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Sample Prompt to Activate:</span>
+              <div class="code-box-container">
+                <div class="code-box-header">
+                  <span>Chat Prompt</span>
+                  <button class="btn-copy-code" id="btn-copy-prompt" onclick="copyText('Use EasyData MCP. Create a simple table called workouts with columns: exercise_name TEXT, duration_minutes INTEGER.', 'btn-copy-prompt')">Copy Prompt</button>
+                </div>
+                <div class="code-box" style="color: #34d399;" id="prompt-content">Use EasyData MCP. Create a simple table called workouts with columns: exercise_name TEXT, duration_minutes INTEGER.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Interactive Sliders Nav -->
+          <div class="slider-nav">
+            <button class="nav-arrow-btn" id="btn-prev" onclick="changeStep(-1)" disabled>
+              ← Prev
+            </button>
+            
+            <div class="nav-dots" id="dots-container">
+              <!-- Dynamic Dots generated in JS -->
+            </div>
+
+            <button class="nav-arrow-btn" id="btn-next" onclick="changeStep(1)">
+              Next →
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Support Callout Grid -->
+    <section class="info-grid">
+      <!-- Path Lookup Card -->
+      <div class="info-card paths" id="quick-paths">
+        <h4><span>🔌</span> Hosted vs Local MCP</h4>
+        <p><strong>Cloud URLs (Connectors GUI):</strong> Ideal for hosted environments. Claude's cloud models connect directly via HTTP/SSE. The URL must be public and secure: <span class="code-tag">https://easydata.is/mcp</span></p>
+        <p><strong>Local stdio (Config File):</strong> Ideal for local-only scripts. Requires setting up command hooks in the local configuration JSON files.</p>
+      </div>
+
+      <!-- Troubleshooting Info Card -->
+      <div class="info-card trouble" id="troubleshooting">
+        <h4><span>⚠️</span> Integration Tips</h4>
+        <p><strong>Explicit Activation:</strong> When starting a new conversation with Claude, state clearly: <code>"Use the EasyData MCP connector"</code> to ensure Claude binds the connection.</p>
+        <p><strong>Permission Prompts:</strong> Claude will ask for explicit confirmation before reading or writing data. Choose **Always Allow** to bypass repeated clicks.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Section -->
+  <footer>
+    <div class="nav-container" style="justify-content: center;">
+      <p>&copy; 2026 EasyData. Supporting open-source Model Context Protocol standards.</p>
+    </div>
+  </footer>
+
+  <script>
+    // New visual steps mapping exactly to:
+    // 1-open-claude.png, 2-click-customize-connectors.png, 3-click-connectors.png, 4-click-plus.png, 
+    // 5-click-add-custom-connector.png, 6-give-name.png, 7-insert-url.png, 8-add.png, 
+    // 9-see-new-mcp.png, 10-refresh-tools-list.png
+    const steps = [
+      {
+        number: 1,
+        title: "Open Claude",
+        imageName: "1-open-claude.png",
+        heading: "1. Open the Claude Application",
+        text: "Launch the Claude Desktop client or sign in to Claude in your browser. Locate the chat box where your profile actions reside.",
+        interactive: null
+      },
+      {
+        number: 2,
+        title: "Click Customize",
+        imageName: "2-click-customize-connectors.png",
+        heading: "2. Open settings to find Connectors",
+        text: "Click the menu or customization button located in the <strong>upper-left corner</strong> of the window to open settings so you can get to connectors.",
+        interactive: null
+      },
+      {
+        number: 3,
+        title: "Open Connectors",
+        imageName: "3-click-connectors.png",
+        heading: "3. Go to the Connectors Panel",
+        text: "Select **Connectors** from the popover menu. This opens the main integrations manager panel.",
+        interactive: null
+      },
+      {
+        number: 4,
+        title: "Click Plus Icon",
+        imageName: "4-click-plus.png",
+        heading: "4. Create a New Integration",
+        text: "Locate the **+** (Plus) icon in the top-right corner of the Connectors overlay pane and click it.",
+        interactive: null
+      },
+      {
+        number: 5,
+        title: "Add Custom",
+        imageName: "5-click-add-custom-connector.png",
+        heading: "5. Select Add Custom Connector",
+        text: "Click the **Add Custom Connector** list item to open the custom URL configuration dialog.",
+        interactive: null
+      },
+      {
+        number: 6,
+        title: "Give a Name",
+        imageName: "6-give-name.png",
+        heading: "6. Label the Connector",
+        text: "Type a identifier name into the box, such as <code>EasyData</code>. This labels the server for your prompts.",
+        interactive: null
+      },
+      {
+        number: 7,
+        title: "Insert URL",
+        imageName: "7-insert-url.png",
+        heading: "7. Input the Remote Endpoint URL",
+        text: "Paste the public, secure endpoint URL in the server text field. Copy the EasyData URL below to paste it directly.",
+        interactive: "url"
+      },
+      {
+        number: 8,
+        title: "Click Add",
+        imageName: "8-add.png",
+        heading: "8. Complete the Registration",
+        text: "Click the **Add** button. Claude will contact the URL to negotiate connection handshakes and retrieve tool descriptions.",
+        interactive: null
+      },
+      {
+        number: 9,
+        title: "Enable Connector",
+        imageName: "9-see-new-mcp.png",
+        heading: "9. Enable the Connector",
+        text: "Toggle the switch next to the new <strong>EasyData</strong> connector to turn it on, enabling it for use in your chat conversations.",
+        interactive: null
+      },
+      {
+        number: 10,
+        title: "Refresh Tools",
+        imageName: "10-refresh-tools-list.png",
+        heading: "10. Refresh Tools if Missing",
+        text: "If any database tools are missing or do not show up right away in your chat, click on the <strong>three dots</strong> next to the connector name and select the refresh/reload action to update the tool list. Once loaded, start your prompt using the copyable test prompt below.",
+        interactive: "prompt"
+      }
+    ];
+
+    // Current step pointer
+    let currentStepIdx = 0;
+
+    // Load elements
+    const menuEl = document.querySelector('.steps-menu');
+    const dotsEl = document.getElementById('dots-container');
+    const imgEl = document.getElementById('walkthrough-image');
+    const imgTitleEl = document.getElementById('mockup-title-text');
+    const descTitleEl = document.getElementById('step-desc-title');
+    const descTextEl = document.getElementById('step-desc-text');
+    
+    const urlBoxEl = document.getElementById('url-copy-box');
+    const promptBoxEl = document.getElementById('prompt-copy-box');
+    
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+
+    // Initialize layout
+    function init() {
+      menuEl.innerHTML = '';
+      dotsEl.innerHTML = '';
+
+      // Generate buttons and dots
+      steps.forEach((step, idx) => {
+        // Button
+        const btn = document.createElement('button');
+        btn.className = `step-item-btn ${idx === 0 ? 'active' : ''}`;
+        btn.id = `btn-step-${idx}`;
+        btn.setAttribute('role', 'tab');
+        btn.setAttribute('aria-selected', idx === 0 ? 'true' : 'false');
+        btn.onclick = () => selectStep(idx);
+
+        const numSpan = document.createElement('span');
+        numSpan.className = 'step-number';
+        numSpan.textContent = step.number;
+
+        const textSpan = document.createElement('span');
+        textSpan.className = 'step-title-text';
+        textSpan.textContent = step.title;
+
+        btn.appendChild(numSpan);
+        btn.appendChild(textSpan);
+        menuEl.appendChild(btn);
+
+        // Dot
+        const dot = document.createElement('div');
+        dot.className = `nav-dot ${idx === 0 ? 'active' : ''}`;
+        dot.id = `nav-dot-${idx}`;
+        dot.onclick = () => selectStep(idx);
+        dotsEl.appendChild(dot);
+      });
+
+      // Load initial step
+      loadStep(0);
+    }
+
+    // Load step content
+    function loadStep(idx) {
+      const step = steps[idx];
+      currentStepIdx = idx;
+
+      // Handle active button state in sidebar
+      document.querySelectorAll('.step-item-btn').forEach((btn, i) => {
+        if (i === idx) {
+          btn.classList.add('active');
+          btn.setAttribute('aria-selected', 'true');
+          btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } else {
+          btn.classList.remove('active');
+          btn.setAttribute('aria-selected', 'false');
+        }
+      });
+
+      // Handle active dots
+      document.querySelectorAll('.nav-dot').forEach((dot, i) => {
+        if (i === idx) {
+          dot.classList.add('active');
+        } else {
+          dot.classList.remove('active');
+        }
+      });
+
+      // Fade out image, swap source, fade back in
+      imgEl.classList.remove('loaded');
+      setTimeout(() => {
+        imgEl.src = `assets/Screenshot-claude-mcp/${step.imageName}`;
+        imgEl.onload = () => {
+          imgEl.classList.add('loaded');
+        };
+      }, 100);
+
+      // Titles & Descriptions
+      imgTitleEl.textContent = `${step.imageName} - Claude Settings UI`;
+      descTitleEl.textContent = step.heading;
+      descTextEl.innerHTML = step.text;
+
+      // Interactive components visibility
+      urlBoxEl.classList.toggle('visible', step.interactive === 'url');
+      promptBoxEl.classList.toggle('visible', step.interactive === 'prompt');
+
+      // Handle disabled arrows
+      btnPrev.disabled = idx === 0;
+      btnNext.disabled = idx === steps.length - 1;
+    }
+
+    // Change step by delta (prev/next)
+    function changeStep(delta) {
+      const targetIdx = currentStepIdx + delta;
+      if (targetIdx >= 0 && targetIdx < steps.length) {
+        selectStep(targetIdx);
+      }
+    }
+
+    // Select specific step
+    function selectStep(idx) {
+      loadStep(idx);
+    }
+
+    // Copy to clipboard function
+    function copyText(text, btnId) {
+      navigator.clipboard.writeText(text).then(() => {
+        const copyBtn = document.getElementById(btnId);
+        const originalText = copyBtn.textContent;
+        copyBtn.textContent = 'Copied! ✓';
+        copyBtn.style.color = '#10b981';
+        copyBtn.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+        
+        setTimeout(() => {
+          copyBtn.textContent = originalText;
+          copyBtn.style.color = 'var(--text-muted)';
+          copyBtn.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+        }, 2000);
+      });
+    }
+
+    // Keyboard navigation (left/right arrows)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        changeStep(-1);
+      } else if (e.key === 'ArrowRight') {
+        changeStep(1);
+      }
+    });
+
+    // Run init
+    window.onload = init;
+  </script>
+</body>
+</html>
