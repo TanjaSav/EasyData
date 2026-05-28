@@ -36,6 +36,20 @@ function normalizeGeneratedHtml(html: string) {
       "/apps/${" + appExpression + "}/tables/${" + tableExpression + "}/rows"
   );
 
+  if (normalized.includes("/uploads/")) {
+    throw new Error(
+      "Generated app uses public /uploads file URLs. Store fileName and refresh signed view URLs instead."
+    );
+  }
+
+  if (normalized.includes("EASYDATA_ADMIN_TOKEN")) {
+    throw new Error("Generated app must not reference admin credentials.");
+  }
+
+  if (/\/api\/(apps|rows|[0-9a-f-]{36}|\$\{)/i.test(normalized)) {
+    throw new Error("Generated app contains unsupported legacy /api routes.");
+  }
+
   return normalized;
 }
 

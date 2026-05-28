@@ -1,9 +1,11 @@
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import crypto from "crypto";
-
-const uploadDir = process.env.UPLOAD_DIR || "./uploads";
+import {
+  createStoredFileName,
+  getAppStorageQuotaBytes,
+  uploadDir,
+} from "../services/file.service.js";
 const maxFileSizeBytes = 5 * 1024 * 1024;
 
 const allowedMimeTypes = new Set([
@@ -28,8 +30,10 @@ const storage = multer.diskStorage({
 
   // Generates a safe random filename while preserving the original extension
   filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase();
-    const fileName = crypto.randomBytes(16).toString("hex") + ext;
+    const fileName = createStoredFileName(
+      req.params.id as string,
+      file.originalname
+    );
 
     cb(null, fileName);
   },
@@ -56,8 +60,39 @@ export const upload = multer({
   },
 });
 
+export function validateUploadedFileMagic(filePath: string, mimetype: string) {
+  const header = fs.readFileSync(filePath).subarray(0, 16);
+
+  const matches =
+    (mimetype === "image/png" &&
+      header.length >= 8 &&
+      header[0] === 0x89 &&
+      header[1] === 0x50 &&
+      header[2] === 0x4e &&
+      header[3] === 0x47 &&
+      header[4] === 0x0d &&
+      header[5] === 0x0a &&
+      header[6] === 0x1a &&
+      header[7] === 0x0a) ||
+    (mimetype === "image/jpeg" &&
+      header.length >= 3 &&
+      header[0] === 0xff &&
+      header[1] === 0xd8 &&
+      header[2] === 0xff) ||
+    (mimetype === "application/pdf" && header.subarray(0, 4).toString() === "%PDF") ||
+    (mimetype === "image/webp" &&
+      header.length >= 12 &&
+      header.subarray(0, 4).toString() === "RIFF" &&
+      header.subarray(8, 12).toString() === "WEBP");
+
+  if (!matches) {
+    throw new Error("File content does not match the declared file type.");
+  }
+}
+
 export const uploadConfig = {
   maxFileSizeBytes,
+  appStorageQuotaBytes: getAppStorageQuotaBytes(),
   allowedMimeTypes: Array.from(allowedMimeTypes),
   allowedExtensions: Array.from(allowedExtensions),
 };

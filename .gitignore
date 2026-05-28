@@ -15,5 +15,6 @@ coverage/
 .vite/
 
 data/apps/*.sqlite
+data/*.log
 uploads/
 upload/

@@ -2,6 +2,9 @@ import fs from "fs";
 import path from "path";
 import Database from "better-sqlite3";
 import type { CreateTableInput } from "../types/table.types.js";
+import { validateIdentifier, validateIdentifiers } from "./identifier.service.js";
+import { deleteStoredFile } from "./file.service.js";
+import { analyzeSensitiveColumns } from "./sensitivity.service.js";
 
 const DATA_DIR = process.env.DATA_DIR || "./data/apps";
 
@@ -32,10 +35,12 @@ export function getAppSchema(appId: string) {
       FROM sqlite_master
       WHERE type='table'
       AND name NOT LIKE 'sqlite_%'
+      AND name != '_easydata_meta'
     `)
     .all();
 
   const schema = tables.map((table: any) => {
+    validateIdentifier(table.name, "Table name");
     const columns = db.prepare(`PRAGMA table_info(${table.name})`).all();
 
     return {
@@ -50,10 +55,18 @@ export function getAppSchema(appId: string) {
 
 // Creates a new table inside the selected app database
 export function createTable(appId: string, input: CreateTableInput) {
+  validateIdentifier(input.tableName, "Table name");
+  validateIdentifiers(input.columns.map((column) => column.name), "Column name");
+  const warnings = analyzeSensitiveColumns(input.columns);
+
+  if (warnings.length > 0 && !input.confirmSensitiveData) {
+    throw new Error("Sensitive schema requires confirmSensitiveData: true");
+  }
+
   const dbPath = ensureAppDb(appId);
   const db = new Database(dbPath);
 
-  // Column identifiers come from validated API/MCP schemas; values are parameterized below.
+  // Values are parameterized elsewhere; identifiers are strictly validated here.
   const columnsSql = input.columns
     .map((column) => `${column.name} ${column.type}`)
     .join(", ");
@@ -71,6 +84,7 @@ export function createTable(appId: string, input: CreateTableInput) {
   return {
     success: true,
     table: input.tableName,
+    warnings,
   };
 }
 
@@ -78,8 +92,17 @@ export function createTable(appId: string, input: CreateTableInput) {
 export function alterTable(
   appId: string,
   tableName: string,
-  columns: CreateTableInput["columns"]
+  columns: CreateTableInput["columns"],
+  confirmSensitiveData = false
 ) {
+  validateIdentifier(tableName, "Table name");
+  validateIdentifiers(columns.map((column) => column.name), "Column name");
+  const warnings = analyzeSensitiveColumns(columns);
+
+  if (warnings.length > 0 && !confirmSensitiveData) {
+    throw new Error("Sensitive schema requires confirmSensitiveData: true");
+  }
+
   const dbPath = ensureAppDb(appId);
 
   if (columns.length === 0) {
@@ -101,6 +124,7 @@ export function alterTable(
     success: true,
     table: tableName,
     addedColumns: columns,
+    warnings,
   };
 }
 
@@ -110,10 +134,13 @@ export function insertRow(
   tableName: string,
   data: Record<string, unknown>
 ) {
+  validateIdentifier(tableName, "Table name");
+
   const dbPath = ensureAppDb(appId);
   const db = new Database(dbPath);
 
   const columns = Object.keys(data);
+  validateIdentifiers(columns, "Column name");
   const values = Object.values(data);
 
   if (columns.length === 0) {
@@ -150,6 +177,8 @@ export function getRows(
     limit?: string;
   }
 ) {
+  validateIdentifier(tableName, "Table name");
+
   const dbPath = ensureAppDb(appId);
   const db = new Database(dbPath);
 
@@ -164,6 +193,8 @@ export function getRows(
       throw new Error("Invalid where format. Use column:value");
     }
 
+    validateIdentifier(column, "Where column");
+
     // Keep filter values parameterized while allowing a simple column:value query format.
     sql += ` WHERE ${column} = ?`;
     params.push(value);
@@ -177,6 +208,8 @@ export function getRows(
       db.close();
       throw new Error("Invalid order format. Use column:asc or column:desc");
     }
+
+    validateIdentifier(column, "Order column");
 
     sql += ` ORDER BY ${column} ${direction}`;
   }
@@ -206,9 +239,12 @@ export function updateRow(
   rowId: string,
   data: Record<string, unknown>
 ) {
+  validateIdentifier(tableName, "Table name");
+
   const dbPath = ensureAppDb(appId);
 
   const columns = Object.keys(data);
+  validateIdentifiers(columns, "Column name");
   const values = Object.values(data);
 
   if (columns.length === 0) {
@@ -238,10 +274,38 @@ export function updateRow(
   };
 }
 
-// Deletes a row by its id
-export function deleteRow(appId: string, tableName: string, rowId: string) {
+
+export function exportAppData(appId: string) {
   const dbPath = ensureAppDb(appId);
   const db = new Database(dbPath);
+  const schema = getAppSchema(appId);
+  const tables: Record<string, unknown[]> = {};
+
+  for (const table of schema) {
+    validateIdentifier(table.table, "Table name");
+    tables[table.table] = db.prepare(`SELECT * FROM ${table.table}`).all();
+  }
+
+  db.close();
+
+  return {
+    appId,
+    exportedAt: new Date().toISOString(),
+    schema,
+    tables,
+  };
+}
+
+// Deletes a row by its id
+export function deleteRow(appId: string, tableName: string, rowId: string) {
+  validateIdentifier(tableName, "Table name");
+
+  const dbPath = ensureAppDb(appId);
+  const db = new Database(dbPath);
+
+  const row = db
+    .prepare(`SELECT * FROM ${tableName} WHERE id = ?`)
+    .get(rowId) as Record<string, unknown> | undefined;
 
   const result = db
     .prepare(`DELETE FROM ${tableName} WHERE id = ?`)
@@ -249,10 +313,26 @@ export function deleteRow(appId: string, tableName: string, rowId: string) {
 
   db.close();
 
+  let deletedFiles = 0;
+
+  if (row && result.changes > 0) {
+    for (const [key, value] of Object.entries(row)) {
+      if (!key.endsWith("file_name") || typeof value !== "string") {
+        continue;
+      }
+
+      if (value.startsWith(`${appId}-`)) {
+        deleteStoredFile(value);
+        deletedFiles += 1;
+      }
+    }
+  }
+
   return {
     success: true,
     table: tableName,
     rowId,
     changes: result.changes,
+    deletedFiles,
   };
 }

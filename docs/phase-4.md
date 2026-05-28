@@ -2,9 +2,9 @@
 
 ## Status
 
-Phase 4 is the active project phase.
+Phase 4 is complete for the current project milestone. Remaining work is production operations such as backup policy, external review, and deployment-specific monitoring.
 
-Phase 1 delivered the core API. Phase 2 delivered MCP integration. Phase 3 delivered a working VPS-based file upload flow. The next priority is making the platform safer for real educational data before broader teacher testing.
+Phase 1 delivered the core API. Phase 2 delivered MCP integration. Phase 3 delivered a working VPS-based file upload flow. Phase 4 adds the guardrails needed before broader teacher testing.
 
 ## Goal
 
@@ -20,18 +20,23 @@ Phase 4 covers:
 - schema-level warnings for sensitive or high-risk data fields
 - right-to-deletion support and documentation
 - data retention defaults and cleanup planning
-- security review of API and MCP tool behavior
-- plain-language teacher guidance for educational data use
+- export before delete and retention cleanup endpoints
+- rate limiting and audit logging
+- stronger file validation
+- security review of API, MCP tool behavior, and generated app publishing
+- plain-language teacher guidance for educational data use, including Icelandic guidance
 
 It does not cover final public launch, demo video, or complete hosted onboarding. Cloudflare R2 or another object store is not required for the current VPS deployment and remains only an optional future scaling path.
 
-## Current Risks To Address
+## Implemented Guardrails
 
 ### SQL Identifier Safety
 
-Row values are parameterized, but table names, column names, `where` columns, and `order` columns are currently interpolated into SQL strings.
+Status: implemented.
 
-Phase 4 should add strict identifier validation:
+Row values are parameterized, and table names, column names, `where` columns, and `order` columns are now validated before being interpolated into SQL strings.
+
+The validation rules are:
 
 - allow only letters, numbers, and underscores
 - require identifiers to start with a letter
@@ -40,7 +45,9 @@ Phase 4 should add strict identifier validation:
 
 ### Sensitive Schema Detection
 
-EasyData should warn when an app schema appears to collect sensitive or unnecessary student data.
+Status: implemented.
+
+EasyData now warns when an app schema appears to collect sensitive or unnecessary student data.
 
 Initial warning patterns:
 
@@ -51,39 +58,54 @@ Initial warning patterns:
 - identity: `student_name`, `email`, `phone`, `kennitala`, `national_id`
 - special categories: `religion`, `ethnicity`, `disability`, `special_needs`
 
-The first implementation can return warnings in `create_table` and `alter_table` responses instead of blocking the request.
+Schemas with warnings now require `confirmSensitiveData: true`; successful responses still include the warning details.
 
 ### Retention
 
-Apps should not keep student data indefinitely by default.
+Status: implemented.
 
-Phase 4 should define:
+Apps should not keep student data indefinitely by default. New apps now receive default retention metadata, and app retention can be read or updated through the API.
 
-- a default retention recommendation, such as end of school year
-- metadata fields for retention policy
-- a documented cleanup workflow
-- future API behavior for expiration and deletion
+Implemented behavior:
+
+- default retention recommendation: end of school year
+- retention metadata stored per app
+- `GET /apps/:id/retention` and `PUT /apps/:id/retention`
+- teacher-facing retention guidance in `docs/data-protection-guide.md`
 
 ### Right To Deletion
 
-The API already supports row deletion. Phase 4 should make the workflow explicit:
+Status: implemented.
 
-- document how a teacher deletes a student record
-- add app-level deletion if missing
-- consider export-before-delete guidance
-- add tests for deletion paths
+The API supports row deletion and app-level deletion. App deletion removes the SQLite database and uploaded files owned by that app. The teacher workflow is documented in `docs/data-protection-guide.md`.
+
+Implemented behavior:
+
+- row deletion is available through `DELETE /apps/:id/tables/:table/rows/:rowId`
+- app-level deletion is available through `DELETE /apps/:id`
+- app deletion removes the app database and uploaded files owned by the app
+- deletion paths are covered by tests
 
 ### File Privacy
 
-Uploaded files are stored on the VPS and are publicly readable under `/uploads/:fileName`.
+Status: implemented in Phase 3 hardening.
 
-Phase 4 should document this limitation and decide whether to:
+Uploaded files are stored on the VPS, but they are no longer publicly served through `/uploads/:fileName`. New files are app-owned, viewed through signed expiring URLs, and counted toward the app storage quota. App deletion removes uploaded files owned by that app.
 
-- keep public `/uploads` access for the current demo deployment
-- add hard-to-guess filenames and clearer warnings
-- add signed or token-protected file access later if teacher data requires stricter privacy
+Implemented behavior:
 
-## Implementation Plan
+- signed expiring file URLs
+- app storage quotas
+- magic-byte file validation
+- row deletion cleanup for files referenced by `*_file_name` columns
+- app deletion cleanup for app-owned files
+
+Remaining production work:
+
+- define backup and restore procedures for `uploads/`
+- decide whether long-term deployments need private object storage
+
+## Implementation Summary
 
 1. Add a shared identifier validation helper.
 2. Apply it to table creation, table alteration, row insertion, row querying, row updates, and row deletion.
@@ -93,10 +115,14 @@ Phase 4 should document this limitation and decide whether to:
 6. Add tests for schema sensitivity warnings.
 7. Add app deletion or document the current row-level deletion workflow.
 8. Draft teacher-facing data guidance in plain language.
+9. Add export before delete.
+10. Add rate limiting and audit logging.
+11. Add retention cleanup endpoints.
+12. Add generated app publishing guardrails.
 
-## Proposed API Behavior
+## API Behavior
 
-For a sensitive but allowed schema, EasyData should return a successful response with warnings:
+For a sensitive but confirmed schema, EasyData returns a successful response with warnings:
 
 ```json
 {
@@ -112,7 +138,7 @@ For a sensitive but allowed schema, EasyData should return a successful response
 }
 ```
 
-For unsafe identifiers, EasyData should reject the request:
+For unsafe identifiers, EasyData rejects the request:
 
 ```json
 {
@@ -121,18 +147,24 @@ For unsafe identifiers, EasyData should reject the request:
 }
 ```
 
-## Validation Targets
+## Validation
 
-Phase 4 should be considered complete when:
+Phase 4 is considered complete for the current milestone because:
 
-- unsafe table and column names are rejected
-- unsafe query identifiers are rejected
-- `create_table` and `alter_table` return sensitivity warnings
-- tests cover security validation and warning behavior
-- teacher-facing data guidance exists in `docs/`
-- right-to-deletion behavior is documented
-- `npm test -- --run` passes
-- `npm run typecheck` passes
+- unsafe table and column names are rejected — done
+- unsafe query identifiers are rejected — done
+- `create_table` and `alter_table` return sensitivity warnings — done
+- tests cover security validation and warning behavior — done
+- teacher-facing data guidance exists in `docs/` — done
+- right-to-deletion behavior is documented — done
+- `npm test -- --run` passes — done
+- `npm run typecheck` passes — done
+- export before delete exists — done
+- rate limiting and audit logging exist — done
+- Icelandic teacher guidance exists — done
+- generated app guardrails reject public upload URLs and admin credential references — done
+
+Latest validation: `npm run typecheck` passed and `npm test -- --run` passed with 25 tests.
 
 ## Deliverable
 

@@ -46,9 +46,10 @@ This keeps the project TypeScript-first and avoids compiling source files into J
 
 ## Implemented Tools
 
-The MCP server currently exposes ten tools:
+The MCP server currently exposes teacher-facing tools. `list_apps` was removed from MCP because listing every app is an admin-only operation.
 
-- `list_apps`
+Current tools:
+
 - `create_app`
 - `get_schema`
 - `create_table`
@@ -58,6 +59,7 @@ The MCP server currently exposes ten tools:
 - `update_row`
 - `delete_row`
 - `get_upload_url`
+- `publish_app`
 
 Full tool inputs and outputs are documented in `docs/mcp-tools.md`.
 
@@ -99,16 +101,16 @@ Phase 2 was validated with:
 
 Validated assistant actions:
 
-1. List existing apps.
-2. Create a new EasyData app.
-3. Create database tables.
-4. Retrieve schema information.
-5. Insert rows.
-6. Query rows.
-7. Update rows.
-8. Delete rows.
-9. Add columns to an existing table.
-10. Retrieve the local upload endpoint.
+1. Create a new EasyData app.
+2. Create database tables.
+3. Retrieve schema information.
+4. Insert rows.
+5. Query rows.
+6. Update rows.
+7. Delete rows.
+8. Add columns to an existing table.
+9. Retrieve the local upload endpoint.
+10. Publish a generated single-file HTML app.
 
 Example natural-language request:
 
@@ -127,21 +129,4 @@ Expected assistant workflow:
 
 Phase 2 successfully demonstrates that an assistant can create and manage complete EasyData database structures through MCP tools. The teacher-facing workflow is now possible: the teacher describes an app, the assistant creates the data model, and the assistant can generate a browser app that talks to EasyData through the REST API.
 
-## Known Limitations
 
-- Authentication is still app-token based; there is no teacher identity or school SSO yet.
-- MCP tools do not yet implement schema-level privacy warnings.
-- File upload support is local disk based, not Cloudflare R2 or another object store.
-- Query support is intentionally simple and does not yet support compound filters.
-- The service layer still needs stronger identifier validation before untrusted public use.
-
-## Next Steps
-
-Recommended follow-up work:
-
-1. Add schema sensitivity warnings for names such as `photo`, `health`, `location`, or `student_name`.
-2. Add safer validation for table names and column names.
-3. Add object storage support and replace local upload discovery with real presigned upload URLs.
-4. Add app export and deletion flows.
-5. Expand MCP validation tests so tool registration and tool execution are covered automatically.
-6. Document Claude Desktop configuration examples for Windows, macOS, and Linux.

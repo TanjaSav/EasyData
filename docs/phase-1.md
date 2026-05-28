@@ -48,9 +48,9 @@ App metadata is stored in the internal `_easydata_meta` table.
 
 ### 4. App Management
 
-Implemented app creation and app listing:
+Implemented app creation and admin-only app listing:
 ```POST /apps
-GET  /apps
+GET  /apps  # admin-only
 ```
 
 When an app is created, EasyData generates:
@@ -60,6 +60,7 @@ When an app is created, EasyData generates:
 - optional description
 - API token
 - creation timestamp
+- default retention policy
 
 ---
 
@@ -128,10 +129,11 @@ Endpoints:
 
 ```POST /apps/:id/upload-url
 POST /apps/:id/files
-GET  /uploads/:fileName
+GET  /apps/:id/files/:fileName/view?expires=...&signature=...
+POST /apps/:id/files/:fileName/view-url
 ```
 
-Files are stored in the local `uploads` folder.
+Files are stored in the local `uploads` folder, but they are viewed through signed app file URLs rather than public `/uploads` URLs.
 
 ---
 
@@ -203,7 +205,7 @@ It supports:
 ## Implemented API Endpoints
 ```
 POST   /apps
-GET    /apps
+GET    /apps  # admin-only
 GET    /apps/:id/schema
 
 POST   /apps/:id/tables
@@ -216,7 +218,8 @@ DELETE /apps/:id/tables/:table/rows/:rowId
 
 POST   /apps/:id/upload-url
 POST   /apps/:id/files
-GET    /uploads/:fileName
+GET    /apps/:id/files/:fileName/view?expires=...&signature=...
+POST   /apps/:id/files/:fileName/view-url
 ```
 ## Validation
 
@@ -237,6 +240,6 @@ The backend can:
 - generate API tokens
 - create and modify tables
 - insert, read, update, and delete rows
-- upload and serve files locally
+- upload files locally and serve them through signed URLs
 - expose a browser-callable REST API
 - pass automated API tests

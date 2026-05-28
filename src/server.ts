@@ -3,7 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import dotenv from "dotenv";
-import appRoutes, { legacyRowsRouter } from "./routes/app.routes.js";
+import appRoutes, { legacyRowsRouter, mcpRateLimit } from "./routes/app.routes.js";
 import aiRoutes from "./routes/ai.routes.js";
 import { createEasyDataMcpServer } from "./mcp/server.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
@@ -25,7 +25,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 // Static file serving
-app.use("/uploads", express.static("uploads"));
+// Uploaded files are served by signed app routes, not as public static assets.
 app.use("/public", express.static("public"));
 app.use(express.static("public"));
 
@@ -76,6 +76,7 @@ async function handleMcpRequest(req: express.Request, res: express.Response) {
 // that probe root or framework-style paths before settling on an MCP endpoint.
 app.post(
   ["/mcp", "/", "/api", "/app", "/_next", "/_next/server", "/api/route"],
+  mcpRateLimit,
   handleMcpRequest
 );
 

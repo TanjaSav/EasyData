@@ -19,7 +19,8 @@ EasyData exposes these endpoints:
 ```http
 POST /apps/:id/upload-url
 POST /apps/:id/files
-GET  /uploads/:fileName
+GET  /apps/:id/files/:fileName/view?expires=...&signature=...
+POST /apps/:id/files/:fileName/view-url
 ```
 
 The `upload-url` endpoint returns upload instructions for generated browser apps:
@@ -27,15 +28,18 @@ The `upload-url` endpoint returns upload instructions for generated browser apps
 - `uploadUrl`: the app-specific upload endpoint
 - `method`: `POST`
 - `fieldName`: `file`
-- `limits`: allowed file types, extensions, and max file size
+- `limits`: allowed file types, extensions, max file size, app storage quota, and current app storage usage
 
-Uploaded files are stored in the server-side `uploads/` directory on the VPS. The API returns a URL such as `/uploads/example.png`, which can be saved into an app table column like `photo_url`.
+Uploaded files are stored in the server-side `uploads/` directory on the VPS. New files are named with the owning `appId` and are not served through public static `/uploads` URLs. The upload response returns both a stable `fileName` and a signed, expiring `viewUrl` such as `/apps/:id/files/:fileName/view?expires=...&signature=...`. Generated apps should store the stable `fileName` in SQLite, then request a fresh view URL when rendering older records.
 
 ## Upload Restrictions
 
 Server uploads now enforce basic safety limits:
 
-- maximum size: 5 MB
+- maximum size per file: 5 MB
+- default storage quota per app: 50 MB
+- configurable storage quota with `APP_STORAGE_QUOTA_BYTES`
+- configurable signed view URL TTL with `FILE_VIEW_URL_TTL_SECONDS`
 - allowed MIME types: `image/jpeg`, `image/png`, `image/webp`, `application/pdf`
 - allowed extensions: `.jpg`, `.jpeg`, `.png`, `.webp`, `.pdf`
 
@@ -47,9 +51,10 @@ A generated student submission app can now:
 
 1. Ask EasyData for upload instructions with `POST /apps/:id/upload-url`.
 2. Upload an image with `multipart/form-data` to `POST /apps/:id/files`.
-3. Receive a file URL from EasyData.
-4. Save that URL in SQLite using the row insert endpoint.
-5. Display the uploaded image in the teacher-facing app.
+3. Receive a stable `fileName` and temporary `viewUrl` from EasyData.
+4. Save the stable `fileName` in SQLite.
+5. Display the uploaded image with the returned temporary `viewUrl`.
+6. Later, when rendering existing records, call `POST /apps/:id/files/:fileName/view-url` with the app token to get a fresh signed view URL.
 
 ## Validation
 
@@ -60,6 +65,9 @@ Automated tests cover:
 - saving an uploaded file URL into a row
 - rejecting unsupported file types
 - rejecting oversized files
+- rejecting over-quota files
+- rejecting files whose content does not match their declared type
+- signed file access and signed URL refresh
 
 Run validation with:
 
@@ -70,7 +78,7 @@ npm run typecheck
 
 Latest validation:
 
-- `npm test -- --run`: 12 tests passed
+- `npm test -- --run`: 25 tests passed
 - `npm run typecheck`: passed
 
 ## Completed Deliverable
@@ -84,34 +92,9 @@ Current result:
 - VPS upload discovery works through the REST API
 - VPS upload discovery is exposed through the MCP `get_upload_url` tool
 - generated apps can upload allowed files through `multipart/form-data`
-- uploaded file URLs can be stored in app tables
-- uploaded files can be viewed through `/uploads/:fileName`
-- unsupported or oversized files are rejected
+- stable uploaded file names can be stored in app tables
+- fresh signed view URLs can be generated from stored file names
+- uploaded files can be viewed through signed app file URLs
+- unsigned or expired file view requests are rejected
+- unsupported, oversized, or over-quota files are rejected
 
-## Current Limitations
-
-- Files are stored on the VPS server disk, so backups and disk usage must be managed on the VPS.
-- Upload URLs are EasyData server endpoints, not third-party object storage URLs.
-- Access control for viewing files is not yet time-limited.
-- Storage quotas and cleanup rules still need to be defined before broad school use.
-
-## Deferred Production Work
-
-These items should be handled before broad school use, but they do not block Phase 4:
-
-1. Add storage quotas per app or teacher.
-2. Add backup and restore procedures for the VPS `uploads/` directory.
-3. Add cleanup procedures for deleted or expired app data.
-4. Decide whether uploaded files should stay publicly readable under `/uploads/:fileName` or require signed access.
-5. Keep Cloudflare R2 or another S3-compatible object store as an optional future scaling path only if VPS disk storage becomes insufficient.
-
-## Next Phase
-
-The project should now move to Phase 4: ethics, security, and guardrails.
-
-The first Phase 4 priorities are:
-
-1. Validate table names, column names, and query identifiers before they are interpolated into SQL.
-2. Add schema-level sensitivity warnings for fields such as `student_name`, `photo`, `health`, `location`, and `behavior`.
-3. Add app deletion and row deletion documentation for right-to-deletion workflows.
-4. Define data retention defaults for classroom apps.

@@ -3,8 +3,22 @@ import path from "path";
 import crypto from "crypto";
 import Database from "better-sqlite3";
 import { v4 as uuidv4 } from "uuid";
-import { type EasyDataApp } from "../types/app.types.js";
+import { type EasyDataApp, type RetentionPolicy } from "../types/app.types.js";
 const DATA_DIR = process.env.DATA_DIR || "./data/apps";
+
+function getDbPath(appId: string) {
+  return path.join(DATA_DIR, `${appId}.sqlite`);
+}
+
+export function createDefaultRetentionPolicy(now = new Date()): RetentionPolicy {
+  const year = now.getUTCMonth() <= 5 ? now.getUTCFullYear() : now.getUTCFullYear() + 1;
+
+  return {
+    policy: "end_of_school_year",
+    retainUntil: `${year}-06-30`,
+    note: "Default recommendation: review and delete classroom data at the end of the school year unless there is a clear reason to keep it longer.",
+  };
+}
 
 // Generates a random API token for each app
 function createToken(prefix: string): string {
@@ -18,7 +32,7 @@ export function createApp(name: string, description?: string): EasyDataApp {
   }
 
   const id = uuidv4();
-  const dbPath = path.join(DATA_DIR, `${id}.sqlite`);
+  const dbPath = getDbPath(id);
 
   const app: EasyDataApp = {
     id,
@@ -26,6 +40,7 @@ export function createApp(name: string, description?: string): EasyDataApp {
     description: description ?? "",
     apiToken: createToken("app"),
     createdAt: new Date().toISOString(),
+    retentionPolicy: createDefaultRetentionPolicy(),
   };
 
   const db = new Database(dbPath);
@@ -48,7 +63,7 @@ export function createApp(name: string, description?: string): EasyDataApp {
 
 // Reads app metadata from its SQLite database
 export function getAppMeta(appId: string): EasyDataApp {
-  const dbPath = path.join(DATA_DIR, `${appId}.sqlite`);
+  const dbPath = getDbPath(appId);
 
   if (!fs.existsSync(dbPath)) {
     throw new Error("App database not found");
@@ -66,7 +81,12 @@ export function getAppMeta(appId: string): EasyDataApp {
     throw new Error("App metadata not found");
   }
 
-  return JSON.parse(row.value) as EasyDataApp;
+  const app = JSON.parse(row.value) as EasyDataApp;
+
+  return {
+    ...app,
+    retentionPolicy: app.retentionPolicy ?? createDefaultRetentionPolicy(),
+  };
 }
 
 // Validates the provided Bearer token against the app token
@@ -76,7 +96,74 @@ export function validateAppToken(appId: string, token: string): boolean {
 }
 
 // Lists all apps by reading metadata from SQLite files
-export function listApps(): EasyDataApp[] {
+export type ListedEasyDataApp = Omit<EasyDataApp, "apiToken"> & {
+  hasApiToken: boolean;
+};
+
+export function updateRetentionPolicy(
+  appId: string,
+  retentionPolicy: RetentionPolicy
+): EasyDataApp {
+  const app = getAppMeta(appId);
+  const updatedApp: EasyDataApp = {
+    ...app,
+    retentionPolicy,
+  };
+
+  const db = new Database(getDbPath(appId));
+  db.prepare("UPDATE _easydata_meta SET value = ? WHERE key = ?").run(
+    JSON.stringify(updatedApp),
+    "app"
+  );
+  db.close();
+
+  return updatedApp;
+}
+
+export function deleteApp(appId: string) {
+  const dbPath = getDbPath(appId);
+
+  if (!fs.existsSync(dbPath)) {
+    throw new Error("App database not found");
+  }
+
+  fs.unlinkSync(dbPath);
+
+  return {
+    success: true,
+    appId,
+  };
+}
+
+
+export function findExpiredApps(now = new Date()) {
+  return listApps().filter((app) => {
+    const retainUntil = app.retentionPolicy?.retainUntil;
+
+    if (!retainUntil || app.retentionPolicy.policy === "none") {
+      return false;
+    }
+
+    return retainUntil < now.toISOString().slice(0, 10);
+  });
+}
+
+export function cleanupExpiredApps(now = new Date()) {
+  const expiredApps = findExpiredApps(now);
+  const deletedApps = [];
+
+  for (const app of expiredApps) {
+    deleteApp(app.id);
+    deletedApps.push(app.id);
+  }
+
+  return {
+    checkedAt: now.toISOString(),
+    deletedApps,
+  };
+}
+
+export function listApps(): ListedEasyDataApp[] {
   if (!fs.existsSync(DATA_DIR)) {
     return [];
   }
@@ -85,13 +172,17 @@ export function listApps(): EasyDataApp[] {
     .readdirSync(DATA_DIR)
     .filter((file) => file.endsWith(".sqlite"));
 
-  const apps: EasyDataApp[] = [];
+  const apps: ListedEasyDataApp[] = [];
 
   for (const file of files) {
     const appId = file.replace(".sqlite", "");
 
     try {
-      apps.push(getAppMeta(appId));
+      const { apiToken, ...app } = getAppMeta(appId);
+      apps.push({
+        ...app,
+        hasApiToken: Boolean(apiToken),
+      });
     } catch {
       // Ignore broken or invalid database files
     }

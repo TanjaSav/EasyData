@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { beforeAll, describe, it, expect } from "vitest";
 import fs from "fs";
 import request from "supertest";
 import express from "express";
@@ -6,6 +6,14 @@ import appRoutes, { legacyRowsRouter } from "../src/routes/app.routes.js";
 import { writeGeneratedApp } from "../src/services/generated-app.service.js";
 
 const app = express();
+const pngBuffer = Buffer.from([
+  0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
+  0x00, 0x00, 0x00, 0x0d,
+]);
+
+beforeAll(() => {
+  process.env.EASYDATA_ADMIN_TOKEN = "test-admin-token";
+});
 
 // Test app instance with only the middleware required for API route testing
 app.use(express.json());
@@ -24,16 +32,32 @@ describe("EasyData API", () => {
     expect(res.status).toBe(201);
     expect(res.body.id).toBeDefined();
     expect(res.body.apiToken).toBeDefined();
+    expect(res.body.retentionPolicy.policy).toBe("end_of_school_year");
+    expect(res.body.retentionPolicy.retainUntil).toMatch(/^\d{4}-06-30$/);
 
     appId = res.body.id;
     apiToken = res.body.apiToken;
+  });
+
+  it("requires admin auth for listing apps", async () => {
+    const unauthenticated = await request(app).get("/apps");
+    expect(unauthenticated.status).toBe(401);
+
+    const authorized = await request(app)
+      .get("/apps")
+      .set("Authorization", "Bearer test-admin-token");
+
+    expect(authorized.status).toBe(200);
+    expect(authorized.body.apps.length).toBeGreaterThan(0);
+    expect(authorized.body.apps[0].apiToken).toBeUndefined();
+    expect(authorized.body.apps[0].hasApiToken).toBe(true);
   });
 
   it("requires auth for schema access", async () => {
     const res = await request(app).get(`/apps/${appId}/schema`);
 
     expect(res.status).toBe(401);
-    expect(res.body.error).toBe("Missing Authorization header");
+    expect(res.body.error).toBe("Missing or invalid Authorization header");
   });
 
   it("returns schema with a valid token", async () => {
@@ -45,14 +69,29 @@ describe("EasyData API", () => {
     expect(res.body.schema).toBeDefined();
   });
 
+  it("requires explicit confirmation for sensitive schemas", async () => {
+    const res = await request(app)
+      .post(`/apps/${appId}/tables`)
+      .set("Authorization", `Bearer ${apiToken}`)
+      .send({
+        tableName: "needs_confirmation",
+        columns: [{ name: "student_name", type: "TEXT" }],
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe("Sensitive schema requires confirmSensitiveData: true");
+  });
+
   it("creates a table", async () => {
     const res = await request(app)
       .post(`/apps/${appId}/tables`)
       .set("Authorization", `Bearer ${apiToken}`)
       .send({
         tableName: "submissions",
+        confirmSensitiveData: true,
         columns: [
           { name: "student_name", type: "TEXT" },
+          { name: "photo_file_name", type: "TEXT" },
           { name: "photo_url", type: "TEXT" },
         ],
       });
@@ -60,6 +99,108 @@ describe("EasyData API", () => {
     expect(res.status).toBe(201);
     expect(res.body.success).toBe(true);
     expect(res.body.table).toBe("submissions");
+    expect(res.body.warnings.length).toBeGreaterThan(0);
+    expect(res.body.warnings.map((warning: any) => warning.field)).toContain("student_name");
+  });
+
+
+
+  it("returns and updates retention policy", async () => {
+    const getRes = await request(app)
+      .get(`/apps/${appId}/retention`)
+      .set("Authorization", `Bearer ${apiToken}`);
+
+    expect(getRes.status).toBe(200);
+    expect(getRes.body.retentionPolicy.policy).toBe("end_of_school_year");
+
+    const putRes = await request(app)
+      .put(`/apps/${appId}/retention`)
+      .set("Authorization", `Bearer ${apiToken}`)
+      .send({
+        policy: "custom",
+        retainUntil: "2026-12-31",
+        note: "Keep until the end of the pilot, then review and delete.",
+      });
+
+    expect(putRes.status).toBe(200);
+    expect(putRes.body.retentionPolicy.policy).toBe("custom");
+    expect(putRes.body.retentionPolicy.retainUntil).toBe("2026-12-31");
+  });
+
+  it("returns sensitivity warnings when adding sensitive columns", async () => {
+    const res = await request(app)
+      .put(`/apps/${appId}/tables/submissions`)
+      .set("Authorization", `Bearer ${apiToken}`)
+      .send({
+        confirmSensitiveData: true,
+        columns: [{ name: "health_status", type: "TEXT" }],
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.body.warnings.length).toBe(1);
+    expect(res.body.warnings[0].field).toBe("health_status");
+    expect(res.body.warnings[0].category).toBe("health");
+  });
+
+  it("rejects unsafe table and column identifiers", async () => {
+    const unsafeTable = await request(app)
+      .post(`/apps/${appId}/tables`)
+      .set("Authorization", `Bearer ${apiToken}`)
+      .send({
+        tableName: "submissions;DROP_TABLE",
+        columns: [{ name: "title", type: "TEXT" }],
+      });
+
+    expect(unsafeTable.status).toBe(400);
+    expect(unsafeTable.body.error).toContain("Table name is invalid");
+
+    const unsafeColumn = await request(app)
+      .post(`/apps/${appId}/tables`)
+      .set("Authorization", `Bearer ${apiToken}`)
+      .send({
+        tableName: "safe_table",
+        columns: [{ name: "student-name", type: "TEXT" }],
+      });
+
+    expect(unsafeColumn.status).toBe(400);
+    expect(unsafeColumn.body.error).toContain("Column name is invalid");
+
+    const reservedTable = await request(app)
+      .post(`/apps/${appId}/tables`)
+      .set("Authorization", `Bearer ${apiToken}`)
+      .send({
+        tableName: "_easydata_meta",
+        columns: [{ name: "title", type: "TEXT" }],
+      });
+
+    expect(reservedTable.status).toBe(400);
+    expect(reservedTable.body.error).toContain("Table name is invalid");
+  });
+
+  it("rejects unsafe row and query identifiers", async () => {
+    const unsafeInsert = await request(app)
+      .post(`/apps/${appId}/tables/submissions/rows`)
+      .set("Authorization", `Bearer ${apiToken}`)
+      .send({
+        "student-name": "Alex",
+      });
+
+    expect(unsafeInsert.status).toBe(400);
+    expect(unsafeInsert.body.error).toContain("Column name is invalid");
+
+    const unsafeWhere = await request(app)
+      .get(`/apps/${appId}/tables/submissions/rows?where=student-name:Alex`)
+      .set("Authorization", `Bearer ${apiToken}`);
+
+    expect(unsafeWhere.status).toBe(400);
+    expect(unsafeWhere.body.error).toContain("Where column is invalid");
+
+    const unsafeOrder = await request(app)
+      .get(`/apps/${appId}/tables/submissions/rows?order=student-name:asc`)
+      .set("Authorization", `Bearer ${apiToken}`);
+
+    expect(unsafeOrder.status).toBe(400);
+    expect(unsafeOrder.body.error).toContain("Order column is invalid");
   });
 
   it("inserts a row", async () => {
@@ -115,35 +256,154 @@ describe("EasyData API", () => {
     expect(res.body.fieldName).toBe("file");
     expect(res.body.limits.maxFileSizeBytes).toBe(5 * 1024 * 1024);
     expect(res.body.limits.allowedMimeTypes).toContain("image/png");
+    expect(res.body.limits.appStorageQuotaBytes).toBeGreaterThan(0);
+    expect(res.body.limits.currentStorageUsageBytes).toBeGreaterThanOrEqual(0);
   });
 
   it("uploads an allowed image and stores its URL in a row", async () => {
     const uploadRes = await request(app)
       .post(`/apps/${appId}/files`)
       .set("Authorization", `Bearer ${apiToken}`)
-      .attach("file", Buffer.from("fake png content"), {
+      .attach("file", pngBuffer, {
         filename: "project.png",
         contentType: "image/png",
       });
 
     expect(uploadRes.status).toBe(201);
     expect(uploadRes.body.success).toBe(true);
-    expect(uploadRes.body.url).toMatch(/^\/uploads\//);
+    expect(uploadRes.body.url).toMatch(new RegExp(`^/apps/${appId}/files/.*?/view\\?expires=`));
     expect(uploadRes.body.fileUrl).toBe(uploadRes.body.url);
     expect(uploadRes.body.file_url).toBe(uploadRes.body.url);
     expect(uploadRes.body.path).toBe(uploadRes.body.url);
     expect(uploadRes.body.file.url).toBe(uploadRes.body.url);
+    expect(uploadRes.body.viewUrl).toBe(uploadRes.body.url);
+    expect(uploadRes.body.fileName).toBe(uploadRes.body.file.fileName);
+    expect(uploadRes.body.file.fileName).toMatch(new RegExp(`^${appId}-`));
+    expect(uploadRes.body.storage.appStorageQuotaBytes).toBeGreaterThan(0);
+
+    const fileRes = await request(app).get(uploadRes.body.url);
+    expect(fileRes.status).toBe(200);
+
+    const unsignedFileRes = await request(app).get(
+      `/apps/${appId}/files/${uploadRes.body.file.fileName}/view`
+    );
+    expect(unsignedFileRes.status).toBe(403);
+
+    const refreshRes = await request(app)
+      .post(`/apps/${appId}/files/${uploadRes.body.fileName}/view-url`)
+      .set("Authorization", `Bearer ${apiToken}`);
+    expect(refreshRes.status).toBe(200);
+    expect(refreshRes.body.fileName).toBe(uploadRes.body.fileName);
+    expect(refreshRes.body.viewUrl).toMatch(new RegExp(`^/apps/${appId}/files/.*?/view\\?expires=`));
+
+    const refreshedFileRes = await request(app).get(refreshRes.body.viewUrl);
+    expect(refreshedFileRes.status).toBe(200);
 
     const rowRes = await request(app)
       .post(`/apps/${appId}/tables/submissions/rows`)
       .set("Authorization", `Bearer ${apiToken}`)
       .send({
         student_name: "Mira",
+        photo_file_name: uploadRes.body.fileName,
         photo_url: uploadRes.body.file.url,
       });
 
     expect(rowRes.status).toBe(201);
     expect(rowRes.body.rowId).toBeDefined();
+  });
+
+
+
+  it("exports app data without exposing app tokens", async () => {
+    const res = await request(app)
+      .get(`/apps/${appId}/export`)
+      .set("Authorization", `Bearer ${apiToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.app.apiToken).toBeUndefined();
+    expect(res.body.data.schema.length).toBeGreaterThan(0);
+    expect(res.body.data.tables.submissions.length).toBeGreaterThan(0);
+  });
+
+  it("deletes row-owned files when a row is deleted", async () => {
+    const cleanupAppRes = await request(app).post("/apps").send({
+      name: "Row File Cleanup App",
+    });
+
+    const cleanupAppId = cleanupAppRes.body.id;
+    const cleanupToken = cleanupAppRes.body.apiToken;
+
+    await request(app)
+      .post(`/apps/${cleanupAppId}/tables`)
+      .set("Authorization", `Bearer ${cleanupToken}`)
+      .send({
+        tableName: "submissions",
+        confirmSensitiveData: true,
+        columns: [{ name: "photo_file_name", type: "TEXT" }],
+      });
+
+    const uploadRes = await request(app)
+      .post(`/apps/${cleanupAppId}/files`)
+      .set("Authorization", `Bearer ${cleanupToken}`)
+      .attach("file", pngBuffer, {
+        filename: "cleanup.png",
+        contentType: "image/png",
+      });
+
+    const rowRes = await request(app)
+      .post(`/apps/${cleanupAppId}/tables/submissions/rows`)
+      .set("Authorization", `Bearer ${cleanupToken}`)
+      .send({ photo_file_name: uploadRes.body.fileName });
+
+    const deleteRes = await request(app)
+      .delete(`/apps/${cleanupAppId}/tables/submissions/rows/${rowRes.body.rowId}`)
+      .set("Authorization", `Bearer ${cleanupToken}`);
+
+    expect(deleteRes.status).toBe(200);
+    expect(deleteRes.body.deletedFiles).toBe(1);
+
+    const staleFileRes = await request(app).get(uploadRes.body.viewUrl);
+    expect(staleFileRes.status).toBe(403);
+  });
+
+  it("rejects files whose content does not match their declared type", async () => {
+    const res = await request(app)
+      .post(`/apps/${appId}/files`)
+      .set("Authorization", `Bearer ${apiToken}`)
+      .attach("file", Buffer.from("not actually png"), {
+        filename: "fake.png",
+        contentType: "image/png",
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe("File content does not match the declared file type.");
+  });
+
+  it("rejects uploads that exceed the app storage quota", async () => {
+    const previousQuota = process.env.APP_STORAGE_QUOTA_BYTES;
+    process.env.APP_STORAGE_QUOTA_BYTES = "1";
+
+    const quotaAppRes = await request(app).post("/apps").send({
+      name: "Quota Test App",
+    });
+
+    const res = await request(app)
+      .post(`/apps/${quotaAppRes.body.id}/files`)
+      .set("Authorization", `Bearer ${quotaAppRes.body.apiToken}`)
+      .attach("file", pngBuffer, {
+        filename: "quota.png",
+        contentType: "image/png",
+      });
+
+    expect(res.status).toBe(413);
+    expect(res.body.error).toBe("App storage quota exceeded");
+    expect(res.body.appStorageQuotaBytes).toBe(1);
+
+    if (previousQuota === undefined) {
+      delete process.env.APP_STORAGE_QUOTA_BYTES;
+    } else {
+      process.env.APP_STORAGE_QUOTA_BYTES = previousQuota;
+    }
   });
 
   it("rejects unsupported upload file types", async () => {
@@ -171,6 +431,80 @@ describe("EasyData API", () => {
     expect(res.status).toBe(400);
     expect(res.body.error).toBe("File too large");
     expect(res.body.maxFileSizeBytes).toBe(5 * 1024 * 1024);
+  });
+
+
+  it("deletes an app and its uploaded files", async () => {
+    const deleteAppRes = await request(app).post("/apps").send({
+      name: "Delete Test App",
+    });
+
+    const deleteAppId = deleteAppRes.body.id;
+    const deleteAppToken = deleteAppRes.body.apiToken;
+
+    const uploadRes = await request(app)
+      .post(`/apps/${deleteAppId}/files`)
+      .set("Authorization", `Bearer ${deleteAppToken}`)
+      .attach("file", pngBuffer, {
+        filename: "delete.png",
+        contentType: "image/png",
+      });
+
+    expect(uploadRes.status).toBe(201);
+
+    const res = await request(app)
+      .delete(`/apps/${deleteAppId}`)
+      .set("Authorization", `Bearer ${deleteAppToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.deletedFiles).toBeGreaterThanOrEqual(1);
+
+    const schemaRes = await request(app)
+      .get(`/apps/${deleteAppId}/schema`)
+      .set("Authorization", `Bearer ${deleteAppToken}`);
+
+    expect(schemaRes.status).toBe(404);
+  });
+
+
+  it("lists and cleans up expired apps through admin retention endpoints", async () => {
+    const expiredAppRes = await request(app).post("/apps").send({
+      name: "Expired App",
+    });
+
+    await request(app)
+      .put(`/apps/${expiredAppRes.body.id}/retention`)
+      .set("Authorization", `Bearer ${expiredAppRes.body.apiToken}`)
+      .send({
+        policy: "custom",
+        retainUntil: "2000-01-01",
+        note: "Expired test data.",
+      });
+
+    const expiredRes = await request(app)
+      .get("/apps/retention/expired")
+      .set("Authorization", "Bearer test-admin-token");
+
+    expect(expiredRes.status).toBe(200);
+    expect(expiredRes.body.apps.map((item: any) => item.id)).toContain(expiredAppRes.body.id);
+
+    const cleanupRes = await request(app)
+      .post("/apps/retention/cleanup")
+      .set("Authorization", "Bearer test-admin-token");
+
+    expect(cleanupRes.status).toBe(200);
+    expect(cleanupRes.body.deletedApps.map((item: any) => item.appId)).toContain(expiredAppRes.body.id);
+  });
+
+  it("rejects generated apps that use public upload URLs or admin credentials", () => {
+    expect(() =>
+      writeGeneratedApp("11111111-1111-4111-8111-111111111111", "<img src='/uploads/photo.png'>")
+    ).toThrow("Generated app uses public /uploads file URLs");
+
+    expect(() =>
+      writeGeneratedApp("22222222-2222-4222-8222-222222222222", "EASYDATA_ADMIN_TOKEN")
+    ).toThrow("Generated app must not reference admin credentials");
   });
 
   it("normalizes generated HTML API routes before publishing", () => {

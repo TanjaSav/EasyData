@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { pathToFileURL } from "node:url";
 import { z } from "zod";
-import { createApp, listApps } from "../services/app.service.js";
+import { createApp } from "../services/app.service.js";
 import {
   getGeneratedAppFullUrl,
   writeGeneratedApp,
@@ -16,6 +16,10 @@ import {
   updateRow,
   deleteRow,
 } from "../services/table.service.js";
+import {
+  getAppStorageQuotaBytes,
+  getAppStorageUsageBytes,
+} from "../services/file.service.js";
 
 // Creates an EasyData MCP server instance.
 // A fresh instance is needed for each Streamable HTTP request.
@@ -25,27 +29,9 @@ export function createEasyDataMcpServer() {
     version: "0.1.0",
   });
 
-  // Exposes a tool that returns all existing EasyData apps.
-  // This is useful for checking what apps are already available.
-  server.tool("list_apps", {}, async () => {
-    const apps = listApps();
+  // list_apps is intentionally not exposed over teacher-facing MCP.
+  // Use the admin-protected REST GET /apps endpoint for server administration.
 
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(
-            {
-              count: apps.length,
-              apps,
-            },
-            null,
-            2
-          ),
-        },
-      ],
-    };
-  });
 
   // Exposes a tool that creates a new EasyData app.
   // Claude can use this when a teacher asks for a new database-backed app.
@@ -107,6 +93,10 @@ export function createEasyDataMcpServer() {
     {
       appId: z.string().min(1).describe("The EasyData app id"),
       tableName: z.string().min(1).describe("The name of the table to create"),
+      confirmSensitiveData: z
+        .boolean()
+        .optional()
+        .describe("Set true only after the teacher confirms sensitive data collection warnings"),
       columns: z
         .array(
           z.object({
@@ -118,10 +108,11 @@ export function createEasyDataMcpServer() {
         )
         .describe("The list of columns for the new table"),
     },
-    async ({ appId, tableName, columns }) => {
+    async ({ appId, tableName, columns, confirmSensitiveData }) => {
       const result = createTable(appId, {
         tableName,
         columns,
+        confirmSensitiveData,
       });
 
       return {
@@ -145,6 +136,10 @@ export function createEasyDataMcpServer() {
         .string()
         .min(1)
         .describe("The table that will receive new columns"),
+      confirmSensitiveData: z
+        .boolean()
+        .optional()
+        .describe("Set true only after the teacher confirms sensitive data collection warnings"),
       columns: z
         .array(
           z.object({
@@ -156,8 +151,13 @@ export function createEasyDataMcpServer() {
         )
         .describe("The new columns that should be added"),
     },
-    async ({ appId, tableName, columns }) => {
-      const result = alterTable(appId, tableName, columns);
+    async ({ appId, tableName, columns, confirmSensitiveData }) => {
+      const result = alterTable(
+        appId,
+        tableName,
+        columns,
+        confirmSensitiveData ?? false
+      );
 
       return {
         content: [
@@ -314,7 +314,11 @@ export function createEasyDataMcpServer() {
                 uploadUrl: `/apps/${appId}/files`,
                 method: "POST",
                 fieldName: "file",
-                note: "Local storage mode. Upload using multipart/form-data.",
+                note: "Local storage mode. Upload using multipart/form-data. Store the returned fileName in SQLite, not the signed viewUrl. Use POST /apps/{appId}/files/{fileName}/view-url with Authorization to refresh an expiring view URL when rendering.",
+                limits: {
+                  appStorageQuotaBytes: getAppStorageQuotaBytes(),
+                  currentStorageUsageBytes: getAppStorageUsageBytes(appId),
+                },
               },
               null,
               2

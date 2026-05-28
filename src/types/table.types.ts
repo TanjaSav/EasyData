@@ -6,4 +6,5 @@ export type ColumnDefinition = {
 export type CreateTableInput = {
   tableName: string;
   columns: ColumnDefinition[];
+  confirmSensitiveData?: boolean | undefined;
 };
