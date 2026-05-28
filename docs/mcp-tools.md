@@ -224,6 +224,8 @@ The current implementation uses local uploads with `multipart/form-data`. Upload
 - File uploads use local disk storage, not presigned object storage yet.
 - Table names and column names should be generated from trusted assistant logic and kept simple: lowercase letters, numbers, and underscores.
 
-## Connecting to ChatGPT
+## Connecting to ChatGPT, Claude, and Gemini
 
-For setup steps, see [Connect EasyData MCP to ChatGPT](chatgpt-mcp.md).
+For setup steps, see:
+- [Connect EasyData MCP to ChatGPT and Claude](chatgpt-claude-mcp.md)
+- [Connect EasyData MCP to Gemini](gemini-mcp.md)
