@@ -1,0 +1,66 @@
+{
+  "name": "Dots",
+  "version": 1.1,
+  "height": 1080,
+  "width": 1920,
+    "code":  "\nuniform vec4 _Color0;\nuniform vec4 _Color1;\nuniform float _Height;  \nuniform float _Speed;  \nuniform float _Offset;  \nuniform float _Size;\nuniform vec2 _Pos;\nuniform float _RadialDensity;\nuniform float _AngularDensity;\n\nconst float PI = acos(0.) * 2.;\n\nmat2 rot( float a )\n{\n    return mat2( cos(a), sin(a), -sin(a), cos(a) );\n}\n\nfloat starColor( vec2 uv, float starSize )\n{\n    //return smoothstep( .2, 1., .006/length( uv ) ) * 1.5;\n    return smoothstep( 1., 0., pow(length( uv )/starSize,.5) );\n}\n\nfloat sfract( float x )\n{\n    return sin(x*(2.*PI)) * .5 + .5;\n}\n\nvoid main()\n{\t\n    vec2 fragCoord = vec2(_TexCoord.x, 1.-_TexCoord.y) * _ImageSize;\n    vec2 fragCoordPanned = fragCoord - ( _Pos - _ImageSize * .5 );\n    vec2 uv = (fragCoordPanned *2.-_ImageSize.xy)/_ImageSize.y;\n\n    float N = round( 140. * _RadialDensity );\n    float D = .15 / _AngularDensity;\n\n    float col = length( uv );\n        \n    vec2 mainCell = vec2( floor( atan( uv.y, uv.x ) / (2.*PI) * N )\n                        , floor( length( uv ) / D ) );                    \n    \n    float t = _Time * .5 * _Speed;\n\n    vec4 backgroundColor = mix( _Color0, _Color1, fragCoord.x/_ImageSize.x );\n    vec4 totalCol = backgroundColor;\n    float _Mode = 0.0;\n    for ( int deltaCellY = -1; deltaCellY \u003c= 1; deltaCellY++ )\n    for ( int deltaCellX = -1; deltaCellX \u003c= 1; deltaCellX++ )\n    {\n        vec2 cell = mainCell + vec2( float( deltaCellX ), float( deltaCellY ) );\n        float cellDistFromCenter = (cell.y + .5) * D;\n        vec2 cellCenter = rot( (cell.x+.5) * 2.*PI/N ) * vec2( cellDistFromCenter, 0. );\n\n        {\n            float phaseRaw = cell.x * _Offset + .08 * cell.y - t;\n            float phase = _Mode == 0. ? fract( phaseRaw ) : sfract( phaseRaw );\n            float starSize = mix( .005, .04, phase ) * smoothstep( -1.3, 2., cellDistFromCenter ) * _Size;\n            float c = starColor( uv - cellCenter, starSize );\n            totalCol += (0.75 * phase * c + backgroundColor * c * 4.);\n\t\t\ttotalCol.a = 1.;\n        }\n    }\n    \n    _FragColor = totalCol;\n}\n  ",
+    "signature":  {
+                      "type":  "ES512",
+                      "value":  "MIGIAkIBrgw6YGyY3udcNhMpi2wibWY9RJeDBkjogk+sGDsht+nY+CyShIUB7M10ozZHhggLcZSi40/D5sbwSw0timD/p6wCQgEMXbjc/iKIIYZ4M2+HGyM/p6M2z+jYLKuWpXJOJgAaEwPIHDfW6AIsei2cew7vqvTYkmFx+UZM231JVyRgzX7fTQ=="
+                  },
+  "effectDef": [
+    {
+      "name": "Color0",
+      "type": "Color",
+      "value": "FFFFFF"
+    },
+    {
+      "name": "Color1",
+      "type": "Color",
+      "value": "BED8E4"
+    },
+    {
+      "name": "Speed",
+      "type": "double",
+      "defaultValue": 0.39,
+      "minValue": 0,
+      "maxValue": 10
+    },
+    {
+      "name": "Offset",
+      "type": "double",
+      "defaultValue": 0,
+      "minValue": -0.1,
+      "maxValue": 0.1
+    },
+    {
+      "name": "Size",
+      "type": "double",
+      "defaultValue": 0.15,
+      "minValue": 0,
+      "maxValue": 2
+    },
+    {
+      "name": "Pos",
+      "type": "Position",
+      "value": [
+        960,
+        540
+      ]
+    },
+    {
+      "name": "RadialDensity",
+      "type": "double",
+      "defaultValue": 0.68,
+      "minValue": 0.1,
+      "maxValue": 2
+    },
+    {
+      "name": "AngularDensity",
+      "type": "double",
+      "defaultValue": 5,
+      "minValue": 0.1,
+      "maxValue": 5
+    }
+  ]
+}
