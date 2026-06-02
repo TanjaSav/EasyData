@@ -9,7 +9,7 @@ Ef tafla inniheldur reiti eins og `student_name`, `photo`, `health`, `address`, 
 Góð regla:
 
 1. Fjarlægðu reitinn ef hann er ekki nauðsynlegur.
-2. Notaðu minna persónugreinanleg gögn þegar hægt er, til dæmis nemendaauðkenni í stað fulls nafns.
+2. Notaðu minni persónugreinanleg gögn þegar hægt er, til dæmis nemendaauðkenni í stað fulls nafns.
 3. Ákveddu áður en gögnum er safnað hvenær þeim verður eytt.
 
 ## Varðveisla gagna
