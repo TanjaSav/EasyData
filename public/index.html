@@ -20,10 +20,16 @@
         <span>EasyData</span>
       </a>
       <div class="hidden items-center gap-6 text-sm font-bold text-muted sm:flex">
-        <a class="hover:text-ink" href="#features">Features</a>
-        <a class="hover:text-ink" href="#workflow">Workflow</a>
-        <a class="hover:text-ink" href="/mcp.html">MCP Guide</a>
-        <a class="inline-flex min-h-10 items-center rounded-lg border border-ink bg-ink px-4 text-white" href="/health">API Status</a>
+        <a class="hover:text-ink" href="#features" data-i18n="nav-features">Features</a>
+        <a class="hover:text-ink" href="#workflow" data-i18n="nav-workflow">Workflow</a>
+        <a class="hover:text-ink" href="/mcp.html" data-i18n="nav-mcp">MCP Guide</a>
+        <a class="inline-flex min-h-10 items-center rounded-lg border border-ink bg-ink px-4 text-white" href="/health" data-i18n="nav-status">API Status</a>
+        
+        <!-- Language Switcher -->
+        <div class="flex items-center gap-1 rounded-lg border border-line bg-soft p-1">
+          <button id="lang-en" class="rounded px-2 py-0.5 text-xs font-bold bg-ink text-white" onclick="changeLanguage('en')">EN</button>
+          <button id="lang-is" class="rounded px-2 py-0.5 text-xs font-bold text-muted" onclick="changeLanguage('is')">ÍS</button>
+        </div>
       </div>
     </nav>
   </header>
@@ -32,18 +38,18 @@
     <section class="grid min-h-[92vh] items-center border-b border-line bg-[linear-gradient(90deg,rgba(255,255,255,.96)_0%,rgba(255,255,255,.88)_42%,rgba(255,255,255,.35)_78%),url('/assets/easydata-hero.png')] bg-cover bg-center bg-no-repeat pb-14 pt-32">
       <div class="mx-4 max-w-[1180px] sm:mx-auto">
         <div class="max-w-2xl">
-          <p class="mb-5 inline-flex items-center gap-2 text-xs font-extrabold uppercase text-ocean before:block before:size-2 before:rounded-full before:bg-ambered">Hosted from easydata.is</p>
-          <h1 class="max-w-2xl text-5xl font-black leading-[.96] tracking-normal sm:text-7xl lg:text-8xl">Simple databases for classroom apps.</h1>
-          <p class="mt-6 max-w-xl text-lg leading-8 text-muted sm:text-xl">EasyData lets teachers and small teams create data-backed web apps without managing servers, dashboards, or database credentials.</p>
+          <p class="mb-5 inline-flex items-center gap-2 text-xs font-extrabold uppercase text-ocean before:block before:size-2 before:rounded-full before:bg-ambered" data-i18n="hero-badge">Hosted from easydata.is</p>
+          <h1 class="max-w-2xl text-5xl font-black leading-[.96] tracking-normal sm:text-7xl lg:text-8xl" data-i18n="hero-title">Simple databases for classroom apps.</h1>
+          <p class="mt-6 max-w-xl text-lg leading-8 text-muted sm:text-xl" data-i18n="hero-desc">EasyData lets teachers and small teams create data-backed web apps without managing servers, dashboards, or database credentials.</p>
           <div class="mt-8 flex flex-wrap gap-3" aria-label="Primary actions">
-            <a class="inline-flex min-h-11 items-center justify-center rounded-lg border border-ink bg-ink px-5 font-extrabold text-white" href="/create.html">Create with Codex</a>
-            <a class="inline-flex min-h-11 items-center justify-center rounded-lg border border-line bg-white/85 px-5 font-extrabold text-ink" href="/public/test-client.html">Try the browser demo</a>
-            <a class="inline-flex min-h-11 items-center justify-center rounded-lg border border-line bg-white/85 px-5 font-extrabold text-ink" href="#workflow">View API example</a>
+            <a class="inline-flex min-h-11 items-center justify-center rounded-lg border border-ink bg-ink px-5 font-extrabold text-white" href="/create.html" data-i18n="btn-create">Create with Codex</a>
+            <a class="inline-flex min-h-11 items-center justify-center rounded-lg border border-line bg-white/85 px-5 font-extrabold text-ink" href="/public/test-client.html" data-i18n="btn-demo">Try the browser demo</a>
+            <a class="inline-flex min-h-11 items-center justify-center rounded-lg border border-line bg-white/85 px-5 font-extrabold text-ink" href="#workflow" data-i18n="btn-example">View API example</a>
           </div>
           <div class="mt-11 grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-3" aria-label="EasyData capabilities">
-            <div class="border-t border-ink/20 py-4"><strong class="block text-3xl leading-none">SQLite</strong><span class="mt-2 block text-sm leading-5 text-muted">One database file per app</span></div>
-            <a href="/mcp.html" class="border-t border-ink/20 py-4 block hover:opacity-85 transition-opacity group"><strong class="block text-3xl leading-none text-ink group-hover:text-teal">MCP <span class="text-lg opacity-60 group-hover:opacity-100 transition-opacity">↗</span></strong><span class="mt-2 block text-sm leading-5 text-muted">Claude and Codex can create schemas</span></a>
-            <div class="border-t border-ink/20 py-4"><strong class="block text-3xl leading-none">REST</strong><span class="mt-2 block text-sm leading-5 text-muted">Simple fetch calls from any page</span></div>
+            <div class="border-t border-ink/20 py-4"><strong class="block text-3xl leading-none" data-i18n="cap-sqlite">SQLite</strong><span class="mt-2 block text-sm leading-5 text-muted" data-i18n="cap-sqlite-desc">One database file per app</span></div>
+            <a href="/mcp.html" class="border-t border-ink/20 py-4 block hover:opacity-85 transition-opacity group"><strong class="block text-3xl leading-none text-ink group-hover:text-teal" data-i18n="cap-mcp">MCP <span class="text-lg opacity-60 group-hover:opacity-100 transition-opacity">↗</span></strong><span class="mt-2 block text-sm leading-5 text-muted" data-i18n="cap-mcp-desc">Claude and Codex can create schemas</span></a>
+            <div class="border-t border-ink/20 py-4"><strong class="block text-3xl leading-none" data-i18n="cap-rest">REST</strong><span class="mt-2 block text-sm leading-5 text-muted" data-i18n="cap-rest-desc">Simple fetch calls from any page</span></div>
           </div>
         </div>
       </div>
@@ -52,13 +58,13 @@
     <section class="bg-soft py-20" id="features">
       <div class="mx-4 max-w-[1180px] sm:mx-auto">
         <div class="mb-9 max-w-3xl">
-          <h2 class="text-4xl font-black leading-tight sm:text-5xl">Built for small useful tools, not database administration.</h2>
-          <p class="mt-4 text-lg leading-8 text-muted">Create tables, store rows, upload files, and query results through a compact API that AI tools can operate safely.</p>
+          <h2 class="text-4xl font-black leading-tight sm:text-5xl" data-i18n="features-title">Built for small useful tools, not database administration.</h2>
+          <p class="mt-4 text-lg leading-8 text-muted" data-i18n="features-desc">Create tables, store rows, upload files, and query results through a compact API that AI tools can operate safely.</p>
         </div>
         <div class="grid gap-5 md:grid-cols-3">
-          <article class="min-h-52 rounded-lg border border-line bg-white p-6"><div class="mb-5 grid size-11 place-items-center rounded-lg bg-teal/10 font-black text-teal">01</div><h3 class="text-xl font-extrabold">Create apps from natural language</h3><p class="mt-3 leading-7 text-muted">A teacher describes the workflow, then the assistant creates the app, tables, and usable HTML.</p></article>
-          <article class="min-h-52 rounded-lg border border-line bg-white p-6"><div class="mb-5 grid size-11 place-items-center rounded-lg bg-teal/10 font-black text-teal">02</div><h3 class="text-xl font-extrabold">Keep data in simple tables</h3><p class="mt-3 leading-7 text-muted">Each app receives its own SQLite database with token-protected CRUD endpoints.</p></article>
-          <article class="min-h-52 rounded-lg border border-line bg-white p-6"><div class="mb-5 grid size-11 place-items-center rounded-lg bg-teal/10 font-black text-teal">03</div><h3 class="text-xl font-extrabold">Share static frontends</h3><p class="mt-3 leading-7 text-muted">Generated apps are plain HTML pages that can be opened immediately or hosted anywhere.</p></article>
+          <article class="min-h-52 rounded-lg border border-line bg-white p-6"><div class="mb-5 grid size-11 place-items-center rounded-lg bg-teal/10 font-black text-teal">01</div><h3 class="text-xl font-extrabold" data-i18n="feat-1-title">Create apps from natural language</h3><p class="mt-3 leading-7 text-muted" data-i18n="feat-1-desc">A teacher describes the workflow, then the assistant creates the app, tables, and usable HTML.</p></article>
+          <article class="min-h-52 rounded-lg border border-line bg-white p-6"><div class="mb-5 grid size-11 place-items-center rounded-lg bg-teal/10 font-black text-teal">02</div><h3 class="text-xl font-extrabold" data-i18n="feat-2-title">Keep data in simple tables</h3><p class="mt-3 leading-7 text-muted" data-i18n="feat-2-desc">Each app receives its own SQLite database with token-protected CRUD endpoints.</p></article>
+          <article class="min-h-52 rounded-lg border border-line bg-white p-6"><div class="mb-5 grid size-11 place-items-center rounded-lg bg-teal/10 font-black text-teal">03</div><h3 class="text-xl font-extrabold" data-i18n="feat-3-title">Share static frontends</h3><p class="mt-3 leading-7 text-muted" data-i18n="feat-3-desc">Generated apps are plain HTML pages that can be opened immediately or hosted anywhere.</p></article>
         </div>
       </div>
     </section>
@@ -66,11 +72,11 @@
     <section class="py-20" id="workflow">
       <div class="mx-4 grid max-w-[1180px] sm:mx-auto gap-11 lg:grid-cols-[.9fr_1.1fr]">
         <div>
-          <div class="mb-8"><h2 class="text-4xl font-black leading-tight sm:text-5xl">The API stays small enough to explain.</h2><p class="mt-4 text-lg leading-8 text-muted">AI tools use the same endpoints that a browser app uses, so the generated code remains inspectable.</p></div>
+          <div class="mb-8"><h2 class="text-4xl font-black leading-tight sm:text-5xl" data-i18n="workflow-title">The API stays small enough to explain.</h2><p class="mt-4 text-lg leading-8 text-muted" data-i18n="workflow-desc">AI tools use the same endpoints that a browser app uses, so the generated code remains inspectable.</p></div>
           <ol class="space-y-4">
-            <li class="flex gap-4"><span class="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-sm font-black text-white">1</span><p class="m-0 leading-7 text-muted"><strong class="text-ink">Create an app.</strong> EasyData returns an app id and token.</p></li>
-            <li class="flex gap-4"><span class="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-sm font-black text-white">2</span><p class="m-0 leading-7 text-muted"><strong class="text-ink">Define tables.</strong> Add columns for the teacher's workflow.</p></li>
-            <li class="flex gap-4"><span class="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-sm font-black text-white">3</span><p class="m-0 leading-7 text-muted"><strong class="text-ink">Use fetch.</strong> Insert, update, query, and delete rows from the generated page.</p></li>
+            <li class="flex gap-4"><span class="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-sm font-black text-white">1</span><p class="m-0 leading-7 text-muted" data-i18n="work-1"><strong class="text-ink">Create an app.</strong> EasyData returns an app id and token.</p></li>
+            <li class="flex gap-4"><span class="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-sm font-black text-white">2</span><p class="m-0 leading-7 text-muted" data-i18n="work-2"><strong class="text-ink">Define tables.</strong> Add columns for the teacher's workflow.</p></li>
+            <li class="flex gap-4"><span class="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-sm font-black text-white">3</span><p class="m-0 leading-7 text-muted" data-i18n="work-3"><strong class="text-ink">Use fetch.</strong> Insert, update, query, and delete rows from the generated page.</p></li>
           </ol>
         </div>
         <div class="overflow-hidden rounded-lg border border-slate-800 bg-slate-950 text-slate-100 shadow-sm" aria-label="API example">
@@ -90,9 +96,116 @@
       </div>
     </section>
 
-    <section class="border-y border-line bg-soft py-14"><div class="mx-4 flex max-w-[1180px] sm:mx-auto flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"><div><h2 class="text-3xl font-black">Ready to test the API?</h2><p class="mt-2 text-muted">Open the browser demo and run the full create-table-insert-query flow.</p></div><a class="inline-flex min-h-11 items-center justify-center rounded-lg border border-ink bg-ink px-5 font-extrabold text-white" href="/public/test-client.html">Open demo</a></div></section>
+    <section class="border-y border-line bg-soft py-14"><div class="mx-4 flex max-w-[1180px] sm:mx-auto flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"><div><h2 class="text-3xl font-black" data-i18n="ready-title">Ready to test the API?</h2><p class="mt-2 text-muted" data-i18n="ready-desc">Open the browser demo and run the full create-table-insert-query flow.</p></div><a class="inline-flex min-h-11 items-center justify-center rounded-lg border border-ink bg-ink px-5 font-extrabold text-white" href="/public/test-client.html" data-i18n="ready-btn">Open demo</a></div></section>
   </main>
 
-  <footer class="py-6 text-sm text-muted"><div class="mx-4 max-w-[1180px] sm:mx-auto">EasyData API available at <code class="rounded bg-soft px-1.5 py-0.5">/apps</code>. Health check at <code class="rounded bg-soft px-1.5 py-0.5">/health</code>.</div></footer>
+  <footer class="py-6 text-sm text-muted"><div class="mx-4 max-w-[1180px] sm:mx-auto" data-i18n="footer-text">EasyData API available at <code class="rounded bg-soft px-1.5 py-0.5">/apps</code>. Health check at <code class="rounded bg-soft px-1.5 py-0.5">/health</code>.</div></footer>
+
+  <!-- Translation Script -->
+  <script>
+    const translations = {
+      en: {
+        "nav-features": "Features",
+        "nav-workflow": "Workflow",
+        "nav-mcp": "MCP Guide",
+        "nav-status": "API Status",
+        "hero-badge": "Hosted from easydata.is",
+        "hero-title": "Simple databases for classroom apps.",
+        "hero-desc": "EasyData lets teachers and small teams create data-backed web apps without managing servers, dashboards, or database credentials.",
+        "btn-create": "Create with Codex",
+        "btn-demo": "Try the browser demo",
+        "btn-example": "View API example",
+        "cap-sqlite": "SQLite",
+        "cap-sqlite-desc": "One database file per app",
+        "cap-mcp": "MCP <span class=\"text-lg opacity-60 group-hover:opacity-100 transition-opacity\">↗</span>",
+        "cap-mcp-desc": "Claude and Codex can create schemas",
+        "cap-rest": "REST",
+        "cap-rest-desc": "Simple fetch calls from any page",
+        "features-title": "Built for small useful tools, not database administration.",
+        "features-desc": "Create tables, store rows, upload files, and query results through a compact API that AI tools can operate safely.",
+        "feat-1-title": "Create apps from natural language",
+        "feat-1-desc": "A teacher describes the workflow, then the assistant creates the app, tables, and usable HTML.",
+        "feat-2-title": "Keep data in simple tables",
+        "feat-2-desc": "Each app receives its own SQLite database with token-protected CRUD endpoints.",
+        "feat-3-title": "Share static frontends",
+        "feat-3-desc": "Generated apps are plain HTML pages that can be opened immediately or hosted anywhere.",
+        "workflow-title": "The API stays small enough to explain.",
+        "workflow-desc": "AI tools use the same endpoints that a browser app uses, so the generated code remains inspectable.",
+        "work-1": "<strong class=\"text-ink\">Create an app.</strong> EasyData returns an app id and token.",
+        "work-2": "<strong class=\"text-ink\">Define tables.</strong> Add columns for the teacher's workflow.",
+        "work-3": "<strong class=\"text-ink\">Use fetch.</strong> Insert, update, query, and delete rows from the generated page.",
+        "ready-title": "Ready to test the API?",
+        "ready-desc": "Open the browser demo and run the full create-table-insert-query flow.",
+        "ready-btn": "Open demo",
+        "footer-text": "EasyData API available at <code class=\"rounded bg-soft px-1.5 py-0.5\">/apps</code>. Health check at <code class=\"rounded bg-soft px-1.5 py-0.5\">/health</code>."
+      },
+      is: {
+        "nav-features": "Eiginleikar",
+        "nav-workflow": "Vinnuferli",
+        "nav-mcp": "MCP Leiðarvísir",
+        "nav-status": "Staða API",
+        "hero-badge": "Hýst á easydata.is",
+        "hero-title": "Einfaldir gagnagrunnar fyrir skólaöpp.",
+        "hero-desc": "EasyData gerir kennurum og litlum hópum kleift að búa til veföpp með gagnagrunni án þess að sýsla með netþjóna, stjórnborð eða aðgangsheiti.",
+        "btn-create": "Búa til með Codex",
+        "btn-demo": "Prófa vafrasýnishorn",
+        "btn-example": "Skoða API dæmi",
+        "cap-sqlite": "SQLite",
+        "cap-sqlite-desc": "Ein gagnagrunnsskrá fyrir hvert app",
+        "cap-mcp": "MCP <span class=\"text-lg opacity-60 group-hover:opacity-100 transition-opacity\">↗</span>",
+        "cap-mcp-desc": "Claude og Codex geta búið til skemu",
+        "cap-rest": "REST",
+        "cap-rest-desc": "Einföld fetch-köll af hvaða síðu sem er",
+        "features-title": "Smíðað fyrir einföld og gagnleg tól, ekki flókna stjórnun.",
+        "features-desc": "Búðu til töflur, vistaðu raðir, hlaðið upp skrám og leitaðu í niðurstöðum í gegnum lítið API sem gervigreind getur stýrt örugglega.",
+        "feat-1-title": "Búðu til öpp úr mannamáli",
+        "feat-1-desc": "Kennari lýsir ferlinu, og aðstoðarmaðurinn (AI) býr sjálfkrafa til appið, gagnagrunnstöflurnar og nothæft HTML.",
+        "feat-2-title": "Hafðu gögn í einföldum töflum",
+        "feat-2-desc": "Hvert app fær sinn eigin SQLite gagnagrunn með auðkennisvörðum CRUD endapunktum.",
+        "feat-3-title": "Deildu einföldum vefsíðum",
+        "feat-3-desc": "Öppin sem verða til eru venjulegar HTML síður sem hægt er að opna strax eða hýsa hvar sem er.",
+        "workflow-title": "API-viðmótið er nógu lítið til að hægt sé að útskýra það.",
+        "workflow-desc": "Gervigreindin notar sömu endapunkta og vafraforritið, þannig að kóðinn sem verður til er áfram gegnsær og auðskiljanlegur.",
+        "work-1": "<strong class=\"text-ink\">Stofna app.</strong> EasyData skilar auðkenni appsins og lykli.",
+        "work-2": "<strong class=\"text-ink\">Hanna töflur.</strong> Bættu við dálkum fyrir vinnuferli kennarans.",
+        "work-3": "<strong class=\"text-ink\">Nota fetch.</strong> Settu inn, uppfærðu, leitaðu og eyddu röðum beint af síðunni.",
+        "ready-title": "Tilbúin/n að prófa API-ið?",
+        "ready-desc": "Opnaðu vafrasýnishornið og prófaðu allt ferlið: búa til töflu, setja inn gögn og leita.",
+        "ready-btn": "Opna sýnishorn",
+        "footer-text": "EasyData API er aðgengilegt á <code class=\"rounded bg-soft px-1.5 py-0.5\">/apps</code>. Heilsuprófun á <code class=\"rounded bg-soft px-1.5 py-0.5\">/health</code>."
+      }
+    };
+
+    function changeLanguage(lang) {
+      localStorage.setItem("lang", lang);
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (translations[lang] && translations[lang][key]) {
+          el.innerHTML = translations[lang][key];
+        }
+      });
+      
+      const enBtn = document.getElementById("lang-en");
+      const isBtn = document.getElementById("lang-is");
+      
+      if (lang === "is") {
+        isBtn.classList.add("bg-ink", "text-white");
+        isBtn.classList.remove("text-muted");
+        enBtn.classList.remove("bg-ink", "text-white");
+        enBtn.classList.add("text-muted");
+      } else {
+        enBtn.classList.add("bg-ink", "text-white");
+        enBtn.classList.remove("text-muted");
+        isBtn.classList.remove("bg-ink", "text-white");
+        isBtn.classList.add("text-muted");
+      }
+    }
+
+    // Initialize from localStorage or default to English
+    document.addEventListener("DOMContentLoaded", () => {
+      const savedLang = localStorage.getItem("lang") || "en";
+      changeLanguage(savedLang);
+    });
+  </script>
 </body>
 </html>

@@ -592,6 +592,39 @@
       color: var(--text-muted);
       font-size: 0.85rem;
     }
+
+    /* Language Switcher */
+    .lang-switcher {
+      display: flex;
+      gap: 0.25rem;
+      border-radius: 6px;
+      border: 1px solid var(--panel-border);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 2px;
+      align-items: center;
+      margin-left: 0.5rem;
+    }
+
+    .lang-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .lang-btn:hover {
+      color: var(--text-main);
+    }
+
+    .lang-btn.active {
+      background: var(--text-main);
+      color: var(--bg-dark);
+    }
   </style>
 </head>
 <body>
@@ -609,10 +642,16 @@
         <span>EasyData</span>
       </a>
       <nav class="nav-links">
-        <a href="#quick-paths" id="nav-paths">Connection Rules</a>
-        <a href="./assets/mcp.Project.mp4" id="nav-video">Video guide</a>
-        <a href="#troubleshooting" id="nav-trouble">Troubleshooting</a>
-        <a class="btn-nav" href="/" id="nav-back">Back to EasyData</a>
+        <a href="#quick-paths" id="nav-paths" data-i18n="nav-paths">Connection Rules</a>
+        <a href="./assets/mcp.Project.mp4" id="nav-video" data-i18n="nav-video">Video guide</a>
+        <a href="#troubleshooting" id="nav-trouble" data-i18n="nav-trouble">Troubleshooting</a>
+        <a class="btn-nav" href="/" id="nav-back" data-i18n="nav-back">Back to EasyData</a>
+        
+        <!-- Language Switcher -->
+        <div class="lang-switcher">
+          <button id="lang-en" class="lang-btn active" onclick="changeLanguage('en')">EN</button>
+          <button id="lang-is" class="lang-btn" onclick="changeLanguage('is')">ÍS</button>
+        </div>
       </nav>
     </div>
   </header>
@@ -622,9 +661,9 @@
     
     <!-- Hero Section -->
     <section class="hero">
-      <div class="badge-mcp">Claude GUI Connectors</div>
-      <h1 id="hero-title">Connect MCP via Claude Settings</h1>
-      <p id="hero-desc">Follow the steps below to configure a custom database connection directly within your Claude settings interface using remote MCP URLs.</p>
+      <div class="badge-mcp" data-i18n="hero-badge">Claude GUI Connectors</div>
+      <h1 id="hero-title" data-i18n="hero-title">Connect MCP via Claude Settings</h1>
+      <p id="hero-desc" data-i18n="hero-desc">Follow the steps below to configure a custom database connection directly within your Claude settings interface using remote MCP URLs.</p>
     </section>
 
     <!-- Steps Layout Section -->
@@ -659,22 +698,22 @@
 
             <!-- Dynamic Interactive Copyable Blocks -->
             <div class="interactive-element-box" id="url-copy-box">
-              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">EasyData Remote URL:</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;" data-i18n="url-label">EasyData Remote URL:</span>
               <div class="code-box-container">
                 <div class="code-box-header">
                   <span>Connection URL</span>
-                  <button class="btn-copy-code" id="btn-copy-url" onclick="copyText('https://easydata.is/mcp', 'btn-copy-url')">Copy URL</button>
+                  <button class="btn-copy-code" id="btn-copy-url" onclick="copyText('https://easydata.is/mcp', 'btn-copy-url')" data-i18n="btn-copy-url">Copy URL</button>
                 </div>
                 <div class="code-box" id="url-content">https://easydata.is/mcp</div>
               </div>
             </div>
 
             <div class="interactive-element-box" id="prompt-copy-box">
-              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Sample Prompt to Activate:</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;" data-i18n="prompt-label">Sample Prompt to Activate:</span>
               <div class="code-box-container">
                 <div class="code-box-header">
                   <span>Chat Prompt</span>
-                  <button class="btn-copy-code" id="btn-copy-prompt" onclick="copyText('Use EasyData MCP. Create a simple table called workouts with columns: exercise_name TEXT, duration_minutes INTEGER.', 'btn-copy-prompt')">Copy Prompt</button>
+                  <button class="btn-copy-code" id="btn-copy-prompt" onclick="copyText(translations[currentLang]['prompt-content'], 'btn-copy-prompt')" data-i18n="btn-copy-prompt">Copy Prompt</button>
                 </div>
                 <div class="code-box" style="color: #34d399;" id="prompt-content">Use EasyData MCP. Create a simple table called workouts with columns: exercise_name TEXT, duration_minutes INTEGER.</div>
               </div>
@@ -683,7 +722,7 @@
 
           <!-- Interactive Sliders Nav -->
           <div class="slider-nav">
-            <button class="nav-arrow-btn" id="btn-prev" onclick="changeStep(-1)" disabled>
+            <button class="nav-arrow-btn" id="btn-prev" onclick="changeStep(-1)" disabled data-i18n="btn-prev">
               ← Prev
             </button>
             
@@ -691,7 +730,7 @@
               <!-- Dynamic Dots generated in JS -->
             </div>
 
-            <button class="nav-arrow-btn" id="btn-next" onclick="changeStep(1)">
+            <button class="nav-arrow-btn" id="btn-next" onclick="changeStep(1)" data-i18n="btn-next">
               Next →
             </button>
           </div>
@@ -705,26 +744,26 @@
     <section class="info-grid">
       <!-- Path Lookup Card -->
       <div class="info-card paths" id="quick-paths">
-        <h4><span>🔌</span> Hosted vs Local MCP</h4>
-        <p><strong>Cloud URLs (Connectors GUI):</strong> Ideal for hosted environments. Claude's cloud models connect directly via HTTP/SSE. The URL must be public and secure: <span class="code-tag">https://easydata.is/mcp</span></p>
-        <p><strong>Local stdio (Config File):</strong> Ideal for local-only scripts. Requires setting up command hooks in the local configuration JSON files.</p>
+        <h4 data-i18n="info-mcp-title"><span>🔌</span> Hosted vs Local MCP</h4>
+        <p data-i18n="info-mcp-p1"><strong>Cloud URLs (Connectors GUI):</strong> Ideal for hosted environments. Claude's cloud models connect directly via HTTP/SSE. The URL must be public and secure: <span class="code-tag">https://easydata.is/mcp</span></p>
+        <p data-i18n="info-mcp-p2"><strong>Local stdio (Config File):</strong> Ideal for local-only scripts. Requires setting up command hooks in the local configuration JSON files.</p>
       </div>
 
       <!-- Troubleshooting Info Card -->
       <div class="info-card trouble" id="troubleshooting">
-        <h4><span>⚠️</span> Integration Tips</h4>
-        <p><strong>Explicit Activation:</strong> When starting a new conversation with Claude, state clearly: <code>"Use the EasyData MCP connector"</code> to ensure Claude binds the connection.</p>
-        <p><strong>Permission Prompts:</strong> Claude will ask for explicit confirmation before reading or writing data. Choose **Always Allow** to bypass repeated clicks.</p>
+        <h4 data-i18n="info-trouble-title"><span>⚠️</span> Integration Tips</h4>
+        <p data-i18n="info-trouble-p1"><strong>Explicit Activation:</strong> When starting a new conversation with Claude, state clearly: <code>"Use the EasyData MCP connector"</code> to ensure Claude binds the connection.</p>
+        <p data-i18n="info-trouble-p2"><strong>Permission Prompts:</strong> Claude will ask for explicit confirmation before reading or writing data. Choose **Always Allow** to bypass repeated clicks.</p>
       </div>
     
 
      <!-- Video guide -->
       <div class="video-guide" id="videoguide">
-        <h4>Video guide</h4>
+        <h4 data-i18n="video-guide-title">Video guide</h4>
         <video width="320" height="240" autoplay muted controls>
         <source src="./assets/mcp.Project.mp4" type="video/mp4">
         <source src="./assets/mcp.Project.ogg" type="video/ogg">
-        Your browser does not support the video tag.
+        <span data-i18n="video-not-supported">Your browser does not support the video tag.</span>
         </video>
        </div>
     </section>
@@ -734,100 +773,240 @@
   <!-- Footer Section -->
   <footer>
     <div class="nav-container" style="justify-content: center;">
-      <p>&copy; 2026 EasyData. Supporting open-source Model Context Protocol standards.</p>
+      <p data-i18n="footer-text">&copy; 2026 EasyData. Supporting open-source Model Context Protocol standards.</p>
     </div>
   </footer>
 
   <script>
-    // New visual steps mapping exactly to:
-    // 1-open-claude.png, 2-click-customize-connectors.png, 3-click-connectors.png, 4-click-plus.png, 
-    // 5-click-add-custom-connector.png, 6-give-name.png, 7-insert-url.png, 8-add.png, 
-    // 9-see-new-mcp.png, 10-refresh-tools-list.png
-    const steps = [
-      {
-        number: 1,
-        title: "Open Claude",
-        imageName: "1-open-claude.png",
-        heading: "1. Open the Claude Application",
-        text: "Launch the Claude Desktop client or sign in to Claude in your browser. Locate the chat box where your profile actions reside.",
-        interactive: null
+    const translations = {
+      en: {
+        "title-page": "EasyData | Connecting MCP to Claude Guide",
+        "nav-paths": "Connection Rules",
+        "nav-video": "Video guide",
+        "nav-trouble": "Troubleshooting",
+        "nav-back": "Back to EasyData",
+        "hero-badge": "Claude GUI Connectors",
+        "hero-title": "Connect MCP via Claude Settings",
+        "hero-desc": "Follow the steps below to configure a custom database connection directly within your Claude settings interface using remote MCP URLs.",
+        "url-label": "EasyData Remote URL:",
+        "btn-copy-url": "Copy URL",
+        "prompt-label": "Sample Prompt to Activate:",
+        "btn-copy-prompt": "Copy Prompt",
+        "prompt-content": "Use EasyData MCP. Create a simple table called workouts with columns: exercise_name TEXT, duration_minutes INTEGER.",
+        "btn-prev": "← Prev",
+        "btn-next": "Next →",
+        "copied": "Copied! ✓",
+        "info-mcp-title": "🔌 Hosted vs Local MCP",
+        "info-mcp-p1": "<strong>Cloud URLs (Connectors GUI):</strong> Ideal for hosted environments. Claude's cloud models connect directly via HTTP/SSE. The URL must be public and secure: <span class=\"code-tag\">https://easydata.is/mcp</span>",
+        "info-mcp-p2": "<strong>Local stdio (Config File):</strong> Ideal for local-only scripts. Requires setting up command hooks in the local configuration JSON files.",
+        "info-trouble-title": "⚠️ Integration Tips",
+        "info-trouble-p1": "<strong>Explicit Activation:</strong> When starting a new conversation with Claude, state clearly: <code>\"Use the EasyData MCP connector\"</code> to ensure Claude binds the connection.",
+        "info-trouble-p2": "<strong>Permission Prompts:</strong> Claude will ask for explicit confirmation before reading or writing data. Choose **Always Allow** to bypass repeated clicks.",
+        "video-guide-title": "Video guide",
+        "video-not-supported": "Your browser does not support the video tag.",
+        "footer-text": "&copy; 2026 EasyData. Supporting open-source Model Context Protocol standards."
       },
-      {
-        number: 2,
-        title: "Click Customize",
-        imageName: "2-click-customize-connectors.png",
-        heading: "2. Open settings to find Connectors",
-        text: "Click the menu or customization button located in the <strong>upper-left corner</strong> of the window to open settings so you can get to connectors.",
-        interactive: null
-      },
-      {
-        number: 3,
-        title: "Open Connectors",
-        imageName: "3-click-connectors.png",
-        heading: "3. Go to the Connectors Panel",
-        text: "Select **Connectors** from the popover menu. This opens the main integrations manager panel.",
-        interactive: null
-      },
-      {
-        number: 4,
-        title: "Click Plus Icon",
-        imageName: "4-click-plus.png",
-        heading: "4. Create a New Integration",
-        text: "Locate the **+** (Plus) icon in the top-right corner of the Connectors overlay pane and click it.",
-        interactive: null
-      },
-      {
-        number: 5,
-        title: "Add Custom",
-        imageName: "5-click-add-custom-connector.png",
-        heading: "5. Select Add Custom Connector",
-        text: "Click the **Add Custom Connector** list item to open the custom URL configuration dialog.",
-        interactive: null
-      },
-      {
-        number: 6,
-        title: "Give a Name",
-        imageName: "6-give-name.png",
-        heading: "6. Label the Connector",
-        text: "Type a identifier name into the box, such as <code>EasyData</code>. This labels the server for your prompts.",
-        interactive: null
-      },
-      {
-        number: 7,
-        title: "Insert URL",
-        imageName: "7-insert-url.png",
-        heading: "7. Input the Remote Endpoint URL",
-        text: "Paste the public, secure endpoint URL in the server text field. Copy the EasyData URL below to paste it directly.",
-        interactive: "url"
-      },
-      {
-        number: 8,
-        title: "Click Add",
-        imageName: "8-add.png",
-        heading: "8. Complete the Registration",
-        text: "Click the **Add** button. Claude will contact the URL to negotiate connection handshakes and retrieve tool descriptions.",
-        interactive: null
-      },
-      {
-        number: 9,
-        title: "Enable Connector",
-        imageName: "9-see-new-mcp.png",
-        heading: "9. Enable the Connector",
-        text: "Toggle the switch next to the new <strong>EasyData</strong> connector to turn it on, enabling it for use in your chat conversations.",
-        interactive: null
-      },
-      {
-        number: 10,
-        title: "Refresh Tools",
-        imageName: "10-refresh-tools-list.png",
-        heading: "10. Refresh Tools if Missing",
-        text: "If any database tools are missing or do not show up right away in your chat, click on the <strong>three dots</strong> next to the connector name and select the refresh/reload action to update the tool list. Once loaded, start your prompt using the copyable test prompt below.",
-        interactive: "prompt"
+      is: {
+        "title-page": "EasyData | Tengja MCP við Claude Leiðarvísir",
+        "nav-paths": "Tengingarreglur",
+        "nav-video": "Myndband",
+        "nav-trouble": "Tækniaðstoð",
+        "nav-back": "Til baka í EasyData",
+        "hero-badge": "Claude GUI Tengi",
+        "hero-title": "Tengja MCP í gegnum Claude Stillingar",
+        "hero-desc": "Fylgdu skrefunum hér að neðan til að stilla sérsniðna gagnagrunnstengingu beint í Claude stillingarviðmótinu með ytri MCP vefslóðum.",
+        "url-label": "Ytri EasyData Vefslóð:",
+        "btn-copy-url": "Afrita vefslóð",
+        "prompt-label": "Dæmi um fyrirmæli til að virkja:",
+        "btn-copy-prompt": "Afrita fyrirmæli",
+        "prompt-content": "Notaðu EasyData MCP. Búðu til einfalda töflu sem heitir workouts með dálkunum: exercise_name TEXT, duration_minutes INTEGER.",
+        "btn-prev": "← Fyrra",
+        "btn-next": "Næsta →",
+        "copied": "Afritað! ✓",
+        "info-mcp-title": "🔌 Hýst vs staðbundið MCP",
+        "info-mcp-p1": "<strong>Skýjavefslóðir (Connectors GUI):</strong> Tilvalið fyrir hýst umhverfi. Skýjalíkön Claude tengjast beint í gegnum HTTP/SSE. Vefslóðin verður að vera opinber og örugg: <span class=\"code-tag\">https://easydata.is/mcp</span>",
+        "info-mcp-p2": "<strong>Staðbundið stdio (stillingarskrá):</strong> Tilvalið fyrir keyrslu á eigin tölvu. Krefst þess að stilla skipanir í stillingarskrám á staðbundnu JSON formi.",
+        "info-trouble-title": "⚠️ Ábendingar fyrir samþættingu",
+        "info-trouble-p1": "<strong>Skýr virkjun:</strong> Þegar nýtt spjall er hafið við Claude, segðu skýrt: <code>\"Notaðu EasyData MCP tengið\"</code> til að tryggja að Claude virki tenginguna.",
+        "info-trouble-p2": "<strong>Heimildarbeiðnir:</strong> Claude mun biðja um skýra staðfestingu áður en gögn eru lesin eða skrifuð. Veldu **Alltaf leyfa** til að sleppa endurteknum smellum.",
+        "video-guide-title": "Myndbandsleiðbeiningar",
+        "video-not-supported": "Vafrinn þinn styður ekki myndbönd.",
+        "footer-text": "&copy; 2026 EasyData. Styður opna staðla fyrir Model Context Protocol."
       }
-    ];
+    };
+
+    const stepsData = {
+      en: [
+        {
+          number: 1,
+          title: "Open Claude",
+          imageName: "1-open-claude.png",
+          heading: "1. Open the Claude Application",
+          text: "Launch the Claude Desktop client or sign in to Claude in your browser. Locate the chat box where your profile actions reside.",
+          interactive: null
+        },
+        {
+          number: 2,
+          title: "Click Customize",
+          imageName: "2-click-customize-connectors.png",
+          heading: "2. Open settings to find Connectors",
+          text: "Click the menu or customization button located in the <strong>upper-left corner</strong> of the window to open settings so you can get to connectors.",
+          interactive: null
+        },
+        {
+          number: 3,
+          title: "Open Connectors",
+          imageName: "3-click-connectors.png",
+          heading: "3. Go to the Connectors Panel",
+          text: "Select **Connectors** from the popover menu. This opens the main integrations manager panel.",
+          interactive: null
+        },
+        {
+          number: 4,
+          title: "Click Plus Icon",
+          imageName: "4-click-plus.png",
+          heading: "4. Create a New Integration",
+          text: "Locate the **+** (Plus) icon in the top-right corner of the Connectors overlay pane and click it.",
+          interactive: null
+        },
+        {
+          number: 5,
+          title: "Add Custom",
+          imageName: "5-click-add-custom-connector.png",
+          heading: "5. Select Add Custom Connector",
+          text: "Click the **Add Custom Connector** list item to open the custom URL configuration dialog.",
+          interactive: null
+        },
+        {
+          number: 6,
+          title: "Give a Name",
+          imageName: "6-give-name.png",
+          heading: "6. Label the Connector",
+          text: "Type a identifier name into the box, such as <code>EasyData</code>. This labels the server for your prompts.",
+          interactive: null
+        },
+        {
+          number: 7,
+          title: "Insert URL",
+          imageName: "7-insert-url.png",
+          heading: "7. Input the Remote Endpoint URL",
+          text: "Paste the public, secure endpoint URL in the server text field. Copy the EasyData URL below to paste it directly.",
+          interactive: "url"
+        },
+        {
+          number: 8,
+          title: "Click Add",
+          imageName: "8-add.png",
+          heading: "8. Complete the Registration",
+          text: "Click the **Add** button. Claude will contact the URL to negotiate connection handshakes and retrieve tool descriptions.",
+          interactive: null
+        },
+        {
+          number: 9,
+          title: "Enable Connector",
+          imageName: "9-see-new-mcp.png",
+          heading: "9. Enable the Connector",
+          text: "Toggle the switch next to the new <strong>EasyData</strong> connector to turn it on, enabling it for use in your chat conversations.",
+          interactive: null
+        },
+        {
+          number: 10,
+          title: "Refresh Tools",
+          imageName: "10-refresh-tools-list.png",
+          heading: "10. Refresh Tools if Missing",
+          text: "If any database tools are missing or do not show up right away in your chat, click on the <strong>three dots</strong> next to the connector name and select the refresh/reload action to update the tool list. Once loaded, start your prompt using the copyable test prompt below.",
+          interactive: "prompt"
+        }
+      ],
+      is: [
+        {
+          number: 1,
+          title: "Opna Claude",
+          imageName: "1-open-claude.png",
+          heading: "1. Opnaðu Claude forritið",
+          text: "Keyrðu Claude Desktop forritið eða skráðu þig inn í Claude í vafranum. Finndu spjallboxið þar sem prófílaðgerðirnar þínar eru.",
+          interactive: null
+        },
+        {
+          number: 2,
+          title: "Smella á Customize",
+          imageName: "2-click-customize-connectors.png",
+          heading: "2. Opnaðu stillingar (Customize) til að finna Connectors",
+          text: "Smelltu á valmyndina eða sérstillingarhnappinn efst í <strong>vinstra horninu</strong> á glugganum til að opna stillingar svo þú komist í tengi (connectors).",
+          interactive: null
+        },
+        {
+          number: 3,
+          title: "Opna Connectors",
+          imageName: "3-click-connectors.png",
+          heading: "3. Farðu í Connectors spjaldið",
+          text: "Veldu **Connectors** úr valmyndinni. Þetta opnar aðalspjaldið fyrir samþættingar.",
+          interactive: null
+        },
+        {
+          number: 4,
+          title: "Smella á Plús tákn",
+          imageName: "4-click-plus.png",
+          heading: "4. Búðu til nýja samþættingu",
+          text: "Finndu **+** (plús) táknið í efra hægra horninu á Connectors spjaldinu og smelltu á það.",
+          interactive: null
+        },
+        {
+          number: 5,
+          title: "Add Custom",
+          imageName: "5-click-add-custom-connector.png",
+          heading: "5. Veldu Add Custom Connector",
+          text: "Smelltu á **Add Custom Connector** í listanum til að opna stillingagluggann fyrir sérsniðna vefslóð.",
+          interactive: null
+        },
+        {
+          number: 6,
+          title: "Gefa nafn",
+          imageName: "6-give-name.png",
+          heading: "6. Gefðu tenginu nafn",
+          text: "Skrifaðu heiti í reitinn, eins og <code>EasyData</code>. Þetta merkir netþjóninn fyrir fyrirspurnirnar þínar.",
+          interactive: null
+        },
+        {
+          number: 7,
+          title: "Slá inn vefslóð",
+          imageName: "7-insert-url.png",
+          heading: "7. Sláðu inn ytri vefslóð endapunkts",
+          text: "Límdu opinberu og öruggu vefslóðina í textareitinn. Afritaðu EasyData vefslóðina hér að neðan til að líma hana beint inn.",
+          interactive: "url"
+        },
+        {
+          number: 8,
+          title: "Smella á Add",
+          imageName: "8-add.png",
+          heading: "8. Ljúktu við skráningu",
+          text: "Smelltu á **Add** hnappinn. Claude mun hafa samband við vefslóðina til að koma á tengingu og sækja lýsingar á tólunum.",
+          interactive: null
+        },
+        {
+          number: 9,
+          title: "Virkja tengi",
+          imageName: "9-see-new-mcp.png",
+          heading: "9. Virkjaðu tengið",
+          text: "Kveiktu á rofanum við hliðina á nýja <strong>EasyData</strong> tenginu til að virkja það til notkunar í spjallinu þínu.",
+          interactive: null
+        },
+        {
+          number: 10,
+          title: "Endurhlaða tólum",
+          imageName: "10-refresh-tools-list.png",
+          heading: "10. Endurhlaða tólum ef þau vantar",
+          text: "Ef einhver gagnagrunnstól vantar eða birtast ekki strax í spjallinu þínu, smelltu þá á **punktana þrjá** við hliðina á nafni tengisins og veldu endurhleðslu (refresh/reload) til að uppfæra tólalistann. Þegar það er komið skaltu byrja spjallið með því að nota afritanlegu prufufyrirmælin hér að neðan.",
+          interactive: "prompt"
+        }
+      ]
+    };
+
+    let steps = stepsData.en;
 
     // Current step pointer
     let currentStepIdx = 0;
+    let currentLang = "en";
 
     // Load elements
     const menuEl = document.querySelector('.steps-menu');
@@ -848,7 +1027,7 @@
       menuEl.innerHTML = '';
       dotsEl.innerHTML = '';
 
-      // Generate buttons and dots
+      // Generate buttons and dots based on current language
       steps.forEach((step, idx) => {
         // Button
         const btn = document.createElement('button');
@@ -885,6 +1064,7 @@
     // Load step content
     function loadStep(idx) {
       const step = steps[idx];
+      if (!step) return;
       currentStepIdx = idx;
 
       // Handle active button state in sidebar
@@ -918,13 +1098,23 @@
       }, 100);
 
       // Titles & Descriptions
-      imgTitleEl.textContent = `${step.imageName} - Claude Settings UI`;
+      imgTitleEl.textContent = `${step.imageName} - ${currentLang === 'is' ? 'Claude stillingaviðmót' : 'Claude Settings UI'}`;
       descTitleEl.textContent = step.heading;
       descTextEl.innerHTML = step.text;
 
       // Interactive components visibility
       urlBoxEl.classList.toggle('visible', step.interactive === 'url');
       promptBoxEl.classList.toggle('visible', step.interactive === 'prompt');
+
+      // Update copy button contents based on active language
+      const btnCopyPrompt = document.getElementById('btn-copy-prompt');
+      if (btnCopyPrompt) {
+        btnCopyPrompt.setAttribute('onclick', `copyText(translations['${currentLang}']['prompt-content'], 'btn-copy-prompt')`);
+      }
+      const promptContentEl = document.getElementById('prompt-content');
+      if (promptContentEl) {
+        promptContentEl.textContent = translations[currentLang]["prompt-content"];
+      }
 
       // Handle disabled arrows
       btnPrev.disabled = idx === 0;
@@ -949,7 +1139,7 @@
       navigator.clipboard.writeText(text).then(() => {
         const copyBtn = document.getElementById(btnId);
         const originalText = copyBtn.textContent;
-        copyBtn.textContent = 'Copied! ✓';
+        copyBtn.textContent = translations[currentLang]["copied"] || 'Copied! ✓';
         copyBtn.style.color = '#10b981';
         copyBtn.style.borderColor = 'rgba(16, 185, 129, 0.4)';
         
@@ -961,6 +1151,50 @@
       });
     }
 
+    // Language Swapper Function
+    function changeLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem("lang", lang);
+
+      // Translate static attributes with data-i18n
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (translations[lang] && translations[lang][key]) {
+          el.innerHTML = translations[lang][key];
+        }
+      });
+
+      // Update page title
+      if (translations[lang] && translations[lang]["title-page"]) {
+        document.title = translations[lang]["title-page"];
+      }
+
+      // Update active state of language switcher buttons
+      const enBtn = document.getElementById("lang-en");
+      const isBtn = document.getElementById("lang-is");
+      if (lang === "is") {
+        isBtn.classList.add("active");
+        enBtn.classList.remove("active");
+      } else {
+        enBtn.classList.add("active");
+        isBtn.classList.remove("active");
+      }
+
+      // Update current steps list and re-initialize step display
+      steps = stepsData[lang] || stepsData.en;
+      
+      // Update the dots/menu list to show translated titles
+      document.querySelectorAll('.step-item-btn').forEach((btn, idx) => {
+        if (steps[idx]) {
+          const textSpan = btn.querySelector('.step-title-text');
+          if (textSpan) textSpan.textContent = steps[idx].title;
+        }
+      });
+
+      // Re-load the current active step to show translated content
+      loadStep(currentStepIdx);
+    }
+
     // Keyboard navigation (left/right arrows)
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowLeft') {
@@ -970,8 +1204,12 @@
       }
     });
 
-    // Run init
-    window.onload = init;
+    // Run init and setup language on window load
+    window.onload = () => {
+      init();
+      const savedLang = localStorage.getItem("lang") || "en";
+      changeLanguage(savedLang);
+    };
   </script>
 </body>
 </html>
