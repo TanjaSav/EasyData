@@ -1,19 +1,28 @@
 {
   "manifest_version": 3,
   "name": "Gemini MCP Connector",
-  "version": "1.0",
-  "description": "Forbinder Gemini i browseren med EasyData MCP.",
+  "version": "1.8",
+  "description": "Securely connects Gemini with the EasyData MCP server via the right-click context menu.",
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "contextMenus",
+    "scripting"
   ],
   "host_permissions": [
-    "https://google.com*",
-    "https://easydata.is*"
+    "https://easydata.is/*",
+    "http://localhost:3000/*"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
-    {
-      "matches": ["https://google.com*"],
-      "js": ["content.js"]
+    { 
+      "matches": [
+        "https://gemini.google.com/*",
+        "https://aistudio.google.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
     }
   ]
 }

@@ -11,8 +11,9 @@ function normalizeGeneratedHtml(html: string) {
   // Generated apps from different models often invent /api variants. Store the
   // published HTML with the canonical browser API so new apps work immediately.
   normalized = normalized
-    .replace(/https?:\/\/easydata\.is\/api\/apps/g, "/apps")
-    .replace(/https?:\/\/easydata\.is\/api/g, "/apps")
+    .replace(/https?:\/\/(?:api\.)?easydata\.(?:is|dev)(?:\/v1)?\/apps/g, "/apps")
+    .replace(/https?:\/\/(?:api\.)?easydata\.(?:is|dev)(?:\/v1)?\/api/g, "/apps")
+    .replace(/https?:\/\/(?:api\.)?easydata\.(?:is|dev)(?:\/v1)?/g, "")
     .replace(/\/api\/apps\//g, "/apps/")
     .replace(/\/api\/(?=\$\{[^}]+\}\/tables\/)/g, "/apps/")
     .replace(/\/api\/([0-9a-f-]{36})\/tables\//gi, "/apps/$1/tables/")

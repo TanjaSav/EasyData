@@ -1,8 +1,8 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { pathToFileURL } from "node:url";
 import { z } from "zod";
-import { createApp } from "../services/app.service.js";
+import { createApp, listApps } from "../services/app.service.js";
 import {
   getGeneratedAppFullUrl,
   writeGeneratedApp,
@@ -20,6 +20,8 @@ import {
   getAppStorageQuotaBytes,
   getAppStorageUsageBytes,
 } from "../services/file.service.js";
+import path from "path";
+import Database from "better-sqlite3";
 
 // Creates an EasyData MCP server instance.
 // A fresh instance is needed for each Streamable HTTP request.
@@ -28,6 +30,63 @@ export function createEasyDataMcpServer() {
     name: "easydata-mcp",
     version: "0.1.0",
   });
+
+  // Exposes a query resource that scans all EasyData SQLite databases for matching text.
+  // The Chrome extension uses this to retrieve relevant context.
+  server.resource(
+    "Query EasyData Databases",
+    new ResourceTemplate("easydata://query?q={q}", { list: undefined }),
+    async (uri, { q }) => {
+      const queryStr = String(q || "");
+      const DATA_DIR = process.env.DATA_DIR || "./data/apps";
+      
+      const apps = listApps();
+      const results: any[] = [];
+
+      for (const app of apps) {
+        try {
+          const schema = getAppSchema(app.id);
+          for (const tableInfo of schema) {
+            const textColumns = tableInfo.columns
+              .filter((c: any) => c.type === "TEXT")
+              .map((c: any) => c.name);
+
+            if (textColumns.length === 0) continue;
+
+            const whereClauses = textColumns.map(col => `${col} LIKE ?`).join(" OR ");
+            const dbPath = path.join(DATA_DIR, `${app.id}.sqlite`);
+            const db = new Database(dbPath);
+            
+            const matchingRows = db
+              .prepare(`SELECT * FROM ${tableInfo.table} WHERE ${whereClauses} LIMIT 10`)
+              .all(...textColumns.map(() => `%${queryStr}%`));
+              
+            db.close();
+
+            if (matchingRows.length > 0) {
+              results.push({
+                appName: app.name,
+                appId: app.id,
+                table: tableInfo.table,
+                rows: matchingRows
+              });
+            }
+          }
+        } catch (err) {
+          // Ignore errors for individual apps
+        }
+      }
+
+      return {
+        contents: [
+          {
+            uri: uri.href,
+            text: JSON.stringify(results, null, 2),
+          },
+        ],
+      };
+    }
+  );
 
   // list_apps is intentionally not exposed over teacher-facing MCP.
   // Use the admin-protected REST GET /apps endpoint for server administration.

@@ -6,6 +6,8 @@ import {
 import { spawn } from "child_process";
 import { Router } from "express";
 import { z } from "zod";
+import fs from "fs";
+import path from "path";
 
 const router = Router();
 
@@ -79,10 +81,11 @@ function extractJsonObject(text: string) {
 }
 
 
-// Reads Codex JSONL events and keeps only the final assistant message and usage.
+// Reads Codex JSONL events and keeps only the final assistant message, usage, and any errors.
 function extractCodexResult(stdout: string) {
   let finalMessage = "";
   let usage: CodexUsage | undefined;
+  let cliError = "";
 
   for (const line of stdout.split("\n")) {
     const trimmed = line.trim();
@@ -96,6 +99,8 @@ function extractCodexResult(stdout: string) {
         type?: string;
         item?: { type?: string; text?: string };
         usage?: CodexUsage;
+        message?: string;
+        error?: { message?: string };
       };
 
       if (event.type === "item.completed" && event.item?.type === "agent_message") {
@@ -110,12 +115,21 @@ function extractCodexResult(stdout: string) {
             (event.usage.input_tokens ?? 0) + (event.usage.output_tokens ?? 0),
         };
       }
+
+      if (event.type === "error" && event.message) {
+        cliError = event.message;
+      } else if (event.type === "turn.failed" && event.error?.message) {
+        cliError = event.error.message;
+      }
     } catch {
       continue;
     }
   }
 
   if (!finalMessage) {
+    if (cliError) {
+      throw new Error(cliError);
+    }
     throw new Error("Codex did not return a final agent message");
   }
 
@@ -181,9 +195,30 @@ function runCodexCli(prompt: string) {
     prompt
   );
 
+  let spawnCmd = cliPath;
+  let spawnArgs = [...args];
+
+  if (process.platform === "win32") {
+    if (cliPath.endsWith("codex.cmd") || cliPath.endsWith("codex.ps1")) {
+      const parentDir = path.dirname(cliPath);
+      const jsPath = path.join(parentDir, "node_modules", "@openai", "codex", "bin", "codex.js");
+      if (fs.existsSync(jsPath)) {
+        spawnCmd = "node";
+        spawnArgs.unshift(jsPath);
+      }
+    } else if (cliPath === "codex") {
+      const appData = process.env.APPDATA || "";
+      const globalJsPath = path.join(appData, "npm", "node_modules", "@openai", "codex", "bin", "codex.js");
+      if (fs.existsSync(globalJsPath)) {
+        spawnCmd = "node";
+        spawnArgs.unshift(globalJsPath);
+      }
+    }
+  }
+
   return new Promise<{ text: string; usage: CodexUsage | undefined }>((resolve, reject) => {
     // Run Codex as a child process so long app-generation requests do not block Express.
-    const child = spawn(cliPath, args, {
+    const child = spawn(spawnCmd, spawnArgs, {
       cwd: process.cwd(),
       shell: false,
       env: process.env,
@@ -211,29 +246,54 @@ function runCodexCli(prompt: string) {
       stderr += chunk;
     });
 
+    let isSettled = false;
+    const settle = (callback: () => void) => {
+      if (!isSettled) {
+        isSettled = true;
+        callback();
+      }
+    };
+
     child.on("error", (error) => {
       clearTimeout(timer);
-      reject(error);
+      settle(() => reject(error));
     });
 
-    child.on("close", (code) => {
-      clearTimeout(timer);
+    child.on("exit", (code) => {
+      setTimeout(() => {
+        clearTimeout(timer);
+        settle(() => {
+          if (didTimeout) {
+            reject(new Error(`Codex CLI timed out after ${timeoutMs}ms`));
+            return;
+          }
 
-      if (didTimeout) {
-        reject(new Error(`Codex CLI timed out after ${timeoutMs}ms`));
-        return;
-      }
+          if (code !== 0 && code !== null) {
+            // Check if we can extract a structured error from stdout first
+            try {
+              extractCodexResult(stdout); // This will throw the structured error if present
+            } catch (e: any) {
+              if (e.message && e.message !== "Codex did not return a final agent message") {
+                reject(e);
+                return;
+              }
+            }
 
-      if (code !== 0) {
-        reject(
-          new Error(
-            `Codex CLI exited with code ${code}. ${stderr.trim() || "No stderr output."}`
-          )
-        );
-        return;
-      }
+            reject(
+              new Error(
+                `Codex CLI exited with code ${code}. ${stderr.trim() || "No stderr output."}`
+              )
+            );
+            return;
+          }
 
-      resolve(extractCodexResult(stdout));
+          try {
+            resolve(extractCodexResult(stdout));
+          } catch (e) {
+            reject(e);
+          }
+        });
+      }, 100);
     });
   });
 }
@@ -271,6 +331,7 @@ router.post("/create-app", async (req, res) => {
       codexUsage: codexResult.usage ?? null,
     });
   } catch (error: any) {
+    console.error("[ai/create-app] Error occurred during generation:", error);
     return res.status(500).json({
       error: "Failed to create app with Codex CLI",
       message: error.message,

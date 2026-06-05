@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home Project Photo Turn-In</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+  <main class="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
+    <header class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">Home Project Photo Turn-In</h1>
+        <p class="mt-1 text-sm text-slate-600">Students submit one photo and a short note. The teacher can review, mark, and delete submissions.</p>
+      </div>
+      <button id="refreshBtn" class="rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-slate-700">Refresh</button>
+    </header>
+
+    <div class="mb-5 grid grid-cols-2 rounded-lg border border-slate-200 bg-white p-1 shadow-sm sm:w-96">
+      <button id="studentTab" class="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white">Student turn-in</button>
+      <button id="teacherTab" class="rounded-md px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Teacher review</button>
+    </div>
+
+    <section id="studentView" class="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
+      <form id="submitForm" class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+        <h2 class="text-lg font-semibold text-slate-950">Turn in a project photo</h2>
+        <div class="mt-4 grid gap-4">
+          <label class="grid gap-1 text-sm font-medium text-slate-700">Student name
+            <input id="studentName" required maxlength="80" class="rounded-md border border-slate-300 px-3 py-2 text-slate-950 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="First and last name">
+          </label>
+          <label class="grid gap-1 text-sm font-medium text-slate-700">Project title
+            <input id="projectTitle" required maxlength="120" class="rounded-md border border-slate-300 px-3 py-2 text-slate-950 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="What did you make?">
+          </label>
+          <label class="grid gap-1 text-sm font-medium text-slate-700">Photo
+            <input id="photoInput" required type="file" accept="image/*" capture="environment" class="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm file:mr-3 file:rounded-md file:border-0 file:bg-blue-50 file:px-3 file:py-1.5 file:font-semibold file:text-blue-700 hover:file:bg-blue-100">
+          </label>
+          <label class="grid gap-1 text-sm font-medium text-slate-700">Anything you want your teacher to know?
+            <textarea id="projectDescription" rows="4" class="rounded-md border border-slate-300 px-3 py-2 text-slate-950 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" placeholder="Tell me what you made, what you tried, or what was tricky."></textarea>
+          </label>
+          <button id="submitBtn" class="rounded-md bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-400">Submit project</button>
+          <p id="submitStatus" class="min-h-6 text-sm text-slate-600"></p>
+        </div>
+      </form>
+      <aside class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+        <h2 class="text-lg font-semibold text-slate-950">Photo preview</h2>
+        <div class="mt-4 flex aspect-[4/3] items-center justify-center overflow-hidden rounded-lg border border-dashed border-slate-300 bg-slate-100">
+          <img id="previewImg" class="hidden h-full w-full object-contain" alt="Selected project preview">
+          <span id="previewEmpty" class="px-4 text-center text-sm text-slate-500">Choose a photo to preview it before submitting.</span>
+        </div>
+      </aside>
+    </section>
+
+    <section id="teacherView" class="hidden">
+      <div class="mb-4 flex flex-col gap-3 rounded-lg border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 class="text-lg font-semibold text-slate-950">Submissions</h2>
+          <p id="countText" class="text-sm text-slate-600">Loading submissions...</p>
+        </div>
+        <label class="grid gap-1 text-sm font-medium text-slate-700 sm:w-56">Filter
+          <select id="filterStatus" class="rounded-md border border-slate-300 px-3 py-2 text-slate-950 shadow-sm">
+            <option value="all">All submissions</option>
+            <option value="New">New</option>
+            <option value="Reviewed">Reviewed</option>
+            <option value="Needs follow-up">Needs follow-up</option>
+          </select>
+        </label>
+      </div>
+      <div id="submissionList" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3"></div>
+    </section>
+  </main>
+
+  <script>
+    const appId = "6805641c-b426-421d-92de-59f5602bfb11";
+    const apiToken = "app_523569cc9e88706a106aef7d55eba57c862eadd9e997db78";
+    const tableName = "submissions";
+    const rowsUrl = "/apps/" + appId + "/tables/" + tableName + "/rows";
+    const authHeaders = { "Authorization": "Bearer " + apiToken };
+    const jsonHeaders = { "Content-Type": "application/json", "Authorization": "Bearer " + apiToken };
+    let submissions = [];
+
+    const $ = id => document.getElementById(id);
+    const esc = value => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[ch]));
+    const rowsFrom = data => Array.isArray(data) ? data : (Array.isArray(data.rows) ? data.rows : []);
+    const setSubmitStatus = (text, error) => { $("submitStatus").textContent = text; $("submitStatus").className = "min-h-6 text-sm " + (error ? "text-red-700" : "text-slate-600"); };
+
+    function showTab(which) {
+      const student = which === "student";
+      $("studentView").classList.toggle("hidden", !student);
+      $("teacherView").classList.toggle("hidden", student);
+      $("studentTab").className = student ? "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white" : "rounded-md px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100";
+      $("teacherTab").className = !student ? "rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white" : "rounded-md px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100";
+      if (!student) loadSubmissions();
+    }
+
+    async function uploadPhoto(file) {
+      const form = new FormData();
+      form.append("file", file);
+      const res = await fetch("/apps/" + appId + "/files", { method: "POST", headers: authHeaders, body: form });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "The photo could not be uploaded.");
+      return { fileName: data.fileName || (data.file && data.file.fileName) || "", viewUrl: data.viewUrl || data.url || "" };
+    }
+
+    async function viewUrlFor(row) {
+      if (!row.photo_file_name) return row.photo_url || "";
+      try {
+        const res = await fetch("/apps/" + appId + "/files/" + encodeURIComponent(row.photo_file_name) + "/view-url", { method: "POST", headers: authHeaders });
+        const data = await res.json();
+        return data.viewUrl || data.url || row.photo_url || "";
+      } catch (error) {
+        return row.photo_url || "";
+      }
+    }
+
+    $("photoInput").addEventListener("change", () => {
+      const file = $("photoInput").files && $("photoInput").files[0];
+      if (!file) return;
+      $("previewImg").src = URL.createObjectURL(file);
+      $("previewImg").classList.remove("hidden");
+      $("previewEmpty").classList.add("hidden");
+    });
+
+    $("submitForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      const file = $("photoInput").files && $("photoInput").files[0];
+      if (!file) return setSubmitStatus("Please choose a project photo.", true);
+      $("submitBtn").disabled = true;
+      setSubmitStatus("Uploading photo and saving submission...");
+      try {
+        const uploaded = await uploadPhoto(file);
+        const body = {
+          student_name: $("studentName").value.trim(),
+          project_title: $("projectTitle").value.trim(),
+          project_description: $("projectDescription").value.trim(),
+          photo_file_name: uploaded.fileName,
+          photo_url: uploaded.viewUrl,
+          submitted_at: new Date().toISOString(),
+          status: "New",
+          teacher_note: ""
+        };
+        const res = await fetch(rowsUrl, { method: "POST", headers: jsonHeaders, body: JSON.stringify(body) });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || "Submission could not be saved.");
+        $("submitForm").reset();
+        $("previewImg").classList.add("hidden");
+        $("previewEmpty").classList.remove("hidden");
+        setSubmitStatus("Submitted. Your teacher can see it now.");
+        await loadSubmissions();
+      } catch (error) {
+        setSubmitStatus(error.message || "Something went wrong.", true);
+      } finally {
+        $("submitBtn").disabled = false;
+      }
+    });
+
+    async function loadSubmissions() {
+      const list = $("submissionList");
+      list.innerHTML = '<div class="rounded-lg border border-slate-200 bg-white p-5 text-sm text-slate-600 shadow-sm">Loading...</div>';
+      try {
+        const res = await fetch(rowsUrl, { headers: authHeaders });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Could not load submissions.");
+        submissions = rowsFrom(data).sort((a, b) => String(b.submitted_at || "").localeCompare(String(a.submitted_at || "")));
+        await renderSubmissions();
+      } catch (error) {
+        list.innerHTML = '<div class="rounded-lg border border-red-200 bg-red-50 p-5 text-sm text-red-800">' + esc(error.message) + '</div>';
+      }
+    }
+
+    async function renderSubmissions() {
+      const filter = $("filterStatus").value;
+      const list = $("submissionList");
+      const visible = submissions.filter(row => filter === "all" || (row.status || "New") === filter);
+      $("countText").textContent = visible.length + " shown, " + submissions.length + " total";
+      if (!visible.length) {
+        list.innerHTML = '<div class="rounded-lg border border-slate-200 bg-white p-5 text-sm text-slate-600 shadow-sm">No submissions match this view.</div>';
+        return;
+      }
+      const cards = await Promise.all(visible.map(async row => {
+        const img = await viewUrlFor(row);
+        const date = row.submitted_at ? new Date(row.submitted_at).toLocaleString() : "No date";
+        return '<article class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">' +
+          '<div class="flex aspect-[4/3] items-center justify-center bg-slate-100">' + (img ? '<img src="' + esc(img) + '" alt="Project photo" class="h-full w-full object-contain">' : '<span class="text-sm text-slate-500">No photo</span>') + '</div>' +
+          '<div class="grid gap-3 p-4">' +
+          '<div><h3 class="font-semibold text-slate-950">' + esc(row.project_title || "Untitled project") + '</h3><p class="text-sm text-slate-600">' + esc(row.student_name || "Unknown student") + ' · ' + esc(date) + '</p></div>' +
+          '<p class="min-h-10 text-sm text-slate-700">' + esc(row.project_description || "No note added.") + '</p>' +
+          '<label class="grid gap-1 text-sm font-medium text-slate-700">Status<select data-status="' + row.id + '" class="rounded-md border border-slate-300 px-3 py-2"><option' + ((row.status || "New") === "New" ? " selected" : "") + '>New</option><option' + (row.status === "Reviewed" ? " selected" : "") + '>Reviewed</option><option' + (row.status === "Needs follow-up" ? " selected" : "") + '>Needs follow-up</option></select></label>' +
+          '<label class="grid gap-1 text-sm font-medium text-slate-700">Teacher note<textarea data-note="' + row.id + '" rows="3" class="rounded-md border border-slate-300 px-3 py-2">' + esc(row.teacher_note || "") + '</textarea></label>' +
+          '<div class="flex gap-2"><button data-save="' + row.id + '" class="flex-1 rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-700">Save</button><button data-delete="' + row.id + '" class="rounded-md border border-red-200 px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-50">Delete</button></div>' +
+          '</div></article>';
+      }));
+      list.innerHTML = cards.join("");
+    }
+
+    async function updateSubmission(id) {
+      const status = document.querySelector('[data-status="' + id + '"]').value;
+      const note = document.querySelector('[data-note="' + id + '"]').value;
+      const res = await fetch(rowsUrl + "/" + id, { method: "PUT", headers: jsonHeaders, body: JSON.stringify({ status, teacher_note: note }) });
+      if (!res.ok) alert("Could not save this submission.");
+      await loadSubmissions();
+    }
+
+    async function deleteSubmission(id) {
+      if (!confirm("Delete this submission and its photo?")) return;
+      const res = await fetch(rowsUrl + "/" + id, { method: "DELETE", headers: authHeaders });
+      if (!res.ok) alert("Could not delete this submission.");
+      await loadSubmissions();
+    }
+
+    document.addEventListener("click", event => {
+      const saveId = event.target.getAttribute("data-save");
+      const deleteId = event.target.getAttribute("data-delete");
+      if (saveId) updateSubmission(saveId);
+      if (deleteId) deleteSubmission(deleteId);
+    });
+    $("filterStatus").addEventListener("change", renderSubmissions);
+    $("studentTab").addEventListener("click", () => showTab("student"));
+    $("teacherTab").addEventListener("click", () => showTab("teacher"));
+    $("refreshBtn").addEventListener("click", loadSubmissions);
+    loadSubmissions();
+  </script>
+</body>
+</html>

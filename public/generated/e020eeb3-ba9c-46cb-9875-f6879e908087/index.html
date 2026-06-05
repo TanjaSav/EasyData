@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Project Submission Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        // Mock API configuration based on EasyData app parameters
+        const APP_ID = 'e020eeb3-ba9c-46cb-9875-f6879e908087';
+        
+        // In-memory fallback state initialized with dummy clean data for demonstration
+        let submissions = [
+            {
+                rowid: 1,
+                student_name: "Alex Rivera",
+                project_title: "Solar Powered Water Purifier",
+                project_description: "A miniature model demonstrating how solar energy can be used to distill and purify water for off-grid communities.",
+                photo_file_name: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80&w=600",
+                grade: "A",
+                feedback: "Fantastic attention to detail in the distillation chamber seals. Great work!",
+                grade_level: "9th Grade",
+                team_members: "None",
+                submitted_at: "2026-06-04 14:22"
+            },
+            {
+                rowid: 2,
+                student_name: "Chloe Chen",
+                project_title: "Kinetic Energy Sculpture",
+                project_description: "An artistic wire sculpture that utilizes falling marbles to trigger complex domino-like mechanical reactions.",
+                photo_file_name: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&q=80&w=600",
+                grade: "",
+                feedback: "",
+                grade_level: "10th Grade",
+                team_members: "Marcus Vance",
+                submitted_at: "2026-06-05 09:15"
+            }
+        ];
+
+        function switchView(viewName) {
+            if (viewName === 'student') {
+                document.getElementById('student-view').classList.remove('hidden');
+                document.getElementById('teacher-view').classList.add('hidden');
+                document.getElementById('nav-student').classList.add('border-indigo-600', 'text-indigo-600');
+                document.getElementById('nav-student').classList.remove('text-gray-500');
+                document.getElementById('nav-teacher').classList.remove('border-indigo-600', 'text-indigo-600');
+                document.getElementById('nav-teacher').classList.add('text-gray-500');
+            } else {
+                document.getElementById('student-view').classList.add('hidden');
+                document.getElementById('teacher-view').classList.remove('hidden');
+                document.getElementById('nav-teacher').classList.add('border-indigo-600', 'text-indigo-600');
+                document.getElementById('nav-teacher').classList.remove('text-gray-500');
+                document.getElementById('nav-student').classList.remove('border-indigo-600', 'text-indigo-600');
+                document.getElementById('nav-student').classList.add('text-gray-500');
+                renderTeacherDashboard();
+            }
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('student_name').value;
+            const title = document.getElementById('project_title').value;
+            const desc = document.getElementById('project_description').value;
+            const gradeLevel = document.getElementById('grade_level').value;
+            const team = document.getElementById('team_members').value || "None";
+            const photoUrl = document.getElementById('photo_url').value || "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80&w=600";
+            
+            const now = new Date();
+            const timestamp = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+            const newSubmission = {
+                rowid: submissions.length + 1,
+                student_name: name,
+                project_title: title,
+                project_description: desc,
+                photo_file_name: photoUrl,
+                grade: "",
+                feedback: "",
+                grade_level: gradeLevel,
+                team_members: team,
+                submitted_at: timestamp
+            };
+
+            submissions.unshift(newSubmission);
+            
+            // Show alert feedback
+            const alertBox = document.getElementById('success-alert');
+            alertBox.classList.remove('hidden');
+            document.getElementById('submission-form').reset();
+            
+            setTimeout(() => {
+                alertBox.classList.add('hidden');
+            }, 4000);
+        }
+
+        function renderTeacherDashboard() {
+            const container = document.getElementById('submissions-grid');
+            container.innerHTML = '';
+
+            if (submissions.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500">No project submissions found.</div>`;
+                return;
+            }
+
+            submissions.forEach((sub) => {
+                const card = document.createElement('div');
+                card.className = "bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 transition hover:shadow-lg flex flex-col";
+                
+                const isGraded = sub.grade && sub.grade.trim() !== "";
+                const badgeColor = isGraded ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800";
+                const badgeText = isGraded ? `Graded: ${sub.grade}` : "Pending Review";
+
+                card.innerHTML = `
+                    <div class="relative h-48 bg-gray-100">
+                        <img src="${sub.photo_file_name}" alt="Project Preview" class="w-full h-full object-cover">
+                        <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-semibold ${badgeColor}">
+                            ${badgeText}
+                        </span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-1">
+                                <h3 class="text-lg font-bold text-gray-900 truncate">${sub.project_title}</h3>
+                                <span class="text-xs text-gray-400 font-mono">${sub.submitted_at}</span>
+                            </div>
+                            <p class="text-sm font-medium text-indigo-600 mb-3">By: ${sub.student_name} <span class="text-gray-400">(${sub.grade_level})</span></p>
+                            <p class="text-sm text-gray-600 line-clamp-3 mb-4">${sub.project_description}</p>
+                            ${sub.team_members && sub.team_members !== 'None' ? `<p class="text-xs text-gray-500 mb-4"><i class="fa-solid fa-users mr-1"></i> Partners: ${sub.team_members}</p>` : ''}
+                        </div>
+                        
+                        <div class="border-t border-gray-100 pt-4 mt-auto">
+                            <form onsubmit="saveGrade(event, ${sub.rowid})" class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Grade / Score</label>
+                                    <input type="text" id="grade-${sub.rowid}" value="${sub.grade}" placeholder="e.g. A+, 95/100" class="w-full rounded-md border border-gray-200 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Teacher Feedback</label>
+                                    <textarea id="feedback-${sub.rowid}" rows="2" placeholder="Add constructive remarks..." class="w-full rounded-md border border-gray-200 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">${sub.feedback}</textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-slate-800 hover:bg-slate-900 text-white text-xs font-medium py-2 px-3 rounded transition flex items-center justify-center gap-1">
+                                    <i class="fa-solid fa-floppy-disk"></i> Save Review
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function saveGrade(e, rowid) {
+            e.preventDefault();
+            const gradeVal = document.getElementById(`grade-${rowid}`).value;
+            const feedbackVal = document.getElementById(`feedback-${rowid}`).value;
+            
+            const index = submissions.findIndex(s => s.rowid === rowid);
+            if (index !== -1) {
+                submissions[index].grade = gradeVal;
+                submissions[index].feedback = feedbackVal;
+                renderTeacherDashboard();
+                
+                // Toast notification indicator
+                const toast = document.createElement('div');
+                toast.className = "fixed bottom-5 right-5 bg-emerald-600 text-white px-4 py-2.5 rounded-lg shadow-lg text-sm font-medium z-50 transition transform flex items-center gap-2 animate-bounce";
+                toast.innerHTML = `<i class="fa-solid fa-circle-check"></i> Review successfully saved for card #${rowid}!`;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 3000);
+            }
+        }
+
+        window.onload = function() {
+            switchView('student');
+        };
+    </script>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans text-gray-900">
+
+    
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-indigo-600 text-white rounded-xl shadow-md shadow-indigo-100">
+                        <i class="fa-solid fa-graduation-cap text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-xl font-extrabold tracking-tight text-slate-900 block">EduShowcase</span>
+                        <span class="text-xs text-gray-400 font-medium -mt-1 block">Home Project Hub</span>
+                    </div>
+                </div>
+                <div class="flex space-x-8">
+                    <button id="nav-student" onclick="switchView('student')" class="inline-flex items-center px-1 pt-1 border-b-2 font-semibold text-sm transition-colors duration-200">
+                        <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Student Portal
+                    </button>
+                    <button id="nav-teacher" onclick="switchView('teacher')" class="inline-flex items-center px-1 pt-1 border-b-2 font-semibold text-sm transition-colors duration-200">
+                        <i class="fa-solid fa-chalkboard-user mr-2"></i> Teacher Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        
+        <section id="student-view" class="">
+            <div class="max-w-3xl mx-auto">
+                <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 rounded-2xl p-6 sm:p-8 text-white shadow-xl mb-8">
+                    <h1 class="text-2xl sm:text-3xl font-extrabold mb-2">Submit Your Project From Home!</h1>
+                    <p class="text-indigo-100 text-sm sm:text-base opacity-90">Proud of something you engineered, coded, or crafted? Upload your work details along with an image link so your teacher can look over it and provide real-time grading feedback.</p>
+                </div>
+
+                <div id="success-alert" class="hidden mb-6 bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-xl shadow-sm animate-fade-in">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <i class="fa-solid fa-circle-check text-emerald-500 text-xl"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-semibold text-emerald-800">Submission Successful!</p>
+                            <p class="text-xs text-emerald-700 mt-0.5">Your home project has been successfully cataloged into the Teacher Evaluation Dashboard grid.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
+                    <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2 border-b border-gray-100 pb-4">
+                        <i class="fa-regular fa-id-card text-indigo-500"></i> Project Delivery Form
+                    </h2>
+                    
+                    <form id="submission-form" onsubmit="handleFormSubmit(event)" class="space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Student Full Name <span class="text-red-500">*</span></label>
+                                <input type="text" id="student_name" required placeholder="e.g. Jane Doe" class="w-full rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Grade Level <span class="text-red-500">*</span></label>
+                                <select id="grade_level" required class="w-full rounded-xl border border-gray-200 px-4 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow">
+                                    <option value="">Select Grade Level</option>
+                                    <option value="6th Grade">6th Grade</option>
+                                    <option value="7th Grade">7th Grade</option>
+                                    <option value="8th Grade">8th Grade</option>
+                                    <option value="9th Grade">9th Grade</option>
+                                    <option value="10th Grade">10th Grade</option>
+                                    <option value="11th Grade">11th Grade</option>
+                                    <option value="12th Grade">12th Grade</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Project Title <span class="text-red-500">*</span></label>
+                                <input type="text" id="project_title" required placeholder="e.g. Baking Soda Volcano" class="w-full rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2">Partner / Team Members <span class="text-gray-400">(Optional)</span></label>
+                                <input type="text" id="team_members" placeholder="e.g. John Smith, Tim Lee" class="w-full rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Project Summary & Process <span class="text-red-500">*</span></label>
+                            <textarea id="project_description" rows="4" required placeholder="Describe what you created, the materials you used, and what you learned from this experiment..." class="w-full rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow"></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-2">Project Photo Image URL <span class="text-red-500">*</span></label>
+                            <div class="mt-1 flex rounded-xl shadow-sm">
+                                <span class="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-gray-200 bg-gray-50 text-gray-400 text-sm">
+                                    <i class="fa-regular fa-image"></i>
+                                </span>
+                                <input type="url" id="photo_url" required placeholder="Paste a direct image link URL (e.g., from Imgur, Postimages, or Unsplash)" class="w-full rounded-r-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow">
+                            </div>
+                            <p class="mt-1 text-xs text-gray-400">For simplicity, please paste a direct web link ending in .jpg, .png or an open hosting link showing your visual progress.</p>
+                        </div>
+
+                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-xl shadow-md shadow-indigo-100 transition-all flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> File Project Submission
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        
+        <section id="teacher-view" class="hidden">
+            <div class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Teacher Management Desk</h1>
+                    <p class="text-sm text-gray-500">Inspect live student homework submissions, assign score grades, and provide feedback commentary.</p>
+                </div>
+                <div class="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-gray-100 text-sm text-gray-600 font-medium self-start shadow-sm">
+                    <i class="fa-solid fa-filter text-indigo-500"></i>
+                    <span>Live Tracker Live Mode</span>
+                </div>
+            </div>
+
+            
+            <div id="submissions-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>

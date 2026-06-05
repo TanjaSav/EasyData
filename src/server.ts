@@ -22,7 +22,25 @@ app.use(
 );
 app.use(cors());
 app.use(morgan("dev"));
-app.use(express.json());
+app.use(
+  express.json({
+    verify: (req: any, res, buf, encoding) => {
+      req.rawBody = buf.toString((encoding as BufferEncoding) || "utf8");
+    },
+  })
+);
+
+// Error handler for JSON parsing errors
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  if (err instanceof SyntaxError && "status" in err && err.status === 400 && "body" in err) {
+    console.error("JSON Parsing Error on path:", req.path);
+    console.error("Raw Body was:", (req as any).rawBody);
+    console.error("Error details:", err);
+    return res.status(400).json({ error: "Invalid JSON", message: err.message });
+  }
+  next(err);
+});
+
 
 // Static file serving
 // Uploaded files are served by signed app routes, not as public static assets.
@@ -43,6 +61,12 @@ app.get("/health", (req, res) => {
 });
 
 async function handleMcpRequest(req: express.Request, res: express.Response) {
+  // Enforce Accept header for MCP streamable HTTP compatibility
+  const accept = req.headers.accept || "";
+  if (!accept.includes("application/json") || !accept.includes("text/event-stream")) {
+    req.headers.accept = "application/json, text/event-stream";
+  }
+
   // Streamable HTTP requests are stateless, so each request gets an isolated MCP server.
   const mcpServer = createEasyDataMcpServer();
   const transport = new StreamableHTTPServerTransport({

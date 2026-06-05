@@ -58,13 +58,26 @@ Android Studio (Ladybug or newer) has built-in support for MCP in its Gemini sid
 }
 ```
 
-## 3. Gemini Web App & AI Studio (Extensions)
+## 3. Gemini Web App & AI Studio (No-Code App Builder Extension)
 
-The standard web interfaces at `gemini.google.com` and `aistudio.google.com` do not have a native settings menu for MCP yet. You can use community "bridge" extension:
+To make it as simple as possible for teachers, you do not need to install complex third-party tools or manually enter the EasyData URL. EasyData includes a custom Chrome Extension (`chrome-extention`) that acts as a direct bridge.
 
-- **MCP SuperAssistant** (Chrome Extension)
+### How to install:
+1. Open Google Chrome and navigate to `chrome://extensions/`.
+2. Turn on the **Developer mode** toggle in the top-right corner.
+3. Click the **Load unpacked** button in the top-left corner.
+4. Select the `chrome-extention` directory in the downloaded project folder.
 
-This extension allow you to point to a local or remote MCP server and use its tools directly in the chat interface.
+### How to use:
+1. Open `gemini.google.com` or `aistudio.google.com`.
+2. Type your application request in plain English into the chat box (e.g., *"Can you make me an app where students take pictures of their projects at home and turn them in so i can see them"*).
+3. **Do not press Enter yet.** Highlight/select the text you just wrote.
+4. Right-click the selected text and select **Create App with EasyData**.
+5. You will see a loading indicator typed into your chat input: `[EasyData: Building your app, please wait...]`
+6. Wait 10-20 seconds. The extension will automatically call the EasyData AI services, provision the database tables, write the client code, and publish the app.
+7. Once finished, the live URL and app summary will be automatically typed directly into your chat! You can then press Enter to send the live URL to Gemini for further analysis or prompt editing.
+
+*(Optional)* If you want full interactive tool-calling in the middle of a chat conversation, you can use a community "bridge" extension like **MCP SuperAssistant** or **MCP Bridge** pointing to the public endpoint `https://easydata.is/mcp`.
 
 ## 4. Custom Integration via Gemini API
 

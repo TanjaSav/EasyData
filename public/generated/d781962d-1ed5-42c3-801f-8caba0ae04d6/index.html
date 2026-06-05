@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Photo Turn-In</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+  <main class="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8">
+    <header class="mb-6 flex flex-col gap-4 border-b border-slate-200 pb-5 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 class="text-2xl font-semibold tracking-tight sm:text-3xl">Project Photo Turn-In</h1>
+        <p class="mt-2 max-w-2xl text-sm text-slate-600">Students can submit one photo of a home project. Teachers can review submissions, add comments, and mark them reviewed.</p>
+      </div>
+      <div class="inline-flex rounded-md border border-slate-300 bg-white p-1 shadow-sm">
+        <button id="studentTab" class="rounded px-3 py-2 text-sm font-medium bg-slate-900 text-white" type="button">Student</button>
+        <button id="teacherTab" class="rounded px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100" type="button">Teacher</button>
+      </div>
+    </header>
+
+    <section id="message" class="mb-4 hidden rounded-md border px-4 py-3 text-sm"></section>
+
+    <section id="studentView" class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_22rem]">
+      <form id="submitForm" class="rounded-lg border border-slate-200 bg-white p-5 shadow-sm">
+        <div class="mb-5">
+          <h2 class="text-lg font-semibold">Turn in a project</h2>
+          <p class="mt-1 text-sm text-slate-600">Before taking the picture, move private items out of view and avoid faces when possible.</p>
+        </div>
+        <div class="grid gap-4">
+          <label class="block">
+            <span class="text-sm font-medium text-slate-700">Student name</span>
+            <input id="studentName" class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900" required autocomplete="name">
+          </label>
+          <label class="block">
+            <span class="text-sm font-medium text-slate-700">Project title</span>
+            <input id="projectTitle" class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900" required>
+          </label>
+          <label class="block">
+            <span class="text-sm font-medium text-slate-700">Photo</span>
+            <input id="photoInput" type="file" accept="image/*" capture="environment" class="mt-1 block w-full text-sm text-slate-700 file:mr-4 file:rounded-md file:border-0 file:bg-slate-900 file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-slate-700" required>
+          </label>
+          <img id="preview" alt="Project preview" class="hidden max-h-80 w-full rounded-lg border border-slate-200 object-contain bg-slate-100">
+          <label class="block">
+            <span class="text-sm font-medium text-slate-700">Notes for your teacher</span>
+            <textarea id="notes" rows="4" class="mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900" placeholder="What did you make? What should your teacher notice?"></textarea>
+          </label>
+          <button id="submitButton" class="inline-flex items-center justify-center rounded-md bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-400" type="submit">Submit project</button>
+        </div>
+      </form>
+
+      <aside class="rounded-lg border border-amber-200 bg-amber-50 p-5 text-sm text-amber-950">
+        <h2 class="font-semibold">Photo reminder</h2>
+        <ul class="mt-3 list-disc space-y-2 pl-5">
+          <li>Show the project clearly.</li>
+          <li>Try not to include people, mail, screens, addresses, or family photos.</li>
+          <li>Ask an adult before submitting if you are unsure.</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section id="teacherView" class="hidden">
+      <div class="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 class="text-lg font-semibold">Teacher review</h2>
+          <p id="submissionCount" class="mt-1 text-sm text-slate-600">Loading submissions...</p>
+        </div>
+        <button id="refreshButton" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-100" type="button">Refresh</button>
+      </div>
+      <div id="submissionList" class="grid gap-4 md:grid-cols-2 xl:grid-cols-3"></div>
+      <div id="emptyState" class="hidden rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-600">No projects have been submitted yet.</div>
+    </section>
+  </main>
+
+  <script>
+    const appId = "d781962d-1ed5-42c3-801f-8caba0ae04d6";
+    const apiToken = "app_3c31ad84e2f3f555b246196de87f5b6c89157b5caf3b90e8";
+    const tableName = "submissions";
+    const rowsUrl = "/apps/" + appId + "/tables/" + tableName + "/rows";
+    const headers = { "Content-Type": "application/json", "Authorization": "Bearer " + apiToken };
+
+    const studentTab = document.getElementById("studentTab");
+    const teacherTab = document.getElementById("teacherTab");
+    const studentView = document.getElementById("studentView");
+    const teacherView = document.getElementById("teacherView");
+    const submitForm = document.getElementById("submitForm");
+    const submitButton = document.getElementById("submitButton");
+    const photoInput = document.getElementById("photoInput");
+    const preview = document.getElementById("preview");
+    const submissionList = document.getElementById("submissionList");
+    const emptyState = document.getElementById("emptyState");
+    const submissionCount = document.getElementById("submissionCount");
+    const message = document.getElementById("message");
+
+    let selectedPhoto = "";
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = "mb-4 rounded-md border px-4 py-3 text-sm " + (type === "error" ? "border-red-200 bg-red-50 text-red-800" : "border-emerald-200 bg-emerald-50 text-emerald-800");
+      window.setTimeout(() => message.classList.add("hidden"), 5000);
+    }
+
+    function setView(view) {
+      const teacher = view === "teacher";
+      studentView.classList.toggle("hidden", teacher);
+      teacherView.classList.toggle("hidden", !teacher);
+      studentTab.className = teacher ? "rounded px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100" : "rounded px-3 py-2 text-sm font-medium bg-slate-900 text-white";
+      teacherTab.className = teacher ? "rounded px-3 py-2 text-sm font-medium bg-slate-900 text-white" : "rounded px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100";
+      if (teacher) loadSubmissions();
+    }
+
+    function getRowId(row) {
+      return row.id || row.rowId || row._id;
+    }
+
+    function fileToResizedDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error("Could not read the photo."));
+        reader.onload = () => {
+          const image = new Image();
+          image.onerror = () => reject(new Error("Could not load the photo."));
+          image.onload = () => {
+            const maxSide = 1200;
+            const scale = Math.min(1, maxSide / Math.max(image.width, image.height));
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.round(image.width * scale);
+            canvas.height = Math.round(image.height * scale);
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL("image/jpeg", 0.78));
+          };
+          image.src = reader.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    photoInput.addEventListener("change", async () => {
+      const file = photoInput.files[0];
+      selectedPhoto = "";
+      preview.classList.add("hidden");
+      if (!file) return;
+      try {
+        selectedPhoto = await fileToResizedDataUrl(file);
+        preview.src = selectedPhoto;
+        preview.classList.remove("hidden");
+      } catch (error) {
+        showMessage(error.message, "error");
+      }
+    });
+
+    submitForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!selectedPhoto) {
+        showMessage("Please choose a project photo first.", "error");
+        return;
+      }
+      submitButton.disabled = true;
+      submitButton.textContent = "Submitting...";
+      const payload = {
+        student_name: document.getElementById("studentName").value.trim(),
+        project_title: document.getElementById("projectTitle").value.trim(),
+        notes: document.getElementById("notes").value.trim(),
+        photo_data_url: selectedPhoto,
+        submitted_at: new Date().toISOString(),
+        status: "New",
+        teacher_comment: ""
+      };
+      try {
+        const response = await fetch(rowsUrl, { method: "POST", headers, body: JSON.stringify(payload) });
+        if (!response.ok) throw new Error("Submission failed.");
+        submitForm.reset();
+        selectedPhoto = "";
+        preview.classList.add("hidden");
+        showMessage("Project submitted. Thank you.", "success");
+      } catch (error) {
+        showMessage(error.message, "error");
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Submit project";
+      }
+    });
+
+    async function loadSubmissions() {
+      submissionCount.textContent = "Loading submissions...";
+      submissionList.innerHTML = "";
+      emptyState.classList.add("hidden");
+      try {
+        const response = await fetch(rowsUrl, { headers: { "Authorization": "Bearer " + apiToken } });
+        if (!response.ok) throw new Error("Could not load submissions.");
+        const data = await response.json();
+        const rows = Array.isArray(data) ? data : (data.rows || []);
+        rows.sort((a, b) => String(b.submitted_at || "").localeCompare(String(a.submitted_at || "")));
+        submissionCount.textContent = rows.length + (rows.length === 1 ? " submission" : " submissions");
+        emptyState.classList.toggle("hidden", rows.length !== 0);
+        rows.forEach(renderSubmission);
+      } catch (error) {
+        submissionCount.textContent = "Could not load submissions.";
+        showMessage(error.message, "error");
+      }
+    }
+
+    function renderSubmission(row) {
+      const rowId = getRowId(row);
+      const card = document.createElement("article");
+      card.className = "overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm";
+      const submitted = row.submitted_at ? new Date(row.submitted_at).toLocaleString() : "No date";
+      card.innerHTML = "<img class='h-56 w-full bg-slate-100 object-contain' alt='Submitted project photo' src='" + (row.photo_data_url || "") + "'>" +
+        "<div class='space-y-3 p-4'>" +
+        "<div><h3 class='font-semibold text-slate-900'></h3><p class='text-sm text-slate-600'></p><p class='text-xs text-slate-500'></p></div>" +
+        "<p class='min-h-10 rounded-md bg-slate-50 p-3 text-sm text-slate-700'></p>" +
+        "<label class='block text-sm font-medium text-slate-700'>Status<select class='mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm'><option>New</option><option>Reviewed</option><option>Needs follow-up</option></select></label>" +
+        "<label class='block text-sm font-medium text-slate-700'>Teacher comment<textarea rows='3' class='mt-1 w-full rounded-md border border-slate-300 px-3 py-2 text-sm'></textarea></label>" +
+        "<div class='flex gap-2'><button class='save flex-1 rounded-md bg-slate-900 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-700' type='button'>Save review</button><button class='delete rounded-md border border-red-300 bg-white px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-50' type='button'>Delete</button></div>" +
+        "</div>";
+      card.querySelector("h3").textContent = row.project_title || "Untitled project";
+      card.querySelector("p.text-sm").textContent = row.student_name || "No student name";
+      card.querySelector("p.text-xs").textContent = submitted;
+      card.querySelector("p.min-h-10").textContent = row.notes || "No notes.";
+      const select = card.querySelector("select");
+      select.value = row.status || "New";
+      const textarea = card.querySelector("textarea");
+      textarea.value = row.teacher_comment || "";
+      card.querySelector(".save").addEventListener("click", async () => {
+        await updateSubmission(rowId, { status: select.value, teacher_comment: textarea.value.trim() });
+      });
+      card.querySelector(".delete").addEventListener("click", async () => {
+        if (confirm("Delete this submission?")) await deleteSubmission(rowId);
+      });
+      submissionList.appendChild(card);
+    }
+
+    async function updateSubmission(rowId, data) {
+      try {
+        const response = await fetch(rowsUrl + "/" + rowId, { method: "PUT", headers, body: JSON.stringify(data) });
+        if (!response.ok) throw new Error("Could not save review.");
+        showMessage("Review saved.", "success");
+        loadSubmissions();
+      } catch (error) {
+        showMessage(error.message, "error");
+      }
+    }
+
+    async function deleteSubmission(rowId) {
+      try {
+        const response = await fetch(rowsUrl + "/" + rowId, { method: "DELETE", headers: { "Authorization": "Bearer " + apiToken } });
+        if (!response.ok) throw new Error("Could not delete submission.");
+        showMessage("Submission deleted.", "success");
+        loadSubmissions();
+      } catch (error) {
+        showMessage(error.message, "error");
+      }
+    }
+
+    studentTab.addEventListener("click", () => setView("student"));
+    teacherTab.addEventListener("click", () => setView("teacher"));
+    document.getElementById("refreshButton").addEventListener("click", loadSubmissions);
+  </script>
+</body>
+</html>
