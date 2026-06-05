@@ -593,6 +593,47 @@
       font-size: 0.85rem;
     }
 
+    /* Platform Selector styling */
+    .mcp-platform-selector-wrapper {
+      display: flex;
+      justify-content: center;
+      margin: 1.5rem 0 3rem 0;
+    }
+
+    .mcp-platform-selector {
+      display: inline-flex;
+      gap: 0.25rem;
+      background: var(--panel-dark);
+      border: 1px solid var(--panel-border);
+      padding: 0.35rem;
+      border-radius: 9999px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    }
+
+    .platform-btn {
+      background: none;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.6rem 1.4rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .platform-btn:hover {
+      color: var(--text-main);
+    }
+
+    .platform-btn.active {
+      background: var(--gradient-primary);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    }
+
     /* Language Switcher */
     .lang-switcher {
       display: flex;
@@ -666,6 +707,14 @@
       <p id="hero-desc" data-i18n="hero-desc">Follow the steps below to configure a custom database connection directly within your Claude settings interface using remote MCP URLs.</p>
     </section>
 
+    <!-- Platform Selector -->
+    <div class="mcp-platform-selector-wrapper">
+      <div class="mcp-platform-selector">
+        <button id="platform-claude" class="platform-btn active" onclick="selectPlatform('claude')" data-i18n="platform-claude">Claude Settings Guide</button>
+        <button id="platform-gemini" class="platform-btn" onclick="selectPlatform('gemini')" data-i18n="platform-gemini">Gemini Extension Guide</button>
+      </div>
+    </div>
+
     <!-- Steps Layout Section -->
     <section class="steps-container" id="visual-guide">
       
@@ -685,8 +734,9 @@
             <span class="mockup-dot green"></span>
             <span class="mockup-title" id="mockup-title-text">1-open-claude.png - Claude Connectors</span>
           </div>
-          <div class="mockup-image-container">
+          <div class="mockup-image-container" style="position: relative;">
             <img src="assets/Screenshot-claude-mcp/1-open-claude.png" alt="Setup Screenshot" class="mockup-img" id="walkthrough-image" />
+            <div id="mockup-svg-container" style="width: 100%; height: 100%; display: none; align-items: center; justify-content: center; padding: 1rem; position: absolute; inset: 0;"></div>
           </div>
         </div>
 
@@ -775,9 +825,7 @@
     <div class="nav-container" style="justify-content: center;">
       <p data-i18n="footer-text">&copy; 2026 EasyData. Supporting open-source Model Context Protocol standards.</p>
     </div>
-  </footer>
-
-  <script>
+  <  <script>
     const translations = {
       en: {
         "title-page": "EasyData | Connecting MCP to Claude Guide",
@@ -785,9 +833,14 @@
         "nav-video": "Video guide",
         "nav-trouble": "Troubleshooting",
         "nav-back": "Back to EasyData",
-        "hero-badge": "Claude GUI Connectors",
-        "hero-title": "Connect MCP via Claude Settings",
-        "hero-desc": "Follow the steps below to configure a custom database connection directly within your Claude settings interface using remote MCP URLs.",
+        "platform-claude": "Claude Settings Guide",
+        "platform-gemini": "Gemini Extension Guide",
+        "hero-title-claude": "Connect MCP via Claude Settings",
+        "hero-desc-claude": "Follow the steps below to configure a custom database connection directly within your Claude settings interface using remote MCP URLs.",
+        "hero-title-gemini": "Build Apps inside Gemini",
+        "hero-desc-gemini": "Install the EasyData Chrome Extension to allow gemini.google.com to instantly build hosted database-backed apps from your chat input.",
+        "hero-badge-claude": "Claude GUI Connectors",
+        "hero-badge-gemini": "Gemini Web App Bridge",
         "url-label": "EasyData Remote URL:",
         "btn-copy-url": "Copy URL",
         "prompt-label": "Sample Prompt to Activate:",
@@ -812,9 +865,14 @@
         "nav-video": "Myndband",
         "nav-trouble": "Tækniaðstoð",
         "nav-back": "Til baka í EasyData",
-        "hero-badge": "Claude GUI Tengi",
-        "hero-title": "Tengja MCP í gegnum Claude Stillingar",
-        "hero-desc": "Fylgdu skrefunum hér að neðan til að stilla sérsniðna gagnagrunnstengingu beint í Claude stillingarviðmótinu með ytri MCP vefslóðum.",
+        "platform-claude": "Leiðarvísir fyrir Claude",
+        "platform-gemini": "Leiðarvísir fyrir Gemini",
+        "hero-title-claude": "Tengja MCP í gegnum Claude Stillingar",
+        "hero-desc-claude": "Fylgdu skrefunum hér að neðan til að stilla sérsniðna gagnagrunnstengingu beint í Claude stillingarviðmótinu með ytri MCP vefslóðum.",
+        "hero-title-gemini": "Smíða öpp inni í Gemini",
+        "hero-desc-gemini": "Settu upp EasyData Chrome viðbótina til að gera gemini.google.com kleift að smíða hýst öpp með gagnagrunni beint úr spjallinu.",
+        "hero-badge-claude": "Claude GUI Tengi",
+        "hero-badge-gemini": "Gemini Vefviðbót",
         "url-label": "Ytri EasyData Vefslóð:",
         "btn-copy-url": "Afrita vefslóð",
         "prompt-label": "Dæmi um fyrirmæli til að virkja:",
@@ -828,7 +886,7 @@
         "info-mcp-p2": "<strong>Staðbundið stdio (stillingarskrá):</strong> Tilvalið fyrir keyrslu á eigin tölvu. Krefst þess að stilla skipanir í stillingarskrám á staðbundnu JSON formi.",
         "info-trouble-title": "⚠️ Ábendingar fyrir samþættingu",
         "info-trouble-p1": "<strong>Skýr virkjun:</strong> Þegar nýtt spjall er hafið við Claude, segðu skýrt: <code>\"Notaðu EasyData MCP tengið\"</code> til að tryggja að Claude virki tenginguna.",
-        "info-trouble-p2": "<strong>Heimildarbeiðnir:</strong> Claude mun biðja um skýra staðfestingu áður en gögn eru lesin eða skrifuð. Veldu **Alltaf leyfa** til að sleppa endurteknum smellum.",
+        "info-trouble-p2": "<strong>Heimildarbeiðnir:</strong> Claude mun biðja um skýra staðfestingu áður en gögn oli lesin eða skrifuð. Veldu **Alltaf leyfa** til að sleppa endurteknum smellum.",
         "video-guide-title": "Myndbandsleiðbeiningar",
         "video-not-supported": "Vafrinn þinn styður ekki myndbönd.",
         "footer-text": "&copy; 2026 EasyData. Styður opna staðla fyrir Model Context Protocol."
@@ -836,177 +894,266 @@
     };
 
     const stepsData = {
-      en: [
-        {
-          number: 1,
-          title: "Open Claude",
-          imageName: "1-open-claude.png",
-          heading: "1. Open the Claude Application",
-          text: "Launch the Claude Desktop client or sign in to Claude in your browser. Locate the chat box where your profile actions reside.",
-          interactive: null
-        },
-        {
-          number: 2,
-          title: "Click Customize",
-          imageName: "2-click-customize-connectors.png",
-          heading: "2. Open settings to find Connectors",
-          text: "Click the menu or customization button located in the <strong>upper-left corner</strong> of the window to open settings so you can get to connectors.",
-          interactive: null
-        },
-        {
-          number: 3,
-          title: "Open Connectors",
-          imageName: "3-click-connectors.png",
-          heading: "3. Go to the Connectors Panel",
-          text: "Select **Connectors** from the popover menu. This opens the main integrations manager panel.",
-          interactive: null
-        },
-        {
-          number: 4,
-          title: "Click Plus Icon",
-          imageName: "4-click-plus.png",
-          heading: "4. Create a New Integration",
-          text: "Locate the **+** (Plus) icon in the top-right corner of the Connectors overlay pane and click it.",
-          interactive: null
-        },
-        {
-          number: 5,
-          title: "Add Custom",
-          imageName: "5-click-add-custom-connector.png",
-          heading: "5. Select Add Custom Connector",
-          text: "Click the **Add Custom Connector** list item to open the custom URL configuration dialog.",
-          interactive: null
-        },
-        {
-          number: 6,
-          title: "Give a Name",
-          imageName: "6-give-name.png",
-          heading: "6. Label the Connector",
-          text: "Type a identifier name into the box, such as <code>EasyData</code>. This labels the server for your prompts.",
-          interactive: null
-        },
-        {
-          number: 7,
-          title: "Insert URL",
-          imageName: "7-insert-url.png",
-          heading: "7. Input the Remote Endpoint URL",
-          text: "Paste the public, secure endpoint URL in the server text field. Copy the EasyData URL below to paste it directly.",
-          interactive: "url"
-        },
-        {
-          number: 8,
-          title: "Click Add",
-          imageName: "8-add.png",
-          heading: "8. Complete the Registration",
-          text: "Click the **Add** button. Claude will contact the URL to negotiate connection handshakes and retrieve tool descriptions.",
-          interactive: null
-        },
-        {
-          number: 9,
-          title: "Enable Connector",
-          imageName: "9-see-new-mcp.png",
-          heading: "9. Enable the Connector",
-          text: "Toggle the switch next to the new <strong>EasyData</strong> connector to turn it on, enabling it for use in your chat conversations.",
-          interactive: null
-        },
-        {
-          number: 10,
-          title: "Refresh Tools",
-          imageName: "10-refresh-tools-list.png",
-          heading: "10. Refresh Tools if Missing",
-          text: "If any database tools are missing or do not show up right away in your chat, click on the <strong>three dots</strong> next to the connector name and select the refresh/reload action to update the tool list. Once loaded, start your prompt using the copyable test prompt below.",
-          interactive: "prompt"
-        }
-      ],
-      is: [
-        {
-          number: 1,
-          title: "Opna Claude",
-          imageName: "1-open-claude.png",
-          heading: "1. Opnaðu Claude forritið",
-          text: "Keyrðu Claude Desktop forritið eða skráðu þig inn í Claude í vafranum. Finndu spjallboxið þar sem prófílaðgerðirnar þínar eru.",
-          interactive: null
-        },
-        {
-          number: 2,
-          title: "Smella á Customize",
-          imageName: "2-click-customize-connectors.png",
-          heading: "2. Opnaðu stillingar (Customize) til að finna Connectors",
-          text: "Smelltu á valmyndina eða sérstillingarhnappinn efst í <strong>vinstra horninu</strong> á glugganum til að opna stillingar svo þú komist í tengi (connectors).",
-          interactive: null
-        },
-        {
-          number: 3,
-          title: "Opna Connectors",
-          imageName: "3-click-connectors.png",
-          heading: "3. Farðu í Connectors spjaldið",
-          text: "Veldu **Connectors** úr valmyndinni. Þetta opnar aðalspjaldið fyrir samþættingar.",
-          interactive: null
-        },
-        {
-          number: 4,
-          title: "Smella á Plús tákn",
-          imageName: "4-click-plus.png",
-          heading: "4. Búðu til nýja samþættingu",
-          text: "Finndu **+** (plús) táknið í efra hægra horninu á Connectors spjaldinu og smelltu á það.",
-          interactive: null
-        },
-        {
-          number: 5,
-          title: "Add Custom",
-          imageName: "5-click-add-custom-connector.png",
-          heading: "5. Veldu Add Custom Connector",
-          text: "Smelltu á **Add Custom Connector** í listanum til að opna stillingagluggann fyrir sérsniðna vefslóð.",
-          interactive: null
-        },
-        {
-          number: 6,
-          title: "Gefa nafn",
-          imageName: "6-give-name.png",
-          heading: "6. Gefðu tenginu nafn",
-          text: "Skrifaðu heiti í reitinn, eins og <code>EasyData</code>. Þetta merkir netþjóninn fyrir fyrirspurnirnar þínar.",
-          interactive: null
-        },
-        {
-          number: 7,
-          title: "Slá inn vefslóð",
-          imageName: "7-insert-url.png",
-          heading: "7. Sláðu inn ytri vefslóð endapunkts",
-          text: "Límdu opinberu og öruggu vefslóðina í textareitinn. Afritaðu EasyData vefslóðina hér að neðan til að líma hana beint inn.",
-          interactive: "url"
-        },
-        {
-          number: 8,
-          title: "Smella á Add",
-          imageName: "8-add.png",
-          heading: "8. Ljúktu við skráningu",
-          text: "Smelltu á **Add** hnappinn. Claude mun hafa samband við vefslóðina til að koma á tengingu og sækja lýsingar á tólunum.",
-          interactive: null
-        },
-        {
-          number: 9,
-          title: "Tengi",
-          imageName: "9-see-new-mcp.png",
-          heading: "9. Tengið",
-          text: "Hérna sérðu að tengið er komið.",
-          interactive: null
-        },
-        {
-          number: 10,
-          title: "Endurhlaða tólum",
-          imageName: "10-refresh-tools-list.png",
-          heading: "10. Endurhlaða tólum ef þau vantar",
-          text: "Ef einhver gagnagrunnstól vantar eða birtast ekki strax í spjallinu þínu, smelltu þá á **punktana þrjá** við hliðina á nafni tengisins og veldu endurhleðslu (refresh/reload) til að uppfæra tólalistann. Þegar það er komið skaltu byrja spjallið með því að nota afritanlegu prufufyrirmælin hér að neðan.",
-          interactive: "prompt"
-        }
-      ]
+      claude: {
+        en: [
+          {
+            number: 1,
+            title: "Open Claude",
+            imageName: "1-open-claude.png",
+            heading: "1. Open the Claude Application",
+            text: "Launch the Claude Desktop client or sign in to Claude in your browser. Locate the chat box where your profile actions reside.",
+            interactive: null
+          },
+          {
+            number: 2,
+            title: "Click Customize",
+            imageName: "2-click-customize-connectors.png",
+            heading: "2. Open settings to find Connectors",
+            text: "Click the menu or customization button located in the <strong>upper-left corner</strong> of the window to open settings so you can get to connectors.",
+            interactive: null
+          },
+          {
+            number: 3,
+            title: "Open Connectors",
+            imageName: "3-click-connectors.png",
+            heading: "3. Go to the Connectors Panel",
+            text: "Select **Connectors** from the popover menu. This opens the main integrations manager panel.",
+            interactive: null
+          },
+          {
+            number: 4,
+            title: "Click Plus Icon",
+            imageName: "4-click-plus.png",
+            heading: "4. Create a New Integration",
+            text: "Locate the **+** (Plus) icon in the top-right corner of the Connectors overlay pane and click it.",
+            interactive: null
+          },
+          {
+            number: 5,
+            title: "Add Custom",
+            imageName: "5-click-add-custom-connector.png",
+            heading: "5. Select Add Custom Connector",
+            text: "Click the **Add Custom Connector** list item to open the custom URL configuration dialog.",
+            interactive: null
+          },
+          {
+            number: 6,
+            title: "Give a Name",
+            imageName: "6-give-name.png",
+            heading: "6. Label the Connector",
+            text: "Type a identifier name into the box, such as <code>EasyData</code>. This labels the server for your prompts.",
+            interactive: null
+          },
+          {
+            number: 7,
+            title: "Insert URL",
+            imageName: "7-insert-url.png",
+            heading: "7. Input the Remote Endpoint URL",
+            text: "Paste the public, secure endpoint URL in the server text field. Copy the EasyData URL below to paste it directly.",
+            interactive: "url"
+          },
+          {
+            number: 8,
+            title: "Click Add",
+            imageName: "8-add.png",
+            heading: "8. Complete the Registration",
+            text: "Click the **Add** button. Claude will contact the URL to negotiate connection handshakes and retrieve tool descriptions.",
+            interactive: null
+          },
+          {
+            number: 9,
+            title: "Enable Connector",
+            imageName: "9-see-new-mcp.png",
+            heading: "9. Enable the Connector",
+            text: "Toggle the switch next to the new <strong>EasyData</strong> connector to turn it on, enabling it for use in your chat conversations.",
+            interactive: null
+          },
+          {
+            number: 10,
+            title: "Refresh Tools",
+            imageName: "10-refresh-tools-list.png",
+            heading: "10. Refresh Tools if Missing",
+            text: "If any database tools are missing or do not show up right away in your chat, click on the <strong>three dots</strong> next to the connector name and select the refresh/reload action to update the tool list. Once loaded, start your prompt using the copyable test prompt below.",
+            interactive: "prompt"
+          }
+        ],
+        is: [
+          {
+            number: 1,
+            title: "Opna Claude",
+            imageName: "1-open-claude.png",
+            heading: "1. Opnaðu Claude forritið",
+            text: "Keyrðu Claude Desktop forritið eða skráðu þig inn í Claude í vafranum. Finndu spjallboxið þar sem prófílaðgerðirnar þínar eru.",
+            interactive: null
+          },
+          {
+            number: 2,
+            title: "Smella á Customize",
+            imageName: "2-click-customize-connectors.png",
+            heading: "2. Opnaðu stillingar (Customize) til að finna Connectors",
+            text: "Smelltu á valmyndina eða sérstillingarhnappinn efst í <strong>vinstra horninu</strong> á glugganum til að opna stillingar svo þú komist í tengi (connectors).",
+            interactive: null
+          },
+          {
+            number: 3,
+            title: "Opna Connectors",
+            imageName: "3-click-connectors.png",
+            heading: "3. Farðu í Connectors spjaldið",
+            text: "Veldu **Connectors** úr valmyndinni. Þetta opnar aðalspjaldið fyrir samþættingar.",
+            interactive: null
+          },
+          {
+            number: 4,
+            title: "Smella á Plús tákn",
+            imageName: "4-click-plus.png",
+            heading: "4. Búðu til nýja samþættingu",
+            text: "Finndu **+** (plús) táknið í efra hægra horninu á Connectors spjaldinu og smelltu á það.",
+            interactive: null
+          },
+          {
+            number: 5,
+            title: "Add Custom",
+            imageName: "5-click-add-custom-connector.png",
+            heading: "5. Veldu Add Custom Connector",
+            text: "Smelltu á **Add Custom Connector** í listanum til að opna stillingagluggann fyrir sérsniðna vefslóð.",
+            interactive: null
+          },
+          {
+            number: 6,
+            title: "Gefa nafn",
+            imageName: "6-give-name.png",
+            heading: "6. Gefðu tenginu nafn",
+            text: "Skrifaðu heiti í reitinn, eins og <code>EasyData</code>. Þetta merkir netþjóninn fyrir fyrirspurnirnar þínar.",
+            interactive: null
+          },
+          {
+            number: 7,
+            title: "Slá inn vefslóð",
+            imageName: "7-insert-url.png",
+            heading: "7. Sláðu inn ytri vefslóð endapunkts",
+            text: "Límdu opinberu og öruggu vefslóðina í textareitinn. Afritaðu EasyData vefslóðina hér að neðan til að líma hana beint inn.",
+            interactive: "url"
+          },
+          {
+            number: 8,
+            title: "Smella á Add",
+            imageName: "8-add.png",
+            heading: "8. Ljúktu við skráningu",
+            text: "Smelltu á **Add** hnappinn. Claude mun hafa samband við vefslóðina til að koma á tengingu og sækja lýsingar á tólunum.",
+            interactive: null
+          },
+          {
+            number: 9,
+            title: "Tengi",
+            imageName: "9-see-new-mcp.png",
+            heading: "9. Tengið",
+            text: "Hérna sérðu að tengið er komið.",
+            interactive: null
+          },
+          {
+            number: 10,
+            title: "Endurhlaða tólum",
+            imageName: "10-refresh-tools-list.png",
+            heading: "10. Endurhlaða tólum ef þau vantar",
+            text: "Ef einhver gagnagrunnstól vantar eða birtast ekki strax í spjallinu þínu, smelltu þá á **punktana þrjá** við hliðina á nafni tengisins og veldu endurhleðslu (refresh/reload) til að uppfæra tólalistann. Þegar það er komið skaltu byrja spjallið með því að nota afritanlegu prufufyrirmælin hér að neðan.",
+            interactive: "prompt"
+          }
+        ]
+      },
+      gemini: {
+        en: [
+          {
+            number: 1,
+            title: "Install Extension",
+            heading: "1. Install Chrome Extension",
+            text: "Open Google Chrome and go to <code>chrome://extensions/</code>. Enable <strong>Developer mode</strong> in the top-right corner, click <strong>Load unpacked</strong> in the top-left, and select the <code>chrome-extention</code> directory from the EasyData project folder.",
+            interactive: null,
+            svg: '<svg viewBox="0 0 600 350" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;"><rect width="600" height="350" rx="12" fill="#0D1117" /><rect x="0" y="0" width="600" height="40" rx="12" fill="#161B22" /><circle cx="20" cy="20" r="6" fill="#FF5F56" /><circle cx="40" cy="20" r="6" fill="#FFBD2E" /><circle cx="60" cy="20" r="6" fill="#27C93F" /><rect x="90" y="10" width="400" height="20" rx="10" fill="#0D1117" /><text x="210" y="24" fill="#8B949E" font-family="sans-serif" font-size="11">chrome://extensions/</text><text x="30" y="75" fill="#F0F6FC" font-family="sans-serif" font-weight="bold" font-size="18">Extensions</text><rect x="420" y="60" width="150" height="30" rx="6" fill="#21262D" stroke="#30363D" /><text x="430" y="79" fill="#C9D1D9" font-family="sans-serif" font-size="11">Developer mode</text><rect x="525" y="67" width="34" height="16" rx="8" fill="#1F6FEB" /><circle cx="549" cy="75" r="6" fill="#FFF" /><rect x="30" y="110" width="120" height="32" rx="6" fill="#238636" /><text x="50" y="130" fill="#FFF" font-family="sans-serif" font-weight="bold" font-size="12">Load unpacked</text><rect x="30" y="110" width="120" height="32" rx="6" fill="none" stroke="#58A6FF" stroke-width="2" stroke-dasharray="4" /><rect x="30" y="165" width="260" height="140" rx="8" fill="#161B22" stroke="#30363D" /><rect x="50" y="185" width="40" height="40" rx="6" fill="#388BFD" /><text x="63" y="211" fill="#FFF" font-family="sans-serif" font-weight="bold" font-size="20">E</text><text x="105" y="200" fill="#F0F6FC" font-family="sans-serif" font-weight="bold" font-size="14">Gemini MCP Connector</text><text x="105" y="218" fill="#8B949E" font-family="sans-serif" font-size="11">Version 1.0.0</text><text x="50" y="245" fill="#8B949E" font-family="sans-serif" font-size="12">EasyData bridge to gemini.google.com</text><rect x="220" y="275" width="50" height="20" rx="10" fill="#21262D" stroke="#30363D" /><text x="233" y="289" fill="#58A6FF" font-family="sans-serif" font-size="10">Active</text><path d="M110,105 L95,120 L110,135" stroke="#58A6FF" stroke-width="3" fill="none" /><line x1="110" y1="120" x2="160" y2="120" stroke="#58A6FF" stroke-width="3" /><text x="175" y="124" fill="#58A6FF" font-family="sans-serif" font-weight="bold" font-size="12">Click here to load chrome-extention folder</text></svg>'
+          },
+          {
+            number: 2,
+            title: "Type Request",
+            heading: "2. Write App Description",
+            text: "Open <code>gemini.google.com</code> or <code>aistudio.google.com</code>. Type your prompt in the chat box describing the app you want (e.g. student showcase and grading system).",
+            interactive: null,
+            svg: '<svg viewBox="0 0 600 350" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;"><rect width="600" height="350" rx="12" fill="#0D1117" /><rect x="0" y="0" width="600" height="40" rx="12" fill="#161B22" /><circle cx="20" cy="20" r="6" fill="#FF5F56" /><circle cx="40" cy="20" r="6" fill="#FFBD2E" /><circle cx="60" cy="20" r="6" fill="#27C93F" /><rect x="90" y="10" width="400" height="20" rx="10" fill="#0D1117" /><text x="225" y="24" fill="#8B949E" font-family="sans-serif" font-size="11">gemini.google.com</text><rect x="40" y="220" width="520" height="90" rx="20" fill="#161B22" stroke="#30363D" stroke-width="2" /><text x="60" y="250" fill="#F0F6FC" font-family="sans-serif" font-size="14">Can you make me an app where students take pictures of</text><text x="60" y="275" fill="#F0F6FC" font-family="sans-serif" font-size="14">their projects at home and turn them in so i can see them</text><path d="M525,265 C525,255 535,255 535,245 C535,255 545,255 545,265 C545,275 535,275 535,285 C535,275 525,275 525,265 Z" fill="#7A9BFC" /><rect x="55" y="235" width="460" height="48" fill="rgba(56, 139, 253, 0.2)" rx="4" /><rect x="100" y="80" width="400" height="110" rx="10" fill="#1F2937" stroke="#374151" /><text x="120" y="115" fill="#388BFD" font-family="sans-serif" font-weight="bold" font-size="16">Write App Description</text><text x="120" y="145" fill="#C9D1D9" font-family="sans-serif" font-size="13">Type your prompt in the chat box on Gemini.</text><text x="120" y="168" fill="#8B949E" font-family="sans-serif" font-size="12">Highlight/select the entire prompt text before sending.</text></svg>'
+          },
+          {
+            number: 3,
+            title: "Right Click",
+            heading: "3. Right-Click the Text",
+            text: "Select/highlight all the text you wrote. Right-click the selected prompt text, and click **Create App with EasyData 🚀** in the context menu.",
+            interactive: null,
+            svg: '<svg viewBox="0 0 600 350" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;"><rect width="600" height="350" rx="12" fill="#0D1117" /><rect x="0" y="0" width="600" height="40" rx="12" fill="#161B22" /><circle cx="20" cy="20" r="6" fill="#FF5F56" /><circle cx="40" cy="20" r="6" fill="#FFBD2E" /><circle cx="60" cy="20" r="6" fill="#27C93F" /><rect x="90" y="10" width="400" height="20" rx="10" fill="#0D1117" /><text x="225" y="24" fill="#8B949E" font-family="sans-serif" font-size="11">gemini.google.com</text><rect x="40" y="220" width="520" height="90" rx="20" fill="#161B22" stroke="#30363D" /><rect x="55" y="235" width="460" height="48" fill="rgba(56, 139, 253, 0.2)" rx="4" /><text x="60" y="250" fill="#F0F6FC" font-family="sans-serif" font-size="14">Can you make me an app where students take pictures of</text><text x="60" y="275" fill="#F0F6FC" font-family="sans-serif" font-size="14">their projects at home and turn them in so i can see them</text><g><rect x="200" y="60" width="220" height="150" rx="8" fill="#1F2937" stroke="#374151" stroke-width="2" /><text x="220" y="85" fill="#C9D1D9" font-family="sans-serif" font-size="13">Cut</text><text x="220" y="110" fill="#C9D1D9" font-family="sans-serif" font-size="13">Copy</text><text x="220" y="135" fill="#C9D1D9" font-family="sans-serif" font-size="13">Paste</text><line x1="200" y1="145" x2="420" y2="145" stroke="#374151" /><rect x="204" y="152" width="212" height="32" rx="4" fill="url(#purpleGrad)" /><text x="220" y="172" fill="#FFF" font-family="sans-serif" font-weight="bold" font-size="12">Create App with EasyData 🚀</text></g><path d="M360,175 L380,195 L372,197 L378,212 L370,215 L364,200 L356,203 Z" fill="#FFF" stroke="#000" stroke-width="1.5" /><defs><linearGradient id="purpleGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#8B5CF6" /><stop offset="100%" stop-color="#06B6D4" /></linearGradient></defs></svg>'
+          },
+          {
+            number: 4,
+            title: "Wait & Publish",
+            heading: "4. Wait for App Generation",
+            text: "A loading overlay will display while the EasyData AI services compile client code, create database schemas, and publish the application.",
+            interactive: null,
+            svg: '<svg viewBox="0 0 600 350" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;"><rect width="600" height="350" rx="12" fill="#0D1117" /><rect x="0" y="0" width="600" height="40" rx="12" fill="#161B22" /><circle cx="20" cy="20" r="6" fill="#FF5F56" /><circle cx="40" cy="20" r="6" fill="#FFBD2E" /><circle cx="60" cy="20" r="6" fill="#27C93F" /><rect x="90" y="10" width="400" height="20" rx="10" fill="#0D1117" /><g transform="translate(150, 80)"><rect width="300" height="180" rx="12" fill="#161B22" stroke="#8B5CF6" stroke-width="2" /><circle cx="150" cy="65" r="24" stroke="#30363D" stroke-width="4" fill="none" /><path d="M150,41 A24,24 0 0,1 174,65" stroke="#06B6D4" stroke-width="4" stroke-linecap="round" fill="none"><animateTransform attributeName="transform" type="rotate" from="0 150 65" to="360 150 65" dur="1.5s" repeatCount="indefinite" /></path><text x="150" y="120" fill="#FFF" font-family="sans-serif" font-weight="bold" font-size="14" text-anchor="middle">Building App with Codex AI...</text><text x="150" y="145" fill="#8B949E" font-family="sans-serif" font-size="11" text-anchor="middle">Creating SQLite schema &amp; tables</text></g></svg>'
+          },
+          {
+            number: 5,
+            title: "Success Link",
+            heading: "5. Open Your Finished App",
+            text: "Once finished, the extension will paste the live link and summary directly into your chat. Press Enter to submit, and click the link to open your live hosted app immediately!",
+            interactive: null,
+            svg: '<svg viewBox="0 0 600 350" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;"><rect width="600" height="350" rx="12" fill="#0D1117" /><rect x="0" y="0" width="600" height="40" rx="12" fill="#161B22" /><circle cx="20" cy="20" r="6" fill="#FF5F56" /><circle cx="40" cy="20" r="6" fill="#FFBD2E" /><circle cx="60" cy="20" r="6" fill="#27C93F" /><rect x="90" y="10" width="400" height="20" rx="10" fill="#0D1117" /><path d="M40,60 L240,60 A12,12 0 0,1 252,72 L252,140 A12,12 0 0,1 240,152 L52,152 A12,12 0 0,1 40,140 Z" fill="#1F2937" stroke="#374151" /><text x="60" y="90" fill="#C9D1D9" font-family="sans-serif" font-size="13">I\'ve built your student showcase app!</text><text x="60" y="112" fill="#C9D1D9" font-family="sans-serif" font-size="13">The database table is named submissions.</text><text x="60" y="134" fill="#10B981" font-family="sans-serif" font-weight="bold" font-size="13">Live App URL is pasted below:</text><g transform="translate(40, 175)"><rect width="520" height="120" rx="10" fill="#161B22" stroke="#10B981" stroke-width="1.5" /><rect x="20" y="20" width="45" height="45" rx="8" fill="url(#purpleGrad)" /><path d="M36,32 L49,42.5 L36,53 Z" fill="#FFF" /><text x="80" y="40" fill="#FFF" font-family="sans-serif" font-weight="bold" font-size="15">Student Project Showcase</text><text x="80" y="60" fill="#8B949E" font-family="sans-serif" font-size="11">Created via EasyData API - Provisioned Successfully</text><rect x="20" y="82" width="480" height="24" rx="4" fill="#0D1117" stroke="#30363D" /><text x="30" y="98" fill="#58A6FF" font-family="sans-serif" font-size="11">https://easydata.is/apps/a6c31e80-51b4-4f5b-b177-7d50cbfb18dd/</text></g><defs><linearGradient id="purpleGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#8B5CF6" /><stop offset="100%" stop-color="#06B6D4" /></linearGradient></defs></svg>'
+          }
+        ],
+        is: [
+          {
+            number: 1,
+            title: "Sækja viðbót",
+            heading: "1. Setja upp Chrome viðbótina",
+            text: "Opnaðu Google Chrome og farðu á <code>chrome://extensions/</code>. Virkjaðu <strong>Developer mode</strong> (hönnuðarham) efst í hægra horninu, smelltu á <strong>Load unpacked</strong> (hlaða óþjöppuðu) efst til vinstri, og veldu <code>chrome-extention</code> möppuna úr EasyData verkefninu.",
+            interactive: null,
+            svg: '<svg viewBox="0 0 600 350" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;"><rect width="600" height="350" rx="12" fill="#0D1117" /><rect x="0" y="0" width="600" height="40" rx="12" fill="#161B22" /><circle cx="20" cy="20" r="6" fill="#FF5F56" /><circle cx="40" cy="20" r="6" fill="#FFBD2E" /><circle cx="60" cy="20" r="6" fill="#27C93F" /><rect x="90" y="10" width="400" height="20" rx="10" fill="#0D1117" /><text x="210" y="24" fill="#8B949E" font-family="sans-serif" font-size="11">chrome://extensions/</text><text x="30" y="75" fill="#F0F6FC" font-family="sans-serif" font-weight="bold" font-size="18">Extensions</text><rect x="420" y="60" width="150" height="30" rx="6" fill="#21262D" stroke="#30363D" /><text x="430" y="79" fill="#C9D1D9" font-family="sans-serif" font-size="11">Developer mode</text><rect x="525" y="67" width="34" height="16" rx="8" fill="#1F6FEB" /><circle cx="549" cy="75" r="6" fill="#FFF" /><rect x="30" y="110" width="120" height="32" rx="6" fill="#238636" /><text x="50" y="130" fill="#FFF" font-family="sans-serif" font-weight="bold" font-size="12">Load unpacked</text><rect x="30" y="110" width="120" height="32" rx="6" fill="none" stroke="#58A6FF" stroke-width="2" stroke-dasharray="4" /><rect x="30" y="165" width="260" height="140" rx="8" fill="#161B22" stroke="#30363D" /><rect x="50" y="185" width="40" height="40" rx="6" fill="#388BFD" /><text x="63" y="211" fill="#FFF" font-family="sans-serif" font-weight="bold" font-size="20">E</text><text x="105" y="200" fill="#F0F6FC" font-family="sans-serif" font-weight="bold" font-size="14">Gemini MCP Connector</text><text x="105" y="218" fill="#8B949E" font-family="sans-serif" font-size="11">Version 1.0.0</text><text x="50" y="245" fill="#8B949E" font-family="sans-serif" font-size="12">EasyData bridge to gemini.google.com</text><rect x="220" y="275" width="50" height="20" rx="10" fill="#21262D" stroke="#30363D" /><text x="233" y="289" fill="#58A6FF" font-family="sans-serif" font-size="10">Active</text><path d="M110,105 L95,120 L110,135" stroke="#58A6FF" stroke-width="3" fill="none" /><line x1="110" y1="120" x2="160" y2="120" stroke="#58A6FF" stroke-width="3" /><text x="175" y="124" fill="#58A6FF" font-family="sans-serif" font-weight="bold" font-size="12">Click here to load chrome-extention folder</text></svg>'
+          },
+          {
+            number: 2,
+            title: "Skrifa beiðni",
+            heading: "2. Skrifaðu lýsingu á appi",
+            text: "Opnaðu <code>gemini.google.com</code> eða <code>aistudio.google.com</code>. Sláðu inn lýsingu á forritinu sem þig vantar í spjallreitinn (t.d. verkefnaskila-app fyrir nemendur).",
+            interactive: null,
+            svg: '<svg viewBox="0 0 600 350" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;"><rect width="600" height="350" rx="12" fill="#0D1117" /><rect x="0" y="0" width="600" height="40" rx="12" fill="#161B22" /><circle cx="20" cy="20" r="6" fill="#FF5F56" /><circle cx="40" cy="20" r="6" fill="#FFBD2E" /><circle cx="60" cy="20" r="6" fill="#27C93F" /><rect x="90" y="10" width="400" height="20" rx="10" fill="#0D1117" /><text x="225" y="24" fill="#8B949E" font-family="sans-serif" font-size="11">gemini.google.com</text><rect x="40" y="220" width="520" height="90" rx="20" fill="#161B22" stroke="#30363D" stroke-width="2" /><text x="60" y="250" fill="#F0F6FC" font-family="sans-serif" font-size="14">Can you make me an app where students take pictures of</text><text x="60" y="275" fill="#F0F6FC" font-family="sans-serif" font-size="14">their projects at home and turn them in so i can see them</text><path d="M525,265 C525,255 535,255 535,245 C535,255 545,255 545,265 C545,275 535,275 535,285 C535,275 525,275 525,265 Z" fill="#7A9BFC" /><rect x="55" y="235" width="460" height="48" fill="rgba(56, 139, 253, 0.2)" rx="4" /><rect x="100" y="80" width="400" height="110" rx="10" fill="#1F2937" stroke="#374151" /><text x="120" y="115" fill="#388BFD" font-family="sans-serif" font-weight="bold" font-size="16">Write App Description</text><text x="120" y="145" fill="#C9D1D9" font-family="sans-serif" font-size="13">Type your prompt in the chat box on Gemini.</text><text x="120" y="168" fill="#8B949E" font-family="sans-serif" font-size="12">Highlight/select the entire prompt text before sending.</text></svg>'
+          },
+          {
+            number: 3,
+            title: "Hægrismella",
+            heading: "3. Hægrismelltu á textann",
+            text: "Ljósaðu (veldu) allan textann sem þú skrifaðir. Hægrismelltu á valda textann og smelltu á **Create App with EasyData 🚀** í samhengisvalmyndinni.",
+            interactive: null,
+            svg: '<svg viewBox="0 0 600 350" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;"><rect width="600" height="350" rx="12" fill="#0D1117" /><rect x="0" y="0" width="600" height="40" rx="12" fill="#161B22" /><circle cx="20" cy="20" r="6" fill="#FF5F56" /><circle cx="40" cy="20" r="6" fill="#FFBD2E" /><circle cx="60" cy="20" r="6" fill="#27C93F" /><rect x="90" y="10" width="400" height="20" rx="10" fill="#0D1117" /><text x="225" y="24" fill="#8B949E" font-family="sans-serif" font-size="11">gemini.google.com</text><rect x="40" y="220" width="520" height="90" rx="20" fill="#161B22" stroke="#30363D" /><rect x="55" y="235" width="460" height="48" fill="rgba(56, 139, 253, 0.2)" rx="4" /><text x="60" y="250" fill="#F0F6FC" font-family="sans-serif" font-size="14">Can you make me an app where students take pictures of</text><text x="60" y="275" fill="#F0F6FC" font-family="sans-serif" font-size="14">their projects at home and turn them in so i can see them</text><g><rect x="200" y="60" width="220" height="150" rx="8" fill="#1F2937" stroke="#374151" stroke-width="2" /><text x="220" y="85" fill="#C9D1D9" font-family="sans-serif" font-size="13">Cut</text><text x="220" y="110" fill="#C9D1D9" font-family="sans-serif" font-size="13">Copy</text><text x="220" y="135" fill="#C9D1D9" font-family="sans-serif" font-size="13">Paste</text><line x1="200" y1="145" x2="420" y2="145" stroke="#374151" /><rect x="204" y="152" width="212" height="32" rx="4" fill="url(#purpleGrad)" /><text x="220" y="172" fill="#FFF" font-family="sans-serif" font-weight="bold" font-size="12">Create App with EasyData 🚀</text></g><path d="M360,175 L380,195 L372,197 L378,212 L370,215 L364,200 L356,203 Z" fill="#FFF" stroke="#000" stroke-width="1.5" /><defs><linearGradient id="purpleGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#8B5CF6" /><stop offset="100%" stop-color="#06B6D4" /></linearGradient></defs></svg>'
+          },
+          {
+            number: 4,
+            title: "Smíða forrit",
+            heading: "4. Gervigreindin smíðar appið",
+            text: "Hleðsluskjár mun birtast á meðan EasyData AI þjónustan stofnar gagnagrunnstöflur, hannar gagnaskemað og skrifar HTML kóðann.",
+            interactive: null,
+            svg: '<svg viewBox="0 0 600 350" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;"><rect width="600" height="350" rx="12" fill="#0D1117" /><rect x="0" y="0" width="600" height="40" rx="12" fill="#161B22" /><circle cx="20" cy="20" r="6" fill="#FF5F56" /><circle cx="40" cy="20" r="6" fill="#FFBD2E" /><circle cx="60" cy="20" r="6" fill="#27C93F" /><rect x="90" y="10" width="400" height="20" rx="10" fill="#0D1117" /><g transform="translate(150, 80)"><rect width="300" height="180" rx="12" fill="#161B22" stroke="#8B5CF6" stroke-width="2" /><circle cx="150" cy="65" r="24" stroke="#30363D" stroke-width="4" fill="none" /><path d="M150,41 A24,24 0 0,1 174,65" stroke="#06B6D4" stroke-width="4" stroke-linecap="round" fill="none"><animateTransform attributeName="transform" type="rotate" from="0 150 65" to="360 150 65" dur="1.5s" repeatCount="indefinite" /></path><text x="150" y="120" fill="#FFF" font-family="sans-serif" font-weight="bold" font-size="14" text-anchor="middle">Building App with Codex AI...</text><text x="150" y="145" fill="#8B949E" font-family="sans-serif" font-size="11" text-anchor="middle">Creating SQLite schema &amp; tables</text></g></svg>'
+          },
+          {
+            number: 5,
+            title: "Opna appið",
+            heading: "5. Tilbúið! Opnaðu appið þitt",
+            text: "Þegar appið er tilbúið, mun viðbótin setja vefslóðina og samantektina beint inn í spjallið þitt. Smelltu á slóðina til að opna keyrandi appið strax!",
+            interactive: null,
+            svg: '<svg viewBox="0 0 600 350" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;"><rect width="600" height="350" rx="12" fill="#0D1117" /><rect x="0" y="0" width="600" height="40" rx="12" fill="#161B22" /><circle cx="20" cy="20" r="6" fill="#FF5F56" /><circle cx="40" cy="20" r="6" fill="#FFBD2E" /><circle cx="60" cy="20" r="6" fill="#27C93F" /><rect x="90" y="10" width="400" height="20" rx="10" fill="#0D1117" /><path d="M40,60 L240,60 A12,12 0 0,1 252,72 L252,140 A12,12 0 0,1 240,152 L52,152 A12,12 0 0,1 40,140 Z" fill="#1F2937" stroke="#374151" /><text x="60" y="90" fill="#C9D1D9" font-family="sans-serif" font-size="13">I\'ve built your student showcase app!</text><text x="60" y="112" fill="#C9D1D9" font-family="sans-serif" font-size="13">The database table is named submissions.</text><text x="60" y="134" fill="#10B981" font-family="sans-serif" font-weight="bold" font-size="13">Live App URL is pasted below:</text><g transform="translate(40, 175)"><rect width="520" height="120" rx="10" fill="#161B22" stroke="#10B981" stroke-width="1.5" /><rect x="20" y="20" width="45" height="45" rx="8" fill="url(#purpleGrad)" /><path d="M36,32 L49,42.5 L36,53 Z" fill="#FFF" /><text x="80" y="40" fill="#FFF" font-family="sans-serif" font-weight="bold" font-size="15">Student Project Showcase</text><text x="80" y="60" fill="#8B949E" font-family="sans-serif" font-size="11">Created via EasyData API - Provisioned Successfully</text><rect x="20" y="82" width="480" height="24" rx="4" fill="#0D1117" stroke="#30363D" /><text x="30" y="98" fill="#58A6FF" font-family="sans-serif" font-size="11">https://easydata.is/apps/a6c31e80-51b4-4f5b-b177-7d50cbfb18dd/</text></g><defs><linearGradient id="purpleGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#8B5CF6" /><stop offset="100%" stop-color="#06B6D4" /></linearGradient></defs></svg>'
+          }
+        ]
+      }
     };
 
-    let steps = stepsData.en;
+    let steps = stepsData.claude.en;
 
     // Current step pointer
     let currentStepIdx = 0;
     let currentLang = "en";
+    let currentPlatform = "claude";
 
     // Load elements
     const menuEl = document.querySelector('.steps-menu');
@@ -1031,10 +1178,10 @@
       steps.forEach((step, idx) => {
         // Button
         const btn = document.createElement('button');
-        btn.className = `step-item-btn ${idx === 0 ? 'active' : ''}`;
+        btn.className = `step-item-btn ${idx === currentStepIdx ? 'active' : ''}`;
         btn.id = `btn-step-${idx}`;
         btn.setAttribute('role', 'tab');
-        btn.setAttribute('aria-selected', idx === 0 ? 'true' : 'false');
+        btn.setAttribute('aria-selected', idx === currentStepIdx ? 'true' : 'false');
         btn.onclick = () => selectStep(idx);
 
         const numSpan = document.createElement('span');
@@ -1051,14 +1198,14 @@
 
         // Dot
         const dot = document.createElement('div');
-        dot.className = `nav-dot ${idx === 0 ? 'active' : ''}`;
+        dot.className = `nav-dot ${idx === currentStepIdx ? 'active' : ''}`;
         dot.id = `nav-dot-${idx}`;
         dot.onclick = () => selectStep(idx);
         dotsEl.appendChild(dot);
       });
 
       // Load initial step
-      loadStep(0);
+      loadStep(currentStepIdx);
     }
 
     // Load step content
@@ -1088,17 +1235,28 @@
         }
       });
 
-      // Fade out image, swap source, fade back in
-      imgEl.classList.remove('loaded');
-      setTimeout(() => {
-        imgEl.src = `assets/Screenshot-claude-mcp/${step.imageName}`;
-        imgEl.onload = () => {
-          imgEl.classList.add('loaded');
-        };
-      }, 100);
+      // Handle SVG vs Image mockup display
+      const svgContainer = document.getElementById('mockup-svg-container');
+      if (step.svg) {
+        imgEl.style.display = 'none';
+        svgContainer.style.display = 'flex';
+        svgContainer.innerHTML = step.svg;
+      } else {
+        svgContainer.style.display = 'none';
+        imgEl.style.display = 'block';
+        
+        // Fade out image, swap source, fade back in
+        imgEl.classList.remove('loaded');
+        setTimeout(() => {
+          imgEl.src = `assets/Screenshot-claude-mcp/${step.imageName}`;
+          imgEl.onload = () => {
+            imgEl.classList.add('loaded');
+          };
+        }, 100);
+      }
 
       // Titles & Descriptions
-      imgTitleEl.textContent = `${step.imageName} - ${currentLang === 'is' ? 'Claude stillingaviðmót' : 'Claude Settings UI'}`;
+      imgTitleEl.textContent = step.svg ? `${step.title} Mockup` : `${step.imageName} - ${currentLang === 'is' ? 'Claude stillingaviðmót' : 'Claude Settings UI'}`;
       descTitleEl.textContent = step.heading;
       descTextEl.innerHTML = step.text;
 
@@ -1151,6 +1309,57 @@
       });
     }
 
+    // Platform Toggle Function
+    function selectPlatform(platform) {
+      currentPlatform = platform;
+      
+      const claudeBtn = document.getElementById("platform-claude");
+      const geminiBtn = document.getElementById("platform-gemini");
+      
+      if (platform === "gemini") {
+        geminiBtn.classList.add("active");
+        claudeBtn.classList.remove("active");
+      } else {
+        claudeBtn.classList.add("active");
+        geminiBtn.classList.remove("active");
+      }
+      
+      updateStepsAndReload();
+    }
+
+    // Update steps based on platform and language state, then reload visual layouts
+    function updateStepsAndReload() {
+      // Fetch correct steps based on platform and language
+      steps = stepsData[currentPlatform][currentLang] || stepsData.claude.en;
+      
+      // Reset active step pointer if out of bounds
+      if (currentStepIdx >= steps.length) {
+        currentStepIdx = 0;
+      }
+
+      // Update Hero Section text based on selected platform and language
+      const titleEl = document.getElementById("hero-title");
+      const descEl = document.getElementById("hero-desc");
+      const badgeEl = document.querySelector(".badge-mcp");
+      
+      const titleKey = `hero-title-${currentPlatform}`;
+      const descKey = `hero-desc-${currentPlatform}`;
+      const badgeKey = `hero-badge-${currentPlatform}`;
+      
+      if (titleEl && translations[currentLang][titleKey]) {
+        titleEl.textContent = translations[currentLang][titleKey];
+      }
+      if (descEl && translations[currentLang][descKey]) {
+        descEl.textContent = translations[currentLang][descKey];
+      }
+      if (badgeEl && translations[currentLang][badgeKey]) {
+        badgeEl.textContent = translations[currentLang][badgeKey];
+      }
+      
+      // Re-render menu & dots
+      init();
+    }
+
     // Language Swapper Function
     function changeLanguage(lang) {
       currentLang = lang;
@@ -1181,18 +1390,7 @@
       }
 
       // Update current steps list and re-initialize step display
-      steps = stepsData[lang] || stepsData.en;
-      
-      // Update the dots/menu list to show translated titles
-      document.querySelectorAll('.step-item-btn').forEach((btn, idx) => {
-        if (steps[idx]) {
-          const textSpan = btn.querySelector('.step-title-text');
-          if (textSpan) textSpan.textContent = steps[idx].title;
-        }
-      });
-
-      // Re-load the current active step to show translated content
-      loadStep(currentStepIdx);
+      updateStepsAndReload();
     }
 
     // Keyboard navigation (left/right arrows)
@@ -1206,7 +1404,6 @@
 
     // Run init and setup language on window load
     window.onload = () => {
-      init();
       const savedLang = localStorage.getItem("lang") || "en";
       changeLanguage(savedLang);
     };
