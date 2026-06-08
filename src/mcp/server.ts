@@ -155,7 +155,7 @@ export function createEasyDataMcpServer() {
       confirmSensitiveData: z
         .boolean()
         .optional()
-        .describe("Set true only after the teacher confirms sensitive data collection warnings"),
+        .describe("Set to true only after the teacher has reviewed and confirmed warnings about collecting sensitive student data"),
       columns: z
         .array(
           z.object({
@@ -198,7 +198,7 @@ export function createEasyDataMcpServer() {
       confirmSensitiveData: z
         .boolean()
         .optional()
-        .describe("Set true only after the teacher confirms sensitive data collection warnings"),
+        .describe("Set to true only after the teacher has reviewed and confirmed warnings about collecting sensitive student data"),
       columns: z
         .array(
           z.object({
@@ -267,12 +267,15 @@ export function createEasyDataMcpServer() {
       where: z
         .string()
         .optional()
-        .describe("Optional filter in column:value format"),
+        .describe("Optional equality filter in the format column:value. Only one column can be filtered, and only exact equality is supported"),
       order: z
         .string()
         .optional()
-        .describe("Optional order in column:asc or column:desc format"),
-      limit: z.string().optional().describe("Optional row limit from 1 to 500"),
+        .describe("Optional sort order in the format column:asc or column:desc. Only one column can be sorted"),
+      limit: z
+        .string()
+        .optional()
+        .describe("Optional maximum number of rows to return, from 1 to 500, provided as a string"),
     },
     async ({ appId, tableName, where, order, limit }) => {
       const query: { where?: string; order?: string; limit?: string } = {};

@@ -9,7 +9,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
   <style>
     /* Reset and Base Styles */
@@ -20,19 +20,37 @@
     }
     
     :root {
-      --bg-dark: #07090e;
-      --panel-dark: #0f131a;
-      --panel-border: rgba(255, 255, 255, 0.08);
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
-      --accent-green: #10b981;
-      --accent-blue: #3b82f6;
-      --accent-purple: #8b5cf6;
-      --gradient-primary: linear-gradient(135deg, #10b981 0%, #3b82f6 50%, #8b5cf6 100%);
-      --glow-purple: rgba(139, 92, 246, 0.15);
-      --font-heading: 'Outfit', sans-serif;
-      --font-body: 'Inter', sans-serif;
-      --font-mono: 'Fira Code', monospace;
+      --bg-dark: #ffffff;
+      --panel-dark: #f5f8f8;
+      --panel-border: #d9e4e8;
+      --text-main: #17202a;
+      --text-muted: #586574;
+      --accent-green: #0f766e;
+      --accent-blue: #246b91;
+      --accent-purple: #8a5a12;
+      --font-heading: "Manrope", system-ui, sans-serif;
+      --font-body: "Manrope", system-ui, sans-serif;
+      --font-paragraph: "Inter", system-ui, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .skip-link {
+      position: fixed;
+      left: 1rem;
+      top: 1rem;
+      z-index: 200;
+      transform: translateY(-150%);
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 0 0 2px rgba(36, 107, 145, 0.2);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
     }
 
     body {
@@ -44,31 +62,8 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* Background Glow Effects */
-    .glow-blob {
-      position: absolute;
-      width: 450px;
-      height: 450px;
-      border-radius: 50%;
-      filter: blur(140px);
-      z-index: -1;
-      opacity: 0.45;
-      pointer-events: none;
-    }
-    .glow-1 {
-      top: -100px;
-      right: -50px;
-      background: rgba(59, 130, 246, 0.25);
-    }
-    .glow-2 {
-      top: 500px;
-      left: -150px;
-      background: rgba(139, 92, 246, 0.2);
-    }
-    .glow-3 {
-      bottom: 100px;
-      right: 5%;
-      background: rgba(16, 185, 129, 0.15);
+    p {
+      font-family: var(--font-paragraph);
     }
 
     /* Navigation */
@@ -78,15 +73,17 @@
       left: 0;
       right: 0;
       z-index: 100;
-      background: rgba(7, 9, 14, 0.85);
+      background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--panel-border);
     }
 
     .nav-container {
-      max-width: 1200px;
+      width: calc(100% - 2rem);
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 1rem 2rem;
+      padding: 0;
+      min-height: 4rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -95,12 +92,12 @@
     .logo {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.625rem;
       text-decoration: none;
       color: var(--text-main);
       font-family: var(--font-heading);
       font-weight: 800;
-      font-size: 1.35rem;
+      font-size: 1.25rem;
       transition: transform 0.2s ease;
     }
 
@@ -111,8 +108,8 @@
     .logo-badge {
       display: grid;
       place-items: center;
-      width: 34px;
-      height: 34px;
+      width: 140px;
+      height: auto;
       border-radius: 8px;
       background: var(--text-main);
       color: var(--bg-dark);
@@ -120,50 +117,86 @@
       font-size: 1rem;
     }
 
+    .logo-mark {
+      display: block;
+      width: 140px;
+      height: auto;
+      object-fit: contain;
+    }
+
     .nav-links {
       display: flex;
-      gap: 2rem;
+      gap: 1.25rem;
       align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
 
     .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-
-    .nav-links a:hover {
+      display: inline-flex;
+      min-height: 2.5rem;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      padding: 0 0.75rem;
       color: var(--text-main);
-    }
-
-    .btn-nav {
-      background: rgba(255, 255, 255, 0.06);
-      padding: 0.45rem 1.1rem;
-      border-radius: 6px;
-      border: 1px solid var(--panel-border);
-      font-weight: 600 !important;
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 800;
       transition: all 0.2s ease;
     }
 
+    .nav-links a:hover {
+      background: var(--panel-dark);
+      color: var(--accent-blue);
+    }
+
+    .btn-nav {
+      background: transparent;
+      border: 0;
+      color: var(--text-main);
+      font-weight: 800 !important;
+      transition: all 0.2s ease;
+    }
+
+    .nav-links a.btn-nav {
+      color: var(--text-main);
+    }
+
     .btn-nav:hover {
-      background: var(--text-main);
-      color: var(--bg-dark) !important;
-      border-color: var(--text-main);
+      background: var(--panel-dark);
+      color: var(--accent-blue) !important;
+      border-color: transparent;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid rgba(36, 107, 145, 0.45);
+      outline-offset: 2px;
     }
 
     /* Main Container */
     main {
-      max-width: 1200px;
-      margin: 7.5rem auto 4rem;
-      padding: 0 2rem;
+      margin: 0;
+      padding: 0 0 4rem;
     }
 
     /* Hero Section */
     .hero {
-      text-align: center;
-      margin-bottom: 3.5rem;
+      display: grid;
+      min-height: 46vh;
+      align-items: center;
+      border-bottom: 1px solid var(--panel-border);
+      background: #ffffff;
+      margin-bottom: 3rem;
+      padding: 8rem 0 4rem;
+      text-align: left;
+    }
+
+    .hero-inner {
+      width: calc(100% - 2rem);
+      max-width: 1180px;
+      margin: 0 auto;
     }
 
     .badge-mcp {
@@ -174,7 +207,7 @@
       border-radius: 9999px;
       background: rgba(16, 185, 129, 0.1);
       border: 1px solid rgba(16, 185, 129, 0.25);
-      color: #34d399;
+      color: #0f766e;
       font-size: 0.8rem;
       font-weight: 600;
       text-transform: uppercase;
@@ -184,21 +217,19 @@
 
     .hero h1 {
       font-family: var(--font-heading);
-      font-size: 3.5rem;
+      font-size: 3.25rem;
       font-weight: 900;
       line-height: 1.15;
-      letter-spacing: -0.02em;
+      letter-spacing: 0;
       margin-bottom: 1.25rem;
-      background: var(--gradient-primary);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: var(--text-main);
     }
 
     .hero p {
       font-size: 1.15rem;
       color: var(--text-muted);
       max-width: 680px;
-      margin: 0 auto;
+      margin: 0;
     }
 
     /* Steps Layout Container */
@@ -206,12 +237,14 @@
       display: grid;
       grid-template-columns: 240px 1fr;
       gap: 2rem;
-      margin-bottom: 4rem;
+      width: calc(100% - 2rem);
+      max-width: 1180px;
+      margin: 0 auto 3rem;
       background: var(--panel-dark);
-      border-radius: 16px;
+      border-radius: 8px;
       border: 1px solid var(--panel-border);
-      padding: 1.5rem;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+      padding: 1.25rem;
+      box-shadow: none;
       min-height: 520px;
     }
 
@@ -272,13 +305,13 @@
 
     .step-item-btn:hover {
       color: var(--text-main);
-      background: rgba(255, 255, 255, 0.03);
+      background: #ffffff;
     }
 
     .step-item-btn.active {
       color: var(--accent-green);
-      background: rgba(16, 185, 129, 0.08);
-      border-color: rgba(16, 185, 129, 0.2);
+      background: rgba(15, 118, 110, 0.08);
+      border-color: rgba(15, 118, 110, 0.2);
     }
 
     .step-number {
@@ -289,7 +322,7 @@
       width: 24px;
       height: 24px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.05);
+      background: #ffffff;
       font-family: var(--font-mono);
       transition: all 0.2s ease;
     }
@@ -323,11 +356,11 @@
 
     /* Screenshot Box Mockup */
     .mockup-frame {
-      background: #040609;
-      border-radius: 12px;
+      background: #ffffff;
+      border-radius: 8px;
       border: 1px solid var(--panel-border);
       padding: 0.5rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      box-shadow: none;
       display: flex;
       flex-direction: column;
     }
@@ -337,7 +370,7 @@
       align-items: center;
       gap: 0.4rem;
       padding-bottom: 0.5rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid #d9e4e8;
       margin-bottom: 0.5rem;
     }
 
@@ -348,7 +381,7 @@
     }
     .mockup-dot.red { background: #ef4444; }
     .mockup-dot.yellow { background: #f59e0b; }
-    .mockup-dot.green { background: #10b981; }
+    .mockup-dot.green { background: #0f766e; }
 
     .mockup-title {
       font-size: 0.7rem;
@@ -361,14 +394,14 @@
     }
 
     .mockup-image-container {
-      border-radius: 6px;
+      border-radius: 8px;
       overflow: hidden;
-      background: #07090e;
+      background: #ffffff;
       position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
-      border: 1px solid rgba(255, 255, 255, 0.02);
+      border: 1px solid #d9e4e8;
       height: 350px;
     }
 
@@ -416,9 +449,9 @@
 
     /* Interactive Box (URLs or Prompts) */
     .interactive-element-box {
-      background: rgba(255, 255, 255, 0.01);
+      background: #ffffff;
       border: 1px solid var(--panel-border);
-      border-radius: 10px;
+      border-radius: 8px;
       padding: 0.85rem;
       margin-top: 0.75rem;
       display: none;
@@ -430,9 +463,9 @@
 
     .code-box-container {
       position: relative;
-      border-radius: 6px;
-      background: #05070a;
-      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid #d9e4e8;
       overflow: hidden;
       margin-top: 0.5rem;
     }
@@ -441,17 +474,17 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(255,255,255,0.02);
+      background: #f5f8f8;
       padding: 0.3rem 0.75rem;
-      border-bottom: 1px solid rgba(255,255,255,0.03);
+      border-bottom: 1px solid #d9e4e8;
       font-size: 0.7rem;
       color: var(--text-muted);
       font-family: var(--font-mono);
     }
 
     .btn-copy-code {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: #ffffff;
+      border: 1px solid #d9e4e8;
       color: var(--text-muted);
       padding: 0.2rem 0.5rem;
       border-radius: 4px;
@@ -461,7 +494,7 @@
     }
 
     .btn-copy-code:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: #f5f8f8;
       color: var(--text-main);
     }
 
@@ -472,7 +505,7 @@
       overflow-x: auto;
       white-space: pre-wrap;
       word-break: break-all;
-      color: #60a5fa;
+      color: #246b91;
       line-height: 1.4;
     }
 
@@ -487,11 +520,11 @@
     }
 
     .nav-arrow-btn {
-      background: rgba(255, 255, 255, 0.03);
+      background: #ffffff;
       border: 1px solid var(--panel-border);
       color: var(--text-main);
       padding: 0.45rem 1rem;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       font-family: var(--font-heading);
       font-weight: 600;
@@ -503,7 +536,7 @@
     }
 
     .nav-arrow-btn:hover:not(:disabled) {
-      background: rgba(255, 255, 255, 0.08);
+      background: #eef4f5;
     }
 
     .nav-arrow-btn:disabled {
@@ -517,10 +550,11 @@
     }
 
     .nav-dot {
-      width: 6px;
-      height: 6px;
+      width: 10px;
+      height: 10px;
+      border: 0;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.15);
+      background: #b8c8ce;
       cursor: pointer;
       transition: all 0.2s ease;
     }
@@ -533,6 +567,10 @@
     /* Info Grid */
     .info-grid {
       display: grid;
+      width: calc(100% - 2rem);
+      max-width: 1180px;
+      margin-right: auto;
+      margin-left: auto;
       grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
       margin-bottom: 5rem;
@@ -546,7 +584,7 @@
 
     .info-card {
       background: var(--panel-dark);
-      border-radius: 12px;
+      border-radius: 8px;
       border: 1px solid var(--panel-border);
       padding: 1.5rem;
     }
@@ -561,8 +599,8 @@
       gap: 0.5rem;
     }
 
-    .info-card.paths h4 { color: #10b981; }
-    .info-card.trouble h4 { color: #f59e0b; }
+    .info-card.paths h4 { color: #0f766e; }
+    .info-card.trouble h4 { color: #8a5a12; }
 
     .info-card p {
       color: var(--text-muted);
@@ -572,12 +610,36 @@
 
     .code-tag {
       font-family: var(--font-mono);
-      background: rgba(255,255,255,0.04);
+      background: #ffffff;
       padding: 0.2rem 0.4rem;
       border-radius: 4px;
-      color: #f3f4f6;
+      color: #17202a;
       font-size: 0.8rem;
       word-break: break-all;
+    }
+
+    @media (max-width: 640px) {
+      .nav-links {
+        gap: 0.4rem;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 8rem;
+      }
+
+      .hero h1 {
+        font-size: 2.35rem;
+        line-height: 1.05;
+      }
+
+      .hero p {
+        font-size: 1rem;
+      }
+
+      .mockup-image-container {
+        height: 260px;
+      }
     }
 
     /* Footer */
@@ -585,7 +647,7 @@
       border-top: 1px solid var(--panel-border);
       padding: 2rem 0;
       text-align: center;
-      background: rgba(0,0,0,0.25);
+      background: #f5f8f8;
     }
 
     footer p {
@@ -595,36 +657,27 @@
   </style>
 </head>
 <body>
-
-  <!-- Background Decorative Glow Blobs -->
-  <div class="glow-blob glow-1"></div>
-  <div class="glow-blob glow-2"></div>
-  <div class="glow-blob glow-3"></div>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
 
   <!-- Header / Navigation -->
   <header>
     <div class="nav-container">
       <a class="logo" href="/">
-        <span class="logo-badge">E</span>
-        <span>EasyData</span>
+        <img class="logo-mark" src="/assets/Logo.svg" alt="" aria-hidden="true" />
+        <!-- <span>EasyData</span> -->
       </a>
-      <nav class="nav-links">
-        <a href="#quick-paths" id="nav-paths">Connection Rules</a>
-        <a href="./assets/mcp.Project.mp4" id="nav-video">Video guide</a>
-        <a href="#troubleshooting" id="nav-trouble">Troubleshooting</a>
-        <a class="btn-nav" href="/" id="nav-back">Back to EasyData</a>
-      </nav>
     </div>
   </header>
 
   <!-- Main Content Wrapper -->
-  <main>
+  <main id="main-content">
     
     <!-- Hero Section -->
     <section class="hero">
-      <div class="badge-mcp">Claude GUI Connectors</div>
-      <h1 id="hero-title">Connect MCP via Claude Settings</h1>
-      <p id="hero-desc">Follow the steps below to configure a custom database connection directly within your Claude settings interface using remote MCP URLs.</p>
+      <div class="hero-inner">
+        <h1 id="hero-title">Connect MCP via Claude Settings</h1>
+        <p id="hero-desc">Follow the steps below to configure a custom database connection directly within your Claude settings interface using remote MCP URLs</p>
+      </div>
     </section>
 
     <!-- Steps Layout Section -->
@@ -636,7 +689,7 @@
       </div>
 
       <!-- Right Step Showcase Area -->
-      <div class="showcase-panel">
+      <div class="showcase-panel" id="step-panel" role="tabpanel" aria-labelledby="btn-step-0">
         
         <!-- Mockup Display Frame -->
         <div class="mockup-frame">
@@ -644,7 +697,6 @@
             <span class="mockup-dot red"></span>
             <span class="mockup-dot yellow"></span>
             <span class="mockup-dot green"></span>
-            <span class="mockup-title" id="mockup-title-text">1-open-claude.png - Claude Connectors</span>
           </div>
           <div class="mockup-image-container">
             <img src="assets/Screenshot-claude-mcp/1-open-claude.png" alt="Setup Screenshot" class="mockup-img" id="walkthrough-image" />
@@ -663,7 +715,7 @@
               <div class="code-box-container">
                 <div class="code-box-header">
                   <span>Connection URL</span>
-                  <button class="btn-copy-code" id="btn-copy-url" onclick="copyText('https://easydata.is/mcp', 'btn-copy-url')">Copy URL</button>
+                  <button class="btn-copy-code" id="btn-copy-url" type="button" onclick="copyText('https://easydata.is/mcp', 'btn-copy-url')">Copy URL</button>
                 </div>
                 <div class="code-box" id="url-content">https://easydata.is/mcp</div>
               </div>
@@ -674,16 +726,16 @@
               <div class="code-box-container">
                 <div class="code-box-header">
                   <span>Chat Prompt</span>
-                  <button class="btn-copy-code" id="btn-copy-prompt" onclick="copyText('Use EasyData MCP. Create a simple table called workouts with columns: exercise_name TEXT, duration_minutes INTEGER.', 'btn-copy-prompt')">Copy Prompt</button>
+                  <button class="btn-copy-code" id="btn-copy-prompt" type="button" onclick="copyText('Use EasyData MCP. Create a simple table called workouts with columns: exercise_name TEXT, duration_minutes INTEGER.', 'btn-copy-prompt')">Copy Prompt</button>
                 </div>
-                <div class="code-box" style="color: #34d399;" id="prompt-content">Use EasyData MCP. Create a simple table called workouts with columns: exercise_name TEXT, duration_minutes INTEGER.</div>
+                <div class="code-box" style="color: #0f766e;" id="prompt-content">Use EasyData MCP. Create a simple table called workouts with columns: exercise_name TEXT, duration_minutes INTEGER</div>
               </div>
             </div>
           </div>
 
           <!-- Interactive Sliders Nav -->
           <div class="slider-nav">
-            <button class="nav-arrow-btn" id="btn-prev" onclick="changeStep(-1)" disabled>
+            <button class="nav-arrow-btn" id="btn-prev" type="button" onclick="changeStep(-1)" disabled>
               ← Prev
             </button>
             
@@ -691,7 +743,7 @@
               <!-- Dynamic Dots generated in JS -->
             </div>
 
-            <button class="nav-arrow-btn" id="btn-next" onclick="changeStep(1)">
+            <button class="nav-arrow-btn" id="btn-next" type="button" onclick="changeStep(1)">
               Next →
             </button>
           </div>
@@ -705,28 +757,17 @@
     <section class="info-grid">
       <!-- Path Lookup Card -->
       <div class="info-card paths" id="quick-paths">
-        <h4><span>🔌</span> Hosted vs Local MCP</h4>
+        <h4>Hosted vs Local MCP</h4>
         <p><strong>Cloud URLs (Connectors GUI):</strong> Ideal for hosted environments. Claude's cloud models connect directly via HTTP/SSE. The URL must be public and secure: <span class="code-tag">https://easydata.is/mcp</span></p>
-        <p><strong>Local stdio (Config File):</strong> Ideal for local-only scripts. Requires setting up command hooks in the local configuration JSON files.</p>
+        <p><strong>Local stdio (Config File):</strong> Ideal for local-only scripts. Requires setting up command hooks in the local configuration JSON files</p>
       </div>
 
       <!-- Troubleshooting Info Card -->
       <div class="info-card trouble" id="troubleshooting">
-        <h4><span>⚠️</span> Integration Tips</h4>
+        <h4>Integration Tips</h4>
         <p><strong>Explicit Activation:</strong> When starting a new conversation with Claude, state clearly: <code>"Use the EasyData MCP connector"</code> to ensure Claude binds the connection.</p>
-        <p><strong>Permission Prompts:</strong> Claude will ask for explicit confirmation before reading or writing data. Choose **Always Allow** to bypass repeated clicks.</p>
+        <p><strong>Permission Prompts:</strong> Claude will ask for explicit confirmation before reading or writing data. Choose <strong>Always Allow</strong> to bypass repeated clicks</p>
       </div>
-    
-
-     <!-- Video guide -->
-      <div class="video-guide" id="videoguide">
-        <h4>Video guide</h4>
-        <video width="320" height="240" autoplay muted controls>
-        <source src="./assets/mcp.Project.mp4" type="video/mp4">
-        <source src="./assets/mcp.Project.ogg" type="video/ogg">
-        Your browser does not support the video tag.
-        </video>
-       </div>
     </section>
 
   </main>
@@ -734,7 +775,7 @@
   <!-- Footer Section -->
   <footer>
     <div class="nav-container" style="justify-content: center;">
-      <p>&copy; 2026 EasyData. Supporting open-source Model Context Protocol standards.</p>
+      <p>&copy; 2026 EasyData. Supporting open-source Model Context Protocol standards</p>
     </div>
   </footer>
 
@@ -742,14 +783,14 @@
     // New visual steps mapping exactly to:
     // 1-open-claude.png, 2-click-customize-connectors.png, 3-click-connectors.png, 4-click-plus.png, 
     // 5-click-add-custom-connector.png, 6-give-name.png, 7-insert-url.png, 8-add.png, 
-    // 9-see-new-mcp.png, 10-refresh-tools-list.png
+    // 9-see-new-mcp.png, 10-refresh-tools-list.png, image 11.jpg
     const steps = [
       {
         number: 1,
         title: "Open Claude",
         imageName: "1-open-claude.png",
         heading: "1. Open the Claude Application",
-        text: "Launch the Claude Desktop client or sign in to Claude in your browser. Locate the chat box where your profile actions reside.",
+        text: "Launch the Claude Desktop client and sign in. Locate the chat box where your profile actions reside.",
         interactive: null
       },
       {
@@ -765,7 +806,7 @@
         title: "Open Connectors",
         imageName: "3-click-connectors.png",
         heading: "3. Go to the Connectors Panel",
-        text: "Select **Connectors** from the popover menu. This opens the main integrations manager panel.",
+        text: "Select <strong>Connectors</strong> from the popover menu. This opens the main integrations manager panel.",
         interactive: null
       },
       {
@@ -773,7 +814,7 @@
         title: "Click Plus Icon",
         imageName: "4-click-plus.png",
         heading: "4. Create a New Integration",
-        text: "Locate the **+** (Plus) icon in the top-right corner of the Connectors overlay pane and click it.",
+        text: "Locate the <strong>+</strong> icon in the top-right corner of the Connectors overlay pane and click it.",
         interactive: null
       },
       {
@@ -781,7 +822,7 @@
         title: "Add Custom",
         imageName: "5-click-add-custom-connector.png",
         heading: "5. Select Add Custom Connector",
-        text: "Click the **Add Custom Connector** list item to open the custom URL configuration dialog.",
+        text: "Click the <strong>Add Custom Connector</strong> list item to open the custom URL configuration dialog.",
         interactive: null
       },
       {
@@ -805,7 +846,7 @@
         title: "Click Add",
         imageName: "8-add.png",
         heading: "8. Complete the Registration",
-        text: "Click the **Add** button. Claude will contact the URL to negotiate connection handshakes and retrieve tool descriptions.",
+        text: "Click the <strong>Add</strong> button. Claude will contact the URL to negotiate connection handshakes and retrieve tool descriptions.",
         interactive: null
       },
       {
@@ -823,6 +864,14 @@
         heading: "10. Refresh Tools if Missing",
         text: "If any database tools are missing or do not show up right away in your chat, click on the <strong>three dots</strong> next to the connector name and select the refresh/reload action to update the tool list. Once loaded, start your prompt using the copyable test prompt below.",
         interactive: "prompt"
+      },
+      {
+        number: 11,
+        title: "Return to Chat",
+        imageName: "image 11.jpg",
+        heading: "11. Return to the Chat",
+        text: "Go back to the chat. Now you can create anything you want with EasyData MCP enabled.",
+        interactive: null
       }
     ];
 
@@ -833,7 +882,6 @@
     const menuEl = document.querySelector('.steps-menu');
     const dotsEl = document.getElementById('dots-container');
     const imgEl = document.getElementById('walkthrough-image');
-    const imgTitleEl = document.getElementById('mockup-title-text');
     const descTitleEl = document.getElementById('step-desc-title');
     const descTextEl = document.getElementById('step-desc-text');
     
@@ -854,8 +902,11 @@
         const btn = document.createElement('button');
         btn.className = `step-item-btn ${idx === 0 ? 'active' : ''}`;
         btn.id = `btn-step-${idx}`;
+        btn.type = 'button';
         btn.setAttribute('role', 'tab');
         btn.setAttribute('aria-selected', idx === 0 ? 'true' : 'false');
+        btn.setAttribute('aria-controls', 'step-panel');
+        btn.tabIndex = idx === 0 ? 0 : -1;
         btn.onclick = () => selectStep(idx);
 
         const numSpan = document.createElement('span');
@@ -871,9 +922,11 @@
         menuEl.appendChild(btn);
 
         // Dot
-        const dot = document.createElement('div');
+        const dot = document.createElement('button');
         dot.className = `nav-dot ${idx === 0 ? 'active' : ''}`;
-        dot.id = `nav-dot-${idx}`;
+        dot.id = 'nav-dot-' + idx;
+        dot.type = 'button';
+        dot.setAttribute('aria-label', 'Go to step ' + step.number + ': ' + step.title);
         dot.onclick = () => selectStep(idx);
         dotsEl.appendChild(dot);
       });
@@ -892,10 +945,12 @@
         if (i === idx) {
           btn.classList.add('active');
           btn.setAttribute('aria-selected', 'true');
+          btn.tabIndex = 0;
           btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         } else {
           btn.classList.remove('active');
           btn.setAttribute('aria-selected', 'false');
+          btn.tabIndex = -1;
         }
       });
 
@@ -903,8 +958,10 @@
       document.querySelectorAll('.nav-dot').forEach((dot, i) => {
         if (i === idx) {
           dot.classList.add('active');
+          dot.setAttribute('aria-current', 'step');
         } else {
           dot.classList.remove('active');
+          dot.removeAttribute('aria-current');
         }
       });
 
@@ -918,7 +975,8 @@
       }, 100);
 
       // Titles & Descriptions
-      imgTitleEl.textContent = `${step.imageName} - Claude Settings UI`;
+      document.getElementById('step-panel').setAttribute('aria-labelledby', 'btn-step-' + idx);
+      imgEl.alt = step.heading + ' screenshot';
       descTitleEl.textContent = step.heading;
       descTextEl.innerHTML = step.text;
 
@@ -950,24 +1008,29 @@
         const copyBtn = document.getElementById(btnId);
         const originalText = copyBtn.textContent;
         copyBtn.textContent = 'Copied! ✓';
-        copyBtn.style.color = '#10b981';
-        copyBtn.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+        copyBtn.style.color = '#0f766e';
+        copyBtn.style.borderColor = 'rgba(15, 118, 110, 0.4)';
         
         setTimeout(() => {
           copyBtn.textContent = originalText;
           copyBtn.style.color = 'var(--text-muted)';
-          copyBtn.style.borderColor = 'rgba(255, 255, 255, 0.06)';
+          copyBtn.style.borderColor = '#d9e4e8';
         }, 2000);
       });
     }
 
-    // Keyboard navigation (left/right arrows)
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowLeft') {
-        changeStep(-1);
-      } else if (e.key === 'ArrowRight') {
-        changeStep(1);
-      }
+    // Keyboard navigation for the walkthrough tabs
+    document.getElementById('visual-guide').addEventListener('keydown', (e) => {
+      let targetIdx = currentStepIdx;
+      if (e.key === 'ArrowLeft') targetIdx = Math.max(0, currentStepIdx - 1);
+      else if (e.key === 'ArrowRight') targetIdx = Math.min(steps.length - 1, currentStepIdx + 1);
+      else if (e.key === 'Home') targetIdx = 0;
+      else if (e.key === 'End') targetIdx = steps.length - 1;
+      else return;
+
+      e.preventDefault();
+      selectStep(targetIdx);
+      document.getElementById('btn-step-' + targetIdx).focus();
     });
 
     // Run init

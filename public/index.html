@@ -4,95 +4,127 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="EasyData is a simple hosted data API for apps, files, and structured tables." />
-  <title>EasyData | Data APIs for fast-moving apps</title>
+  <title>EasyData | Create data-backed apps</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      theme: { extend: { colors: { ink: '#17202a', muted: '#586574', line: '#d9e4e8', soft: '#f5f8f8', teal: '#0f766e', ocean: '#246b91', ambered: '#c98725' } } }
+      theme: { extend: { colors: { ink: '#17202a', muted: '#586574', line: '#d9e4e8', soft: '#f5f8f8', teal: '#0f766e', ocean: '#246b91', ambered: '#c98725' }, fontFamily: { sans: ['"Manrope"', 'system-ui', 'sans-serif'] } } }
     };
   </script>
+  <style>
+    p { font-family: "Inter", system-ui, sans-serif; }
+  </style>
 </head>
-<body class="bg-white text-ink antialiased">
+<body class="bg-white font-sans text-ink antialiased">
+  <a class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:font-extrabold focus:text-ink focus:ring-2 focus:ring-ocean/20" href="#main-content">Skip to main content</a>
   <header class="fixed inset-x-0 top-0 z-20 border-b border-ink/10 bg-white/85 backdrop-blur-md">
-    <nav class="mx-4 flex min-h-16 max-w-[1180px] sm:mx-auto items-center justify-between gap-6" aria-label="Main navigation">
+    <nav class="mx-4 flex min-h-16 max-w-[1180px] items-center justify-between gap-6 sm:mx-auto" aria-label="Main navigation">
       <a class="inline-flex items-center gap-2.5 text-xl font-extrabold no-underline" href="/">
-        <span class="grid size-8 place-items-center rounded-lg bg-ink text-base font-black text-white">E</span>
-        <span>EasyData</span>
+        <img class="w-[140px] h-auto" src="/assets/Logo.svg" alt="" aria-hidden="true" />
+        <!-- <span>EasyData</span> -->
       </a>
-      <div class="hidden items-center gap-6 text-sm font-bold text-muted sm:flex">
-        <a class="hover:text-ink" href="#features">Features</a>
-        <a class="hover:text-ink" href="#workflow">Workflow</a>
-        <a class="hover:text-ink" href="/mcp.html">MCP Guide</a>
-        <a class="inline-flex min-h-10 items-center rounded-lg border border-ink bg-ink px-4 text-white" href="/health">API Status</a>
+      <div class="flex items-center gap-5 text-sm font-bold text-muted">
+        <a class="inline-flex min-h-10 items-center justify-center rounded-lg px-3 text-sm font-extrabold text-ink transition hover:bg-soft hover:text-ocean focus:outline-none  " href="/mcp.html">Connect MCP To Claude</a>
       </div>
     </nav>
   </header>
 
-  <main>
-    <section class="grid min-h-[92vh] items-center border-b border-line bg-[linear-gradient(90deg,rgba(255,255,255,.96)_0%,rgba(255,255,255,.88)_42%,rgba(255,255,255,.35)_78%),url('/assets/easydata-hero.png')] bg-cover bg-center bg-no-repeat pb-14 pt-32">
+  <main id="main-content">
+    <section class="grid min-h-[76vh] items-center border-b border-line bg-[linear-gradient(90deg,rgba(255,255,255,.96)_0%,rgba(255,255,255,.88)_42%,rgba(255,255,255,.35)_78%),url('/assets/easydata-hero.png')] bg-cover bg-center bg-no-repeat pb-14 pt-32 text-left">
       <div class="mx-4 max-w-[1180px] sm:mx-auto">
-        <div class="max-w-2xl">
-          <p class="mb-5 inline-flex items-center gap-2 text-xs font-extrabold uppercase text-ocean before:block before:size-2 before:rounded-full before:bg-ambered">Hosted from easydata.is</p>
-          <h1 class="max-w-2xl text-5xl font-black leading-[.96] tracking-normal sm:text-7xl lg:text-8xl">Simple databases for classroom apps.</h1>
-          <p class="mt-6 max-w-xl text-lg leading-8 text-muted sm:text-xl">EasyData lets teachers and small teams create data-backed web apps without managing servers, dashboards, or database credentials.</p>
-          <div class="mt-8 flex flex-wrap gap-3" aria-label="Primary actions">
-            <a class="inline-flex min-h-11 items-center justify-center rounded-lg border border-ink bg-ink px-5 font-extrabold text-white" href="/create.html">Create with Codex</a>
-            <a class="inline-flex min-h-11 items-center justify-center rounded-lg border border-line bg-white/85 px-5 font-extrabold text-ink" href="/public/test-client.html">Try the browser demo</a>
-            <a class="inline-flex min-h-11 items-center justify-center rounded-lg border border-line bg-white/85 px-5 font-extrabold text-ink" href="#workflow">View API example</a>
-          </div>
-          <div class="mt-11 grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-3" aria-label="EasyData capabilities">
-            <div class="border-t border-ink/20 py-4"><strong class="block text-3xl leading-none">SQLite</strong><span class="mt-2 block text-sm leading-5 text-muted">One database file per app</span></div>
-            <a href="/mcp.html" class="border-t border-ink/20 py-4 block hover:opacity-85 transition-opacity group"><strong class="block text-3xl leading-none text-ink group-hover:text-teal">MCP <span class="text-lg opacity-60 group-hover:opacity-100 transition-opacity">↗</span></strong><span class="mt-2 block text-sm leading-5 text-muted">Claude and Codex can create schemas</span></a>
-            <div class="border-t border-ink/20 py-4"><strong class="block text-3xl leading-none">REST</strong><span class="mt-2 block text-sm leading-5 text-muted">Simple fetch calls from any page</span></div>
-          </div>
+        <div class="sm:-ml-40 lg:-ml-80">
+          <h1 class="text-5xl font-black font-semibold leading-[.96] tracking-normal sm:text-7xl lg:text-8xl">Simple database <br/> platform for <br/> educators</h1>
+          <!-- <p class="mt-6 max-w-2xl text-lg leading-8 text-muted sm:text-xl">EasyData lets teachers and small teams create data-backed web apps without managing servers, dashboards, or database credentials</p> -->
         </div>
       </div>
     </section>
 
-    <section class="bg-soft py-20" id="features">
-      <div class="mx-4 max-w-[1180px] sm:mx-auto">
-        <div class="mb-9 max-w-3xl">
-          <h2 class="text-4xl font-black leading-tight sm:text-5xl">Built for small useful tools, not database administration.</h2>
-          <p class="mt-4 text-lg leading-8 text-muted">Create tables, store rows, upload files, and query results through a compact API that AI tools can operate safely.</p>
-        </div>
-        <div class="grid gap-5 md:grid-cols-3">
-          <article class="min-h-52 rounded-lg border border-line bg-white p-6"><div class="mb-5 grid size-11 place-items-center rounded-lg bg-teal/10 font-black text-teal">01</div><h3 class="text-xl font-extrabold">Create apps from natural language</h3><p class="mt-3 leading-7 text-muted">A teacher describes the workflow, then the assistant creates the app, tables, and usable HTML.</p></article>
-          <article class="min-h-52 rounded-lg border border-line bg-white p-6"><div class="mb-5 grid size-11 place-items-center rounded-lg bg-teal/10 font-black text-teal">02</div><h3 class="text-xl font-extrabold">Keep data in simple tables</h3><p class="mt-3 leading-7 text-muted">Each app receives its own SQLite database with token-protected CRUD endpoints.</p></article>
-          <article class="min-h-52 rounded-lg border border-line bg-white p-6"><div class="mb-5 grid size-11 place-items-center rounded-lg bg-teal/10 font-black text-teal">03</div><h3 class="text-xl font-extrabold">Share static frontends</h3><p class="mt-3 leading-7 text-muted">Generated apps are plain HTML pages that can be opened immediately or hosted anywhere.</p></article>
-        </div>
+    <section class="mx-4 max-w-[1080px] py-12 sm:mx-auto sm:py-16" id="create">
+      <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <section>
+          <h2 class="max-w-3xl text-3xl font-semibold font-black leading-none tracking-normal sm:text-4xl">Create an app</h2>
+
+          <form class="mt-8" id="creator-form">
+            <label class="mb-2 block font-extrabold" for="prompt">App request</label>
+            <textarea class="min-h-52 w-full resize-y rounded-lg border border-line p-4 font-inherit leading-7 outline-none focus:ring-2 focus:ring-ocean/10" id="prompt" name="prompt" required minlength="10" placeholder="Prompt example:
+Use EasyData MCP to create a student project submission app. Students should enter their name, project title, notes, and a photo URL. The teacher should be able to view all submissions. Publish it and return the hosted URL."></textarea>
+            <div class="mt-4 flex flex-wrap items-center gap-3">
+              <button class="inline-flex min-h-11 items-center justify-center rounded-lg bg-ink px-5 font-extrabold text-white shadow-sm transition hover:bg-ocean focus:outline-none focus:ring-2 focus:ring-ocean/20 disabled:cursor-wait disabled:opacity-70" id="submit-button" type="submit">Create</button>
+              <span class="min-h-6 text-sm font-semibold text-muted" id="status" role="status"></span>
+            </div>
+          </form>
+
+          <section class="mt-6 hidden rounded-lg border border-line bg-soft p-5" id="result" aria-live="polite">
+            <h2 class="text-xl font-extrabold" id="result-title"></h2>
+            <p class="mt-2 leading-7 text-muted" id="result-summary"></p>
+            <p class="mt-2"><code class="rounded bg-white px-2 py-1 text-sm" id="result-id"></code></p>
+            <div class="mt-4 flex flex-wrap gap-3">
+              <a class="inline-flex min-h-11 items-center justify-center rounded-lg bg-ink px-5 font-extrabold text-white shadow-sm transition hover:bg-ocean focus:outline-none focus:ring-2 focus:ring-ocean/20" id="open-app" href="#">Open app</a>
+            </div>
+          </section>
+        </section>
+
+        <aside class="self-start rounded-lg border border-line bg-soft p-5 lg:sticky lg:top-24 lg:mt-16">
+          <h2 class="text-xl font-extrabold">What happens</h2>
+          <ul class="mt-3 list-disc space-y-2 pl-5 leading-7 text-muted">
+            <li>Claude connects to the EasyData MCP server</li>
+            <li>It creates a new app and tables</li>
+            <li>EasyData saves the generated HTML</li>
+            <li>You get a hosted link to open</li>
+          </ul>
+        </aside>
       </div>
     </section>
-
-    <section class="py-20" id="workflow">
-      <div class="mx-4 grid max-w-[1180px] sm:mx-auto gap-11 lg:grid-cols-[.9fr_1.1fr]">
-        <div>
-          <div class="mb-8"><h2 class="text-4xl font-black leading-tight sm:text-5xl">The API stays small enough to explain.</h2><p class="mt-4 text-lg leading-8 text-muted">AI tools use the same endpoints that a browser app uses, so the generated code remains inspectable.</p></div>
-          <ol class="space-y-4">
-            <li class="flex gap-4"><span class="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-sm font-black text-white">1</span><p class="m-0 leading-7 text-muted"><strong class="text-ink">Create an app.</strong> EasyData returns an app id and token.</p></li>
-            <li class="flex gap-4"><span class="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-sm font-black text-white">2</span><p class="m-0 leading-7 text-muted"><strong class="text-ink">Define tables.</strong> Add columns for the teacher's workflow.</p></li>
-            <li class="flex gap-4"><span class="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-sm font-black text-white">3</span><p class="m-0 leading-7 text-muted"><strong class="text-ink">Use fetch.</strong> Insert, update, query, and delete rows from the generated page.</p></li>
-          </ol>
-        </div>
-        <div class="overflow-hidden rounded-lg border border-slate-800 bg-slate-950 text-slate-100 shadow-sm" aria-label="API example">
-          <div class="flex gap-2 border-b border-white/10 px-4 py-3"><span class="size-3 rounded-full bg-red-400"></span><span class="size-3 rounded-full bg-yellow-400"></span><span class="size-3 rounded-full bg-green-400"></span></div>
-          <pre class="m-0 overflow-auto p-5 text-sm leading-7"><code>await fetch('/apps/{appId}/tables/submissions/rows', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': 'Bearer app_token'
-  },
-  body: JSON.stringify({
-    student_name: 'Alex',
-    photo_url: '/uploads/project.jpg'
-  })
-});</code></pre>
-        </div>
-      </div>
-    </section>
-
-    <section class="border-y border-line bg-soft py-14"><div class="mx-4 flex max-w-[1180px] sm:mx-auto flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"><div><h2 class="text-3xl font-black">Ready to test the API?</h2><p class="mt-2 text-muted">Open the browser demo and run the full create-table-insert-query flow.</p></div><a class="inline-flex min-h-11 items-center justify-center rounded-lg border border-ink bg-ink px-5 font-extrabold text-white" href="/public/test-client.html">Open demo</a></div></section>
   </main>
 
-  <footer class="py-6 text-sm text-muted"><div class="mx-4 max-w-[1180px] sm:mx-auto">EasyData API available at <code class="rounded bg-soft px-1.5 py-0.5">/apps</code>. Health check at <code class="rounded bg-soft px-1.5 py-0.5">/health</code>.</div></footer>
+  <footer class="border-t border-line bg-soft py-8 text-center">
+    <div class="mx-4 max-w-[1180px] sm:mx-auto">
+      <p class="text-sm text-muted">&copy; 2026 EasyData. Supporting open-source Model Context Protocol standards. <a class="font-bold text-ink hover:text-ocean" href="/privacy">Privacy</a> <span aria-hidden="true">·</span> <a class="font-bold text-ink hover:text-ocean" href="/terms">Terms</a></p>
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById("creator-form");
+    const promptInput = document.getElementById("prompt");
+    const submitButton = document.getElementById("submit-button");
+    const statusEl = document.getElementById("status");
+    const resultEl = document.getElementById("result");
+    const resultTitle = document.getElementById("result-title");
+    const resultSummary = document.getElementById("result-summary");
+    const resultId = document.getElementById("result-id");
+    const openApp = document.getElementById("open-app");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      submitButton.disabled = true;
+      statusEl.className = "min-h-6 text-sm font-semibold text-muted";
+      statusEl.textContent = "Creating with Codex...";
+      resultEl.classList.add("hidden");
+
+      try {
+        const response = await fetch("/ai/create-app", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: promptInput.value })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || data.error || "Request failed");
+        resultTitle.textContent = data.appName || "App created";
+        resultSummary.textContent = data.summary || "Your app is ready.";
+        resultId.textContent = "App ID: " + data.appId;
+        openApp.href = data.appUrl;
+        resultEl.classList.remove("hidden");
+        statusEl.textContent = "Done";
+      } catch (error) {
+        statusEl.className = "min-h-6 text-sm font-semibold text-red-700";
+        statusEl.textContent = error.message;
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>
