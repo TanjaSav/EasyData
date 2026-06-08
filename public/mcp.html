@@ -618,6 +618,72 @@
       word-break: break-all;
     }
 
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .language-switcher,
+    .platform-selector {
+      display: inline-flex;
+      gap: 0.25rem;
+      border: 1px solid var(--panel-border);
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 0.25rem;
+    }
+
+    .lang-btn,
+    .platform-btn {
+      border: 0;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: var(--font-heading);
+      font-size: 0.78rem;
+      font-weight: 800;
+      min-height: 2rem;
+      padding: 0 0.75rem;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .platform-btn {
+      min-height: 2.25rem;
+      font-size: 0.88rem;
+    }
+
+    .lang-btn.active,
+    .platform-btn.active {
+      background: var(--text-main);
+      color: #ffffff;
+    }
+
+    .platform-selector-wrap {
+      width: calc(100% - 2rem);
+      max-width: 1180px;
+      margin: -1rem auto 2rem;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .mockup-svg {
+      width: 100%;
+      height: 100%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .mockup-svg svg {
+      width: 100%;
+      max-height: 100%;
+    }
+
     @media (max-width: 640px) {
       .nav-links {
         gap: 0.4rem;
@@ -666,6 +732,12 @@
         <img class="logo-mark" src="/assets/Logo.svg" alt="" aria-hidden="true" />
         <!-- <span>EasyData</span> -->
       </a>
+      <div class="header-actions">
+        <div class="language-switcher" aria-label="Language selector">
+          <button class="lang-btn active" id="lang-en" type="button" onclick="changeLanguage('en')">EN</button>
+          <button class="lang-btn" id="lang-is" type="button" onclick="changeLanguage('is')">ÍS</button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -675,10 +747,18 @@
     <!-- Hero Section -->
     <section class="hero">
       <div class="hero-inner">
+        <p class="badge-mcp" id="hero-badge">Claude GUI Connectors</p>
         <h1 id="hero-title">Connect MCP via Claude Settings</h1>
         <p id="hero-desc">Follow the steps below to configure a custom database connection directly within your Claude settings interface using remote MCP URLs</p>
       </div>
     </section>
+
+    <div class="platform-selector-wrap">
+      <div class="platform-selector" aria-label="Platform guide selector">
+        <button class="platform-btn active" id="platform-claude" type="button" onclick="selectPlatform('claude')">Claude</button>
+        <button class="platform-btn" id="platform-gemini" type="button" onclick="selectPlatform('gemini')">Gemini</button>
+      </div>
+    </div>
 
     <!-- Steps Layout Section -->
     <section class="steps-container" id="visual-guide">
@@ -700,6 +780,7 @@
           </div>
           <div class="mockup-image-container">
             <img src="assets/Screenshot-claude-mcp/1-open-claude.png" alt="Setup Screenshot" class="mockup-img" id="walkthrough-image" />
+            <div class="mockup-svg" id="mockup-svg" aria-hidden="true"></div>
           </div>
         </div>
 
@@ -711,10 +792,10 @@
 
             <!-- Dynamic Interactive Copyable Blocks -->
             <div class="interactive-element-box" id="url-copy-box">
-              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">EasyData Remote URL:</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;" id="url-label">EasyData Remote URL:</span>
               <div class="code-box-container">
                 <div class="code-box-header">
-                  <span>Connection URL</span>
+                  <span id="url-heading">Connection URL</span>
                   <button class="btn-copy-code" id="btn-copy-url" type="button" onclick="copyText('https://easydata.is/mcp', 'btn-copy-url')">Copy URL</button>
                 </div>
                 <div class="code-box" id="url-content">https://easydata.is/mcp</div>
@@ -722,11 +803,11 @@
             </div>
 
             <div class="interactive-element-box" id="prompt-copy-box">
-              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Sample Prompt to Activate:</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;" id="prompt-label">Sample Prompt to Activate:</span>
               <div class="code-box-container">
                 <div class="code-box-header">
-                  <span>Chat Prompt</span>
-                  <button class="btn-copy-code" id="btn-copy-prompt" type="button" onclick="copyText('Use EasyData MCP. Create a simple table called workouts with columns: exercise_name TEXT, duration_minutes INTEGER.', 'btn-copy-prompt')">Copy Prompt</button>
+                  <span id="prompt-heading">Chat Prompt</span>
+                  <button class="btn-copy-code" id="btn-copy-prompt" type="button" onclick="copyText(activeUi.promptContent, 'btn-copy-prompt')">Copy Prompt</button>
                 </div>
                 <div class="code-box" style="color: #0f766e;" id="prompt-content">Use EasyData MCP. Create a simple table called workouts with columns: exercise_name TEXT, duration_minutes INTEGER</div>
               </div>
@@ -780,11 +861,68 @@
   </footer>
 
   <script>
-    // New visual steps mapping exactly to:
-    // 1-open-claude.png, 2-click-customize-connectors.png, 3-click-connectors.png, 4-click-plus.png, 
-    // 5-click-add-custom-connector.png, 6-give-name.png, 7-insert-url.png, 8-add.png, 
-    // 9-see-new-mcp.png, 10-refresh-tools-list.png, image 11.jpg
-    const steps = [
+    const uiText = {
+      en: {
+        pageTitle: "EasyData | Connecting MCP Guide",
+        claude: "Claude",
+        gemini: "Gemini",
+        heroBadgeClaude: "Claude GUI Connectors",
+        heroTitleClaude: "Connect MCP via Claude Settings",
+        heroDescClaude: "Follow the steps below to configure a custom database connection directly within your Claude settings interface using remote MCP URLs",
+        heroBadgeGemini: "Gemini Web App Bridge",
+        heroTitleGemini: "Build Apps inside Gemini",
+        heroDescGemini: "Install the EasyData Chrome extension to let Gemini create hosted database-backed apps from selected chat text.",
+        urlLabel: "EasyData Remote URL:",
+        urlHeading: "Connection URL",
+        promptLabel: "Sample Prompt to Activate:",
+        promptHeading: "Chat Prompt",
+        copyUrl: "Copy URL",
+        copyPrompt: "Copy Prompt",
+        copied: "Copied! ✓",
+        prev: "← Prev",
+        next: "Next →",
+        promptContent: "Use EasyData MCP. Create a simple table called workouts with columns: exercise_name TEXT, duration_minutes INTEGER",
+        infoMcpTitle: "Hosted vs Local MCP",
+        infoMcp1: `<strong>Cloud URLs (Connectors GUI):</strong> Ideal for hosted environments. Claude's cloud models connect directly via HTTP/SSE. The URL must be public and secure: <span class="code-tag">https://easydata.is/mcp</span>`,
+        infoMcp2: "<strong>Local stdio (Config File):</strong> Ideal for local-only scripts. Requires setting up command hooks in the local configuration JSON files",
+        tipsTitle: "Integration Tips",
+        tips1: `<strong>Explicit Activation:</strong> When starting a new conversation with Claude, state clearly: <code>"Use the EasyData MCP connector"</code> to ensure Claude binds the connection.`,
+        tips2: "<strong>Permission Prompts:</strong> Claude will ask for explicit confirmation before reading or writing data. Choose <strong>Always Allow</strong> to bypass repeated clicks",
+        footer: "&copy; 2026 EasyData. Supporting open-source Model Context Protocol standards"
+      },
+      is: {
+        pageTitle: "EasyData | MCP leiðarvísir",
+        claude: "Claude",
+        gemini: "Gemini",
+        heroBadgeClaude: "Claude GUI tengi",
+        heroTitleClaude: "Tengja MCP í gegnum Claude stillingar",
+        heroDescClaude: "Fylgdu skrefunum hér að neðan til að stilla sérsniðna gagnagrunnstengingu beint í Claude með ytri MCP vefslóð.",
+        heroBadgeGemini: "Gemini vefbrú",
+        heroTitleGemini: "Smíða öpp inni í Gemini",
+        heroDescGemini: "Settu upp EasyData Chrome viðbótina til að láta Gemini búa til hýst gagnadrifin öpp úr völdum spjalltexta.",
+        urlLabel: "Ytri EasyData vefslóð:",
+        urlHeading: "Tengivefslóð",
+        promptLabel: "Dæmi um fyrirmæli:",
+        promptHeading: "Spjallfyrirmæli",
+        copyUrl: "Afrita vefslóð",
+        copyPrompt: "Afrita fyrirmæli",
+        copied: "Afritað! ✓",
+        prev: "← Fyrra",
+        next: "Næsta →",
+        promptContent: "Notaðu EasyData MCP. Búðu til einfalda töflu sem heitir workouts með dálkunum: exercise_name TEXT, duration_minutes INTEGER",
+        infoMcpTitle: "Hýst eða staðbundið MCP",
+        infoMcp1: `<strong>Skýjavefslóðir (Connectors GUI):</strong> Hentar vel fyrir hýst umhverfi. Skýjalíkön Claude tengjast beint með HTTP/SSE. Vefslóðin þarf að vera opinber og örugg: <span class="code-tag">https://easydata.is/mcp</span>`,
+        infoMcp2: "<strong>Staðbundið stdio (stillingarskrá):</strong> Hentar fyrir staðbundin script. Krefst þess að skipanir séu stilltar í staðbundnum JSON stillingarskrám.",
+        tipsTitle: "Ábendingar",
+        tips1: `<strong>Skýr virkjun:</strong> Þegar nýtt spjall er hafið við Claude, segðu skýrt: <code>"Notaðu EasyData MCP tengið"</code> til að tryggja að Claude virki tenginguna.`,
+        tips2: "<strong>Heimildarbeiðnir:</strong> Claude biður um skýra staðfestingu áður en gögn eru lesin eða skrifuð. Veldu <strong>Always Allow</strong> til að sleppa endurteknum smellum.",
+        footer: "&copy; 2026 EasyData. Styður opna staðla fyrir Model Context Protocol"
+      }
+    };
+
+    const stepsData = {
+      claude: {
+        en: [
       {
         number: 1,
         title: "Open Claude",
@@ -873,15 +1011,62 @@
         text: "Go back to the chat. Now you can create anything you want with EasyData MCP enabled.",
         interactive: null
       }
-    ];
+        ],
+        is: [
+          { number: 1, title: "Opna Claude", imageName: "1-open-claude.png", heading: "1. Opnaðu Claude", text: "Opnaðu Claude Desktop eða skráðu þig inn í Claude í vafranum.", interactive: null },
+          { number: 2, title: "Customize", imageName: "2-click-customize-connectors.png", heading: "2. Opnaðu stillingar", text: "Smelltu á valmyndina efst til vinstri til að komast í stillingar og tengi.", interactive: null },
+          { number: 3, title: "Connectors", imageName: "3-click-connectors.png", heading: "3. Farðu í Connectors", text: "Veldu <strong>Connectors</strong> úr valmyndinni til að opna samþættingarnar.", interactive: null },
+          { number: 4, title: "Plús", imageName: "4-click-plus.png", heading: "4. Búðu til nýtt tengi", text: "Smelltu á <strong>+</strong> táknið efst til hægri í Connectors glugganum.", interactive: null },
+          { number: 5, title: "Custom", imageName: "5-click-add-custom-connector.png", heading: "5. Veldu Add Custom Connector", text: "Veldu <strong>Add Custom Connector</strong> til að opna stillingargluggann fyrir sérsniðna vefslóð.", interactive: null },
+          { number: 6, title: "Nafn", imageName: "6-give-name.png", heading: "6. Gefðu tenginu nafn", text: "Skrifaðu nafn eins og <code>EasyData</code> svo auðvelt sé að finna tengið í spjallinu.", interactive: null },
+          { number: 7, title: "Vefslóð", imageName: "7-insert-url.png", heading: "7. Settu inn ytri MCP vefslóð", text: "Límdu opinberu og öruggu EasyData MCP vefslóðina í reitinn.", interactive: "url" },
+          { number: 8, title: "Add", imageName: "8-add.png", heading: "8. Ljúktu við skráningu", text: "Smelltu á <strong>Add</strong>. Claude hefur samband við vefslóðina og sækir lýsingar á tólunum.", interactive: null },
+          { number: 9, title: "Virkja", imageName: "9-see-new-mcp.png", heading: "9. Virkjaðu tengið", text: "Kveiktu á rofanum við <strong>EasyData</strong> tengið til að nota það í spjallinu.", interactive: null },
+          { number: 10, title: "Endurhlaða", imageName: "10-refresh-tools-list.png", heading: "10. Endurhlaða tól ef þau vantar", text: "Ef tól birtast ekki strax, smelltu á punktana þrjá við tengið og veldu refresh eða reload.", interactive: "prompt" },
+          { number: 11, title: "Aftur í spjall", imageName: "image 11.jpg", heading: "11. Farðu aftur í spjallið", text: "Nú geturðu búið til gagnadrifin öpp með EasyData MCP virkt.", interactive: null }
+        ]
+      },
+      gemini: {
+        en: [
+          { number: 1, title: "Install Extension", heading: "1. Install the Chrome extension", text: "Open <code>chrome://extensions/</code>, enable <strong>Developer mode</strong>, click <strong>Load unpacked</strong>, and select the <code>chrome-extention</code> folder from this project.", mockup: "extension", interactive: null },
+          { number: 2, title: "Open Gemini", heading: "2. Open Gemini", text: "Open <code>gemini.google.com</code> or <code>aistudio.google.com</code> and write the app you want Gemini to create.", mockup: "prompt", interactive: null },
+          { number: 3, title: "Select Prompt", heading: "3. Select your prompt", text: "Highlight the prompt text, right-click it, and choose <strong>Create App with EasyData</strong> from the context menu.", mockup: "context", interactive: null },
+          { number: 4, title: "Build App", heading: "4. EasyData builds the app", text: "The extension sends the selected prompt to EasyData. EasyData creates the database schema, writes the HTML app, and publishes it.", mockup: "build", interactive: null },
+          { number: 5, title: "Open Result", heading: "5. Open the generated app", text: "When the app is ready, the extension inserts the hosted URL and summary back into the Gemini page.", mockup: "result", interactive: null }
+        ],
+        is: [
+          { number: 1, title: "Setja upp", heading: "1. Settu upp Chrome viðbótina", text: "Opnaðu <code>chrome://extensions/</code>, virkjaðu <strong>Developer mode</strong>, smelltu á <strong>Load unpacked</strong> og veldu <code>chrome-extention</code> möppuna úr verkefninu.", mockup: "extension", interactive: null },
+          { number: 2, title: "Opna Gemini", heading: "2. Opnaðu Gemini", text: "Opnaðu <code>gemini.google.com</code> eða <code>aistudio.google.com</code> og skrifaðu lýsingu á appinu sem þú vilt búa til.", mockup: "prompt", interactive: null },
+          { number: 3, title: "Velja texta", heading: "3. Veldu fyrirmælin", text: "Ljósaðu textann, hægrismelltu og veldu <strong>Create App with EasyData</strong> í samhengisvalmyndinni.", mockup: "context", interactive: null },
+          { number: 4, title: "Smíða", heading: "4. EasyData smíðar appið", text: "Viðbótin sendir valda textann til EasyData. EasyData býr til gagnagrunn, skrifar HTML appið og birtir það.", mockup: "build", interactive: null },
+          { number: 5, title: "Opna app", heading: "5. Opnaðu tilbúna appið", text: "Þegar appið er tilbúið setur viðbótin hýstu vefslóðina og samantektina aftur inn á Gemini síðuna.", mockup: "result", interactive: null }
+        ]
+      }
+    };
 
-    // Current step pointer
     let currentStepIdx = 0;
+
+    let currentLang = localStorage.getItem("easydata-lang") || "en";
+    let currentPlatform = localStorage.getItem("easydata-platform") || "claude";
+    let steps = stepsData[currentPlatform][currentLang] || stepsData.claude.en;
+    let activeUi = uiText[currentLang];
+
+    function mockupSvg(type) {
+      const labels = currentLang === "is"
+        ? { extension: "Chrome viðbætur", load: "Load unpacked", prompt: "Skrifaðu appbeiðni í Gemini", context: "Create App with EasyData", build: "EasyData er að smíða appið", result: "Appið er tilbúið" }
+        : { extension: "Chrome Extensions", load: "Load unpacked", prompt: "Write your app request in Gemini", context: "Create App with EasyData", build: "EasyData is building the app", result: "Your app is ready" };
+      if (type === "extension") return `<svg viewBox="0 0 600 350" role="img"><rect width="600" height="350" rx="12" fill="#f5f8f8"/><rect x="36" y="44" width="528" height="262" rx="10" fill="#fff" stroke="#d9e4e8"/><text x="60" y="86" fill="#17202a" font-size="24" font-weight="800" font-family="Manrope, sans-serif">${labels.extension}</text><rect x="60" y="116" width="150" height="42" rx="8" fill="#0f766e"/><text x="84" y="143" fill="#fff" font-size="15" font-weight="800" font-family="Manrope, sans-serif">${labels.load}</text><rect x="60" y="188" width="260" height="82" rx="10" fill="#f5f8f8" stroke="#d9e4e8"/><circle cx="92" cy="229" r="20" fill="#246b91"/><text x="86" y="236" fill="#fff" font-size="22" font-weight="900" font-family="Manrope, sans-serif">E</text><text x="126" y="224" fill="#17202a" font-size="17" font-weight="800" font-family="Manrope, sans-serif">EasyData Gemini</text><text x="126" y="247" fill="#586574" font-size="13" font-family="Inter, sans-serif">Chrome extension</text></svg>`;
+      if (type === "prompt") return `<svg viewBox="0 0 600 350" role="img"><rect width="600" height="350" rx="12" fill="#fff"/><rect x="54" y="70" width="492" height="210" rx="18" fill="#f5f8f8" stroke="#d9e4e8"/><text x="82" y="120" fill="#17202a" font-size="22" font-weight="800" font-family="Manrope, sans-serif">Gemini</text><rect x="82" y="182" width="436" height="58" rx="12" fill="#fff" stroke="#d9e4e8"/><text x="104" y="216" fill="#586574" font-size="15" font-family="Inter, sans-serif">${labels.prompt}</text></svg>`;
+      if (type === "context") return `<svg viewBox="0 0 600 350" role="img"><rect width="600" height="350" rx="12" fill="#fff"/><rect x="70" y="190" width="460" height="64" rx="14" fill="#f5f8f8" stroke="#d9e4e8"/><rect x="106" y="204" width="310" height="20" rx="4" fill="#cfe8e5"/><rect x="240" y="80" width="245" height="142" rx="10" fill="#fff" stroke="#d9e4e8"/><text x="264" y="120" fill="#586574" font-size="15" font-family="Inter, sans-serif">Copy</text><text x="264" y="152" fill="#586574" font-size="15" font-family="Inter, sans-serif">Paste</text><rect x="256" y="172" width="205" height="32" rx="6" fill="#0f766e"/><text x="272" y="193" fill="#fff" font-size="13" font-weight="800" font-family="Manrope, sans-serif">${labels.context}</text></svg>`;
+      if (type === "build") return `<svg viewBox="0 0 600 350" role="img"><rect width="600" height="350" rx="12" fill="#f5f8f8"/><rect x="150" y="82" width="300" height="184" rx="14" fill="#fff" stroke="#d9e4e8"/><circle cx="300" cy="145" r="30" fill="none" stroke="#d9e4e8" stroke-width="8"/><path d="M300 115a30 30 0 0 1 30 30" fill="none" stroke="#0f766e" stroke-width="8" stroke-linecap="round"/><text x="300" y="205" fill="#17202a" text-anchor="middle" font-size="18" font-weight="800" font-family="Manrope, sans-serif">${labels.build}</text><text x="300" y="232" fill="#586574" text-anchor="middle" font-size="13" font-family="Inter, sans-serif">SQLite + HTML + hosted URL</text></svg>`;
+      return `<svg viewBox="0 0 600 350" role="img"><rect width="600" height="350" rx="12" fill="#fff"/><rect x="54" y="76" width="492" height="198" rx="14" fill="#f5f8f8" stroke="#d9e4e8"/><text x="86" y="128" fill="#0f766e" font-size="20" font-weight="800" font-family="Manrope, sans-serif">${labels.result}</text><rect x="86" y="160" width="428" height="44" rx="8" fill="#fff" stroke="#d9e4e8"/><text x="106" y="187" fill="#246b91" font-size="14" font-family="ui-monospace, monospace">https://easydata.is/generated/app</text></svg>`;
+    }
 
     // Load elements
     const menuEl = document.querySelector('.steps-menu');
     const dotsEl = document.getElementById('dots-container');
     const imgEl = document.getElementById('walkthrough-image');
+    const svgEl = document.getElementById('mockup-svg');
     const descTitleEl = document.getElementById('step-desc-title');
     const descTextEl = document.getElementById('step-desc-text');
     
@@ -926,7 +1111,7 @@
         dot.className = `nav-dot ${idx === 0 ? 'active' : ''}`;
         dot.id = 'nav-dot-' + idx;
         dot.type = 'button';
-        dot.setAttribute('aria-label', 'Go to step ' + step.number + ': ' + step.title);
+        dot.setAttribute('aria-label', (currentLang === 'is' ? 'Fara í skref ' : 'Go to step ') + step.number + ': ' + step.title);
         dot.onclick = () => selectStep(idx);
         dotsEl.appendChild(dot);
       });
@@ -965,14 +1150,22 @@
         }
       });
 
-      // Fade out image, swap source, fade back in
-      imgEl.classList.remove('loaded');
-      setTimeout(() => {
-        imgEl.src = `assets/Screenshot-claude-mcp/${step.imageName}`;
-        imgEl.onload = () => {
-          imgEl.classList.add('loaded');
-        };
-      }, 100);
+      if (step.mockup) {
+        imgEl.style.display = 'none';
+        svgEl.style.display = 'flex';
+        svgEl.innerHTML = mockupSvg(step.mockup);
+      } else {
+        svgEl.style.display = 'none';
+        svgEl.innerHTML = '';
+        imgEl.style.display = 'block';
+        imgEl.classList.remove('loaded');
+        setTimeout(() => {
+          imgEl.src = `assets/Screenshot-claude-mcp/${step.imageName}`;
+          imgEl.onload = () => {
+            imgEl.classList.add('loaded');
+          };
+        }, 100);
+      }
 
       // Titles & Descriptions
       document.getElementById('step-panel').setAttribute('aria-labelledby', 'btn-step-' + idx);
@@ -1007,7 +1200,7 @@
       navigator.clipboard.writeText(text).then(() => {
         const copyBtn = document.getElementById(btnId);
         const originalText = copyBtn.textContent;
-        copyBtn.textContent = 'Copied! ✓';
+        copyBtn.textContent = activeUi.copied;
         copyBtn.style.color = '#0f766e';
         copyBtn.style.borderColor = 'rgba(15, 118, 110, 0.4)';
         
@@ -1033,8 +1226,60 @@
       document.getElementById('btn-step-' + targetIdx).focus();
     });
 
+
+    function applyUiText() {
+      activeUi = uiText[currentLang] || uiText.en;
+      document.documentElement.lang = currentLang === 'is' ? 'is' : 'en';
+      document.title = activeUi.pageTitle;
+      document.getElementById('platform-claude').textContent = activeUi.claude;
+      document.getElementById('platform-gemini').textContent = activeUi.gemini;
+      document.getElementById('platform-claude').classList.toggle('active', currentPlatform === 'claude');
+      document.getElementById('platform-gemini').classList.toggle('active', currentPlatform === 'gemini');
+      document.getElementById('lang-en').classList.toggle('active', currentLang === 'en');
+      document.getElementById('lang-is').classList.toggle('active', currentLang === 'is');
+      document.getElementById('hero-badge').textContent = currentPlatform === 'gemini' ? activeUi.heroBadgeGemini : activeUi.heroBadgeClaude;
+      document.getElementById('hero-title').textContent = currentPlatform === 'gemini' ? activeUi.heroTitleGemini : activeUi.heroTitleClaude;
+      document.getElementById('hero-desc').textContent = currentPlatform === 'gemini' ? activeUi.heroDescGemini : activeUi.heroDescClaude;
+      document.getElementById('url-label').textContent = activeUi.urlLabel;
+      document.getElementById('url-heading').textContent = activeUi.urlHeading;
+      document.getElementById('btn-copy-url').textContent = activeUi.copyUrl;
+      document.getElementById('prompt-label').textContent = activeUi.promptLabel;
+      document.getElementById('prompt-heading').textContent = activeUi.promptHeading;
+      document.getElementById('btn-copy-prompt').textContent = activeUi.copyPrompt;
+      document.getElementById('prompt-content').textContent = activeUi.promptContent;
+      document.getElementById('btn-prev').textContent = activeUi.prev;
+      document.getElementById('btn-next').textContent = activeUi.next;
+      document.querySelector('#quick-paths h4').textContent = activeUi.infoMcpTitle;
+      document.querySelectorAll('#quick-paths p')[0].innerHTML = activeUi.infoMcp1;
+      document.querySelectorAll('#quick-paths p')[1].innerHTML = activeUi.infoMcp2;
+      document.querySelector('#troubleshooting h4').textContent = activeUi.tipsTitle;
+      document.querySelectorAll('#troubleshooting p')[0].innerHTML = activeUi.tips1;
+      document.querySelectorAll('#troubleshooting p')[1].innerHTML = activeUi.tips2;
+      document.querySelector('footer p').innerHTML = activeUi.footer;
+    }
+
+    function reloadCurrentGuide() {
+      steps = stepsData[currentPlatform][currentLang] || stepsData.claude.en;
+      if (currentStepIdx >= steps.length) currentStepIdx = 0;
+      applyUiText();
+      init();
+    }
+
+    function selectPlatform(platform) {
+      currentPlatform = platform;
+      currentStepIdx = 0;
+      localStorage.setItem('easydata-platform', platform);
+      reloadCurrentGuide();
+    }
+
+    function changeLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('easydata-lang', lang);
+      reloadCurrentGuide();
+    }
+
     // Run init
-    window.onload = init;
+    window.onload = reloadCurrentGuide;
   </script>
 </body>
 </html>
