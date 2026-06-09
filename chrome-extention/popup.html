@@ -14,7 +14,7 @@
     }
 
     body {
-      width: 320px;
+      width: 280px;
       margin: 0;
       padding: 16px;
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -43,7 +43,7 @@
     }
 
     .title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
       margin: 0;
       background: linear-gradient(to right, #C084FC, #60A5FA);
@@ -60,43 +60,20 @@
     }
 
     .card-title {
-      font-size: 12px;
+      font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--text-muted);
       margin-top: 0;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
-    /* Platform Switch (Segmented Control) */
-    .segmented-control {
+    .btn-group {
       display: flex;
-      background-color: var(--bg-color);
-      border-radius: 8px;
-      padding: 2px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      flex-direction: column;
+      gap: 8px;
     }
 
-    .segment-btn {
-      flex: 1;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      padding: 8px 12px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      border-radius: 6px;
-      transition: all 0.2s ease;
-    }
-
-    .segment-btn.active {
-      background-color: var(--accent-color);
-      color: white;
-      box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
-    }
-
-    /* Action Buttons */
     .btn {
       display: flex;
       align-items: center;
@@ -111,7 +88,6 @@
       font-weight: 500;
       cursor: pointer;
       transition: background-color 0.2s;
-      margin-top: 8px;
       text-decoration: none;
       box-sizing: border-box;
     }
@@ -134,7 +110,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .indicator {
@@ -163,14 +139,15 @@
   </div>
 
   <div class="card">
-    <p class="card-title">Select Active AI Platform</p>
-    <div class="segmented-control">
-      <button id="geminiBtn" class="segment-btn active">Gemini</button>
-      <button id="claudeBtn" class="segment-btn">Claude</button>
+    <p class="card-title font-semibold">Open AI Workspace</p>
+    <div class="btn-group">
+      <a href="https://gemini.google.com" target="_blank" class="btn">
+        Launch Gemini
+      </a>
+      <a href="https://claude.ai" target="_blank" class="btn btn-secondary">
+        Launch Claude
+      </a>
     </div>
-    <a id="actionLink" href="https://gemini.google.com" target="_blank" class="btn">
-      Open Gemini Workspace
-    </a>
   </div>
 
   <div class="card">

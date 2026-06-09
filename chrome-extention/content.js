@@ -1,14 +1,4 @@
-chrome.storage.local.get(['activePlatform'], (result) => {
-  const activePlatform = result.activePlatform || 'gemini';
-  const isClaude = window.location.hostname.includes('claude.ai');
-  const isGemini = window.location.hostname.includes('gemini.google.com') || window.location.hostname.includes('aistudio.google.com');
-
-  // Only initialize if the current page matches the active platform selection
-  if ((isClaude && activePlatform !== 'claude') || (isGemini && activePlatform !== 'gemini')) {
-    return;
-  }
-
-  if (!window.mcpListenerAdded) {
+if (!window.mcpListenerAdded) {
     // Keep track of processed tool calls in memory so re-renders of the DOM don't trigger them again
     const processedCalls = new Set();
 
@@ -434,4 +424,3 @@ CRITICAL PROTOCOL:
 
     window.mcpListenerAdded = true;
   }
-});

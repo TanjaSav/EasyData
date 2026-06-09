@@ -1,12 +1,10 @@
 {
   "manifest_version": 3,
   "name": "EasyData MCP Connector",
-  "version": "2.0",
+  "version": "2.1",
   "description": "Connects Gemini and Claude with the EasyData MCP server via context menus and static content scripts.",
   "permissions": [
-    "activeTab",
-    "contextMenus",
-    "storage"
+    "contextMenus"
   ],
   "host_permissions": [
     "https://easydata.is/*"

@@ -29,14 +29,14 @@ The extension relies on a backend server to coordinate databases and code compil
 
 ---
 
-## 2. Switching Platforms (Gemini vs Claude)
-The extension supports both **Google Gemini** (`gemini.google.com` / `aistudio.google.com`) and **Anthropic Claude** (`claude.ai`). You can toggle which platform is active through the extension's popup menu:
+## 2. Using the Popup Dashboard (Gemini & Claude)
+The extension works automatically on both **Google Gemini** (`gemini.google.com` / `aistudio.google.com`) and **Anthropic Claude** (`claude.ai`). You can open the popup menu at any time to check connection status and navigate:
 
 1. Click the extension puzzle icon in the Chrome toolbar.
-2. Click **EasyData MCP Connector** to open the settings popup.
-3. Select your active platform using the toggle buttons (**Gemini** or **Claude**).
-4. Click the link button below the toggle to instantly open the corresponding workspace in a new tab.
-5. The extension will automatically enable context menu actions, auto-submit interception, and tool call observers only on the selected platform.
+2. Click **EasyData MCP Connector** to open the dashboard.
+3. **Verify Server Status:** Check the connection dot at the bottom of the card to verify if the EasyData server is online.
+4. **Quick Navigation:** Click **Launch Gemini** or **Launch Claude** to instantly open the corresponding workspace in a new tab.
+5. **Auto-Run:** The extension automatically hooks context menu actions, submit interceptions, and tool-call observers on both platforms without requiring manual toggling.
 
 ---
 

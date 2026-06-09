@@ -1,16 +1,16 @@
-# Chrome Web Store Developer Submission Guide (Version 2.0)
+# Chrome Web Store Developer Submission Guide (Version 2.2)
 **EasyData MCP Connector Extension**
 
-This is a complete, compiled guide containing all required justifications, single-purpose descriptions, developer certifications, and setup instructions for publishing your extension on the Chrome Web Store. 
+This is a complete, compiled guide containing all required justifications, single-purpose descriptions, developer certifications, and setup instructions for publishing your extension on the Chrome Web Store.
 
 > [!IMPORTANT]
-> This guide is optimized for **manifest version 2.0**, which utilizes static content scripts on targeted domains (Gemini, AI Studio, Claude) and has removed the high-security-risk `scripting` and `http://localhost` permissions.
+> This guide is optimized for the **ultra-minimalist permissions build** of the extension, which has dropped the `activeTab`, `storage`, and `scripting` permissions to ensure a smooth and rapid developer store review.
 
 ---
 
 ## 📋 Table of Contents
-1. [Permission Justifications (`activeTab`, `contextMenus`)](#1-permission-justifications)
-2. [Host Permissions Justification](#2-host-permissions-justification)
+1. [Permission Justification (`contextMenus`)](#1-permission-justification)
+2. [Host Permission Justification](#2-host-permission-justification)
 3. [Remotely Hosted Code Declaration](#3-remotely-hosted-code-declaration)
 4. [Single Purpose Description](#4-single-purpose-description)
 5. [Data Usage Certification Checklist](#5-data-usage-certification-checklist)
@@ -19,35 +19,26 @@ This is a complete, compiled guide containing all required justifications, singl
 
 ---
 
-## 1. Permission Justifications
-Enter these justifications on the **Privacy practices** tab of the Chrome Web Store developer console under the respective permissions.
+## 1. Permission Justification
+Enter this justification on the **Privacy practices** tab of the Chrome Web Store developer console under the respective permission.
 
-### A. Justification for `activeTab`
+### Justification for `contextMenus`
 > **Justification Statement:**
 > 
-> The `activeTab` permission is required to enable the core features of the "EasyData MCP Connector" extension. Specifically, when the user highlights a text prompt in their chat window and clicks one of the context menu options ("Enrich with MCP Data" or "Create App with EasyData"), `activeTab` grants temporary permission to target that active tab. 
+> The `contextMenus` permission is required to display custom right-click commands ("Enrich with MCP Data" and "Create App with EasyData") when a user highlights text on supported pages.
 > 
-> This allows the background service worker to send message payloads directly to the tab's content script (`content.js`) using `chrome.tabs.sendMessage`. The content script then updates the chat area with external database context or application creation logs.
+> To protect user privacy, these menu options are registered using strict URL patterns, rendering only on our targeted AI assistant domains (Google Gemini, Google AI Studio, and Anthropic Claude). The context menu items act as the primary, user-initiated trigger for fetching Model Context Protocol (MCP) data and coordinating application building.
 
 ---
 
-### B. Justification for `contextMenus`
-> **Justification Statement:**
-> 
-> The `contextMenus` permission is required to display custom commands ("Enrich with MCP Data" and "Create App with EasyData") in the browser's right-click context menu. 
-> 
-> The context menu is restricted specifically to our supported AI chat platforms (Google Gemini, Google AI Studio, and Anthropic Claude). It provides the primary user interface to invoke the extension's database-linking features. Using context menu commands acts as an explicit user invocation, ensuring that data is only retrieved and sent when actively requested by the user.
-
----
-
-## 2. Host Permissions Justification
+## 2. Host Permission Justification
 Enter this on the **Privacy practices** tab of the developer console under host permissions.
 
 > **Justification Statement:**
 > 
-> Host permission for `https://easydata.is/*` is required for the extension's background service worker to make HTTP POST requests (`fetch`) to the EasyData Model Context Protocol (MCP) server. 
+> Host permission for `https://easydata.is/*` is required for the extension's background service worker to perform HTTP POST requests (`fetch`) to the EasyData Model Context Protocol (MCP) API endpoints.
 > 
-> When the user initiates a query or requests application building, the background worker contacts `https://easydata.is/mcp` to retrieve database logs, run query tools, and obtain the resulting hosted application endpoints. Declaring this specific host permission is necessary to bypass cross-origin restrictions in Manifest V3. No other domains are requested, maintaining user privacy by restricting network access to the minimum required domain.
+> When the user selects a prompt and triggers a context menu command, the background worker contacts `https://easydata.is/mcp` to fetch data models or coordinate application-building actions. No other domains are requested, maintaining user privacy by restricting network access to the minimum required domain.
 
 ---
 
@@ -94,7 +85,7 @@ Under the data types collected by your extension, declare the following:
 
 1. **Website Content / Page Content:**
    * **Declaration:** **Yes (Persistent/Continuous)**
-   * **Justification:** The extension runs a content script on `gemini.google.com`, `aistudio.google.com`, and `claude.ai` to read the active chat box value, intercept message submits to append system prompts, and observe the output container for JSON tool calls.
+   * **Justification:** The extension runs a content script statically on the supported AI pages (`gemini.google.com`, `aistudio.google.com`, and `claude.ai`) to read the chat area content, format user inputs, and check the output nodes for structured tool calls.
 2. **User Activity (Clicks, Keyboard events):**
    * **Declaration:** **Yes**
    * **Justification:** The content script captures keydown events (Enter key) and mouse clicks (Send button) inside the chat interfaces to trigger prompt formatting and start background compilation services.
@@ -112,6 +103,6 @@ If you see a warning about a missing contact email:
 ---
 
 ## 7. Store Screenshot Preview
-Upload the generated 1280x800 screenshot found at [extension_screenshot.png](file:///C:/Users/eldva/Documents/github/easydata/store-submission/extension_screenshot.png) to fulfill the media requirement:
+Upload the generated 1280x800 screenshot found at `extension_screenshot.png` to fulfill the media requirement:
 
-![Chrome Web Store Screenshot Preview](/C:/Users/eldva/Documents/github/easydata/store-submission/extension_screenshot.png)
+![Chrome Web Store Screenshot Preview](extension_screenshot.png)
