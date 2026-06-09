@@ -29,7 +29,18 @@ The extension relies on a backend server to coordinate databases and code compil
 
 ---
 
-## 2. Workflows: How to Build an App
+## 2. Switching Platforms (Gemini vs Claude)
+The extension supports both **Google Gemini** (`gemini.google.com` / `aistudio.google.com`) and **Anthropic Claude** (`claude.ai`). You can toggle which platform is active through the extension's popup menu:
+
+1. Click the extension puzzle icon in the Chrome toolbar.
+2. Click **EasyData MCP Connector** to open the settings popup.
+3. Select your active platform using the toggle buttons (**Gemini** or **Claude**).
+4. Click the link button below the toggle to instantly open the corresponding workspace in a new tab.
+5. The extension will automatically enable context menu actions, auto-submit interception, and tool call observers only on the selected platform.
+
+---
+
+## 3. Workflows: How to Build an App
 Once the extension is installed, you can build applications using two different workflows:
 
 ### Workflow A: The Right-Click Auto-Build (Recommended)
