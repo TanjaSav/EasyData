@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Learn how to connect Model Context Protocol (MCP) servers to Claude using the graphical Connectors interface. Visual step-by-step guide with screenshot slides." />
-  <title>EasyData | Connecting MCP to Claude Guide</title>
+  <meta name="description" content="Learn how to connect and use the EasyData Chrome Extension to build database-backed web applications in Google Gemini." />
+  <title>EasyData | Gemini Extension Guide</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,7 +28,7 @@
       --accent-green: #10b981;
       --accent-blue: #3b82f6;
       --accent-purple: #8b5cf6;
-      --gradient-primary: linear-gradient(135deg, #10b981 0%, #3b82f6 50%, #8b5cf6 100%);
+      --gradient-primary: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 50%, #10b981 100%);
       --glow-purple: rgba(139, 92, 246, 0.15);
       --font-heading: 'Outfit', sans-serif;
       --font-body: 'Inter', sans-serif;
@@ -58,12 +58,12 @@
     .glow-1 {
       top: -100px;
       right: -50px;
-      background: rgba(59, 130, 246, 0.25);
+      background: rgba(139, 92, 246, 0.25);
     }
     .glow-2 {
       top: 500px;
       left: -150px;
-      background: rgba(139, 92, 246, 0.2);
+      background: rgba(59, 130, 246, 0.25);
     }
     .glow-3 {
       bottom: 100px;
@@ -172,9 +172,9 @@
       gap: 0.5rem;
       padding: 0.4rem 1rem;
       border-radius: 9999px;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      color: #34d399;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      color: #a78bfa;
       font-size: 0.8rem;
       font-weight: 600;
       text-transform: uppercase;
@@ -201,149 +201,98 @@
       margin: 0 auto;
     }
 
-    /* Steps Layout Container */
+    /* Steps Layout Section */
     .steps-container {
       display: grid;
-      grid-template-columns: 240px 1fr;
-      gap: 2rem;
+      grid-template-columns: 280px 1fr;
+      gap: 2.5rem;
       margin-bottom: 4rem;
-      background: var(--panel-dark);
-      border-radius: 16px;
-      border: 1px solid var(--panel-border);
-      padding: 1.5rem;
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
-      min-height: 520px;
     }
 
-    @media (max-width: 968px) {
-      .steps-container {
-        grid-template-columns: 1fr;
-        padding: 1.25rem;
-      }
-    }
-
-    /* Left Sidebar: Steps Menu */
     .steps-menu {
-      border-right: 1px solid var(--panel-border);
-      padding-right: 1rem;
       display: flex;
       flex-direction: column;
-      gap: 0.35rem;
-      max-height: 500px;
-      overflow-y: auto;
-    }
-
-    @media (max-width: 968px) {
-      .steps-menu {
-        border-right: none;
-        border-bottom: 1px solid var(--panel-border);
-        padding-right: 0;
-        padding-bottom: 1rem;
-        flex-direction: row;
-        overflow-x: auto;
-        white-space: nowrap;
-        max-height: none;
-      }
+      gap: 0.5rem;
     }
 
     .step-item-btn {
-      background: none;
-      border: 1px solid transparent;
-      color: var(--text-muted);
-      text-align: left;
-      padding: 0.65rem 0.85rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: var(--font-heading);
       display: flex;
       align-items: center;
-      gap: 0.65rem;
+      gap: 1rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 1rem 1.25rem;
+      border-radius: 10px;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      font-weight: 500;
+      text-align: left;
+      cursor: pointer;
       transition: all 0.2s ease;
-      width: 100%;
-    }
-
-    @media (max-width: 968px) {
-      .step-item-btn {
-        width: auto;
-        flex-shrink: 0;
-        padding: 0.5rem 0.85rem;
-      }
     }
 
     .step-item-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
       color: var(--text-main);
-      background: rgba(255, 255, 255, 0.03);
     }
 
     .step-item-btn.active {
-      color: var(--accent-green);
-      background: rgba(16, 185, 129, 0.08);
-      border-color: rgba(16, 185, 129, 0.2);
+      background: var(--panel-dark);
+      border-color: rgba(139, 92, 246, 0.3);
+      color: var(--text-main);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
     }
 
     .step-number {
-      font-weight: 800;
-      font-size: 0.95rem;
-      display: inline-grid;
+      display: grid;
       place-items: center;
       width: 24px;
       height: 24px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.05);
-      font-family: var(--font-mono);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 0.75rem;
+      font-weight: 700;
       transition: all 0.2s ease;
     }
 
     .step-item-btn.active .step-number {
-      background: var(--accent-green);
-      color: #fff;
+      background: var(--accent-purple);
+      color: white;
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
     }
 
-    .step-title-text {
-      font-weight: 600;
-      font-size: 0.9rem;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-
-    /* Right Side: Showcase Panel */
+    /* Showcase Panel */
     .showcase-panel {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 1.5rem;
-      align-items: start;
-    }
-
-    @media (max-width: 1100px) {
-      .showcase-panel {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* Screenshot Box Mockup */
-    .mockup-frame {
-      background: #040609;
-      border-radius: 12px;
+      background: var(--panel-dark);
       border: 1px solid var(--panel-border);
-      padding: 0.5rem;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      border-radius: 16px;
+      padding: 1.75rem;
       display: flex;
       flex-direction: column;
+      gap: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .mockup-frame {
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: #080a0e;
+      border-radius: 12px;
+      overflow: hidden;
     }
 
     .mockup-header {
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 0.6rem 1rem;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-      margin-bottom: 0.5rem;
+      gap: 0.5rem;
     }
 
     .mockup-dot {
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
     }
     .mockup-dot.red { background: #ef4444; }
@@ -351,25 +300,20 @@
     .mockup-dot.green { background: #10b981; }
 
     .mockup-title {
-      font-size: 0.7rem;
-      color: var(--text-muted);
       font-family: var(--font-mono);
-      margin-left: 0.5rem;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-left: 0.75rem;
     }
 
     .mockup-image-container {
-      border-radius: 6px;
-      overflow: hidden;
-      background: #07090e;
-      position: relative;
+      aspect-ratio: 16 / 10;
+      background: #030406;
       display: flex;
-      justify-content: center;
       align-items: center;
-      border: 1px solid rgba(255, 255, 255, 0.02);
-      height: 350px;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
     }
 
     .mockup-img {
@@ -377,226 +321,245 @@
       max-height: 100%;
       object-fit: contain;
       opacity: 0;
-      transition: opacity 0.2s ease, transform 0.3s ease;
-      transform: translateY(4px);
+      transition: opacity 0.25s ease;
     }
 
     .mockup-img.loaded {
       opacity: 1;
-      transform: translateY(0);
     }
 
-    /* Explanations & Details Column */
+    /* Description Columns */
     .step-details-column {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      height: 100%;
-      min-height: 370px;
+      gap: 1.5rem;
     }
 
     .step-desc-wrapper {
-      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
     }
 
     .step-desc-title {
       font-family: var(--font-heading);
-      font-size: 1.4rem;
-      font-weight: 800;
-      margin-bottom: 0.5rem;
-      color: var(--text-main);
-      line-height: 1.25;
+      font-size: 1.5rem;
+      font-weight: 700;
     }
 
     .step-desc-text {
       color: var(--text-muted);
-      font-size: 0.925rem;
-      line-height: 1.5;
+      font-size: 0.95rem;
     }
 
-    /* Interactive Box (URLs or Prompts) */
+    .step-desc-text strong {
+      color: var(--text-main);
+    }
+
+    .step-desc-text code {
+      font-family: var(--font-mono);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.1rem 0.3rem;
+      border-radius: 4px;
+      font-size: 0.85em;
+      color: #a78bfa;
+    }
+
+    /* Interactive Code Blocks */
     .interactive-element-box {
-      background: rgba(255, 255, 255, 0.01);
-      border: 1px solid var(--panel-border);
-      border-radius: 10px;
-      padding: 0.85rem;
-      margin-top: 0.75rem;
       display: none;
-    }
-
-    .interactive-element-box.visible {
-      display: block;
-    }
-
-    .code-box-container {
-      position: relative;
-      border-radius: 6px;
-      background: #05070a;
-      border: 1px solid rgba(255, 255, 255, 0.03);
-      overflow: hidden;
+      flex-direction: column;
+      gap: 0.5rem;
       margin-top: 0.5rem;
     }
 
+    .interactive-element-box.visible {
+      display: flex;
+    }
+
+    .code-box-container {
+      background: #080a0e;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
     .code-box-header {
+      background: rgba(255, 255, 255, 0.01);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      padding: 0.5rem 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(255,255,255,0.02);
-      padding: 0.3rem 0.75rem;
-      border-bottom: 1px solid rgba(255,255,255,0.03);
-      font-size: 0.7rem;
+      font-size: 0.75rem;
+      font-weight: 600;
       color: var(--text-muted);
-      font-family: var(--font-mono);
     }
 
     .btn-copy-code {
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.06);
       color: var(--text-muted);
-      padding: 0.2rem 0.5rem;
+      padding: 0.25rem 0.6rem;
       border-radius: 4px;
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 600;
       cursor: pointer;
-      font-size: 0.65rem;
       transition: all 0.2s ease;
     }
 
     .btn-copy-code:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
       color: var(--text-main);
+      border-color: rgba(255, 255, 255, 0.12);
     }
 
     .code-box {
+      padding: 1rem;
       font-family: var(--font-mono);
-      font-size: 0.8rem;
-      padding: 0.75rem;
+      font-size: 0.85rem;
+      color: #60a5fa;
       overflow-x: auto;
       white-space: pre-wrap;
       word-break: break-all;
-      color: #60a5fa;
-      line-height: 1.4;
     }
 
-    /* Slider Controls */
+    /* Arrow Nav Sliders */
     .slider-nav {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      border-top: 1px solid var(--panel-border);
-      padding-top: 1rem;
-      margin-top: auto;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+      padding-top: 1.25rem;
+      margin-top: 0.5rem;
     }
 
     .nav-arrow-btn {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--panel-border);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
       color: var(--text-main);
-      padding: 0.45rem 1rem;
+      padding: 0.5rem 1rem;
       border-radius: 6px;
-      cursor: pointer;
-      font-family: var(--font-heading);
-      font-weight: 600;
       font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
+      font-weight: 600;
+      cursor: pointer;
       transition: all 0.2s ease;
     }
 
     .nav-arrow-btn:hover:not(:disabled) {
       background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.1);
     }
 
     .nav-arrow-btn:disabled {
-      opacity: 0.25;
+      opacity: 0.35;
       cursor: not-allowed;
     }
 
     .nav-dots {
       display: flex;
-      gap: 0.4rem;
+      gap: 0.5rem;
     }
 
     .nav-dot {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.12);
       cursor: pointer;
       transition: all 0.2s ease;
     }
 
+    .nav-dot:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
     .nav-dot.active {
-      background: var(--accent-green);
+      background: var(--accent-purple);
+      box-shadow: 0 0 8px var(--accent-purple);
       transform: scale(1.2);
     }
 
-    /* Info Grid */
+    /* Support Callout Grid */
     .info-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
-      margin-bottom: 5rem;
-    }
-
-    @media (max-width: 768px) {
-      .info-grid {
-        grid-template-columns: 1fr;
-      }
+      margin-bottom: 2rem;
     }
 
     .info-card {
       background: var(--panel-dark);
-      border-radius: 12px;
       border: 1px solid var(--panel-border);
+      border-radius: 12px;
       padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
     }
 
     .info-card h4 {
       font-family: var(--font-heading);
       font-size: 1.15rem;
-      font-weight: 700;
-      margin-bottom: 0.75rem;
+      font-weight: 600;
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
 
-    .info-card.paths h4 { color: #10b981; }
-    .info-card.trouble h4 { color: #f59e0b; }
-
     .info-card p {
+      font-size: 0.88rem;
       color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-bottom: 0.75rem;
+    }
+
+    .info-card code {
+      font-family: var(--font-mono);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.1rem 0.3rem;
+      border-radius: 4px;
+      font-size: 0.85em;
     }
 
     .code-tag {
+      color: #60a5fa;
       font-family: var(--font-mono);
-      background: rgba(255,255,255,0.04);
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-      color: #f3f4f6;
-      font-size: 0.8rem;
-      word-break: break-all;
     }
 
     /* Footer */
     footer {
       border-top: 1px solid var(--panel-border);
-      padding: 2rem 0;
-      text-align: center;
-      background: rgba(0,0,0,0.25);
+      padding: 1.5rem 0;
+      background: rgba(7, 9, 14, 0.5);
     }
 
     footer p {
+      font-size: 0.8rem;
       color: var(--text-muted);
-      font-size: 0.85rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .steps-container {
+        grid-template-columns: 1fr;
+      }
+      .steps-menu {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+      }
+      .step-item-btn {
+        flex-shrink: 0;
+      }
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Background Decorative Glow Blobs -->
   <div class="glow-blob glow-1"></div>
   <div class="glow-blob glow-2"></div>
   <div class="glow-blob glow-3"></div>
@@ -609,7 +572,7 @@
         <span>EasyData</span>
       </a>
       <nav class="nav-links">
-        <a href="/gemini-mcp.html">Gemini Guide</a>
+        <a href="/mcp.html">Claude Guide</a>
         <a href="#quick-paths" id="nav-paths">Connection Rules</a>
         <a href="#troubleshooting" id="nav-trouble">Troubleshooting</a>
         <a class="btn-nav" href="/" id="nav-back">Back to EasyData</a>
@@ -622,9 +585,9 @@
     
     <!-- Hero Section -->
     <section class="hero">
-      <div class="badge-mcp">Claude GUI Connectors</div>
-      <h1 id="hero-title">Connect MCP via Claude Settings</h1>
-      <p id="hero-desc">Follow the steps below to configure a custom database connection directly within your Claude settings interface using remote MCP URLs.</p>
+      <div class="badge-mcp">Gemini Chrome Extension</div>
+      <h1 id="hero-title">Connect MCP via Gemini Extension</h1>
+      <p id="hero-desc">Follow the steps below to configure the EasyData Chrome extension, launch your database engine, and automatically publish web apps inside Gemini.</p>
     </section>
 
     <!-- Steps Layout Section -->
@@ -644,10 +607,10 @@
             <span class="mockup-dot red"></span>
             <span class="mockup-dot yellow"></span>
             <span class="mockup-dot green"></span>
-            <span class="mockup-title" id="mockup-title-text">1-open-claude.png - Claude Connectors</span>
+            <span class="mockup-title" id="mockup-title-text">1-load-extension.png - Extensions Manager</span>
           </div>
           <div class="mockup-image-container">
-            <img src="assets/Screenshot-claude-mcp/1-open-claude.png" alt="Setup Screenshot" class="mockup-img" id="walkthrough-image" />
+            <img src="assets/Screenshot-gemini-mcp/1-load-extension.png" alt="Setup Screenshot" class="mockup-img" id="walkthrough-image" />
           </div>
         </div>
 
@@ -659,7 +622,7 @@
 
             <!-- Dynamic Interactive Copyable Blocks -->
             <div class="interactive-element-box" id="url-copy-box">
-              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">EasyData Remote URL:</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Workspace Endpoint URL:</span>
               <div class="code-box-container">
                 <div class="code-box-header">
                   <span>Connection URL</span>
@@ -670,13 +633,13 @@
             </div>
 
             <div class="interactive-element-box" id="prompt-copy-box">
-              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Sample Prompt to Activate:</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Copy Detailed App Prompt:</span>
               <div class="code-box-container">
                 <div class="code-box-header">
                   <span>Chat Prompt</span>
-                  <button class="btn-copy-code" id="btn-copy-prompt" onclick="copyText('Use EasyData MCP. Create a simple table called workouts with columns: exercise_name TEXT, duration_minutes INTEGER.', 'btn-copy-prompt')">Copy Prompt</button>
+                  <button class="btn-copy-code" id="btn-copy-prompt" onclick="copyText('Create a database app called Workout Tracker. Create table workouts with columns: name TEXT, duration_mins INTEGER. Style the interface using Tailwind CSS and deep colors.', 'btn-copy-prompt')">Copy Prompt</button>
                 </div>
-                <div class="code-box" style="color: #34d399;" id="prompt-content">Use EasyData MCP. Create a simple table called workouts with columns: exercise_name TEXT, duration_minutes INTEGER.</div>
+                <div class="code-box" style="color: #a78bfa;" id="prompt-content">Create a database app called Workout Tracker. Create table workouts with columns: name TEXT, duration_mins INTEGER. Style the interface using Tailwind CSS and deep colors.</div>
               </div>
             </div>
           </div>
@@ -705,16 +668,16 @@
     <section class="info-grid">
       <!-- Path Lookup Card -->
       <div class="info-card paths" id="quick-paths">
-        <h4><span>🔌</span> Hosted vs Local MCP</h4>
-        <p><strong>Cloud URLs (Connectors GUI):</strong> Ideal for hosted environments. Claude's cloud models connect directly via HTTP/SSE. The URL must be public and secure: <span class="code-tag">https://easydata.is/mcp</span></p>
-        <p><strong>Local stdio (Config File):</strong> Ideal for local-only scripts. Requires setting up command hooks in the local configuration JSON files.</p>
+        <h4><span>🔌</span> Local Server Check</h4>
+        <p><strong>Database Service:</strong> Ensure your local node engine is active by running <code>npm run dev</code> inside the project root before using the extension.</p>
+        <p><strong>Cloud Fallback:</strong> If the local server is offline, the extension automatically routes requests securely through the public cloud endpoint <span class="code-tag">https://easydata.is/mcp</span>.</p>
       </div>
 
       <!-- Troubleshooting Info Card -->
       <div class="info-card trouble" id="troubleshooting">
-        <h4><span>⚠️</span> Integration Tips</h4>
-        <p><strong>Explicit Activation:</strong> When starting a new conversation with Claude, state clearly: <code>"Use the EasyData MCP connector"</code> to ensure Claude binds the connection.</p>
-        <p><strong>Permission Prompts:</strong> Claude will ask for explicit confirmation before reading or writing data. Choose **Always Allow** to bypass repeated clicks.</p>
+        <h4><span>⚠️</span> Troubleshooting Tips</h4>
+        <p><strong>Reload Extension:</strong> If the loading circle fails to close, go to <code>chrome://extensions</code>, toggle the EasyData Connector **Off** and **On**, and refresh your chat page.</p>
+        <p><strong>OpenAI Keys:</strong> Bypass Codex rate limits by configuring your <code>OPENAI_API_KEY</code> inside the project's <code>.env</code> file.</p>
       </div>
     </section>
 
@@ -728,90 +691,46 @@
   </footer>
 
   <script>
-    // New visual steps mapping exactly to:
-    // 1-open-claude.png, 2-click-customize-connectors.png, 3-click-connectors.png, 4-click-plus.png, 
-    // 5-click-add-custom-connector.png, 6-give-name.png, 7-insert-url.png, 8-add.png, 
-    // 9-see-new-mcp.png, 10-refresh-tools-list.png
     const steps = [
       {
         number: 1,
-        title: "Open Claude",
-        imageName: "1-open-claude.png",
-        heading: "1. Open the Claude Application",
-        text: "Launch the Claude Desktop client or sign in to Claude in your browser. Locate the chat box where your profile actions reside.",
+        title: "Load Extension",
+        imageName: "1-load-extension.png",
+        heading: "1. Load the Chrome Extension",
+        text: "Navigate to <code>chrome://extensions/</code> in Google Chrome. Toggle **Developer mode** on in the top-right corner. Click **Load unpacked** in the top-left and select the <code>chrome-extention</code> repository folder.",
         interactive: null
       },
       {
         number: 2,
-        title: "Click Customize",
-        imageName: "2-click-customize-connectors.png",
-        heading: "2. Open settings to find Connectors",
-        text: "Click the menu or customization button located in the <strong>upper-left corner</strong> of the window to open settings so you can get to connectors.",
+        title: "Start Database",
+        imageName: "2-start-server.png",
+        heading: "2. Start the Local database Server",
+        text: "Open a terminal in your project root and run <code>npm run dev</code>. Keep this terminal running in the background. Verify it is online at <code>http://localhost:3000/health</code>.",
         interactive: null
       },
       {
         number: 3,
-        title: "Open Connectors",
-        imageName: "3-click-connectors.png",
-        heading: "3. Go to the Connectors Panel",
-        text: "Select **Connectors** from the popover menu. This opens the main integrations manager panel.",
-        interactive: null
-      },
-      {
-        number: 4,
-        title: "Click Plus Icon",
-        imageName: "4-click-plus.png",
-        heading: "4. Create a New Integration",
-        text: "Locate the **+** (Plus) icon in the top-right corner of the Connectors overlay pane and click it.",
-        interactive: null
-      },
-      {
-        number: 5,
-        title: "Add Custom",
-        imageName: "5-click-add-custom-connector.png",
-        heading: "5. Select Add Custom Connector",
-        text: "Click the **Add Custom Connector** list item to open the custom URL configuration dialog.",
-        interactive: null
-      },
-      {
-        number: 6,
-        title: "Give a Name",
-        imageName: "6-give-name.png",
-        heading: "6. Label the Connector",
-        text: "Type a identifier name into the box, such as <code>EasyData</code>. This labels the server for your prompts.",
-        interactive: null
-      },
-      {
-        number: 7,
-        title: "Insert URL",
-        imageName: "7-insert-url.png",
-        heading: "7. Input the Remote Endpoint URL",
-        text: "Paste the public, secure endpoint URL in the server text field. Copy the EasyData URL below to paste it directly.",
+        title: "Toggle Platform",
+        imageName: "3-popup-toggle.png",
+        heading: "3. Set active Platform to Gemini",
+        text: "Open the extension settings from the Chrome toolbar puzzle icon. Ensure the active platform switch is toggled to **Gemini** to hook your workspace.",
         interactive: "url"
       },
       {
-        number: 8,
-        title: "Click Add",
-        imageName: "8-add.png",
-        heading: "8. Complete the Registration",
-        text: "Click the **Add** button. Claude will contact the URL to negotiate connection handshakes and retrieve tool descriptions.",
-        interactive: null
-      },
-      {
-        number: 9,
-        title: "Enable Connector",
-        imageName: "9-see-new-mcp.png",
-        heading: "9. Enable the Connector",
-        text: "Toggle the switch next to the new <strong>EasyData</strong> connector to turn it on, enabling it for use in your chat conversations.",
-        interactive: null
-      },
-      {
-        number: 10,
-        title: "Refresh Tools",
-        imageName: "10-refresh-tools-list.png",
-        heading: "10. Refresh Tools if Missing",
-        text: "If any database tools are missing or do not show up right away in your chat, click on the <strong>three dots</strong> next to the connector name and select the refresh/reload action to update the tool list. Once loaded, start your prompt using the copyable test prompt below.",
+        number: 4,
+        title: "Highlight & Click",
+        imageName: "4-highlight-prompt.png",
+        heading: "4. Highlight Text & Right-Click",
+        text: "Open Google Gemini. Write your application description in the prompt box, select/highlight the prompt, right-click it, and click **Create App with EasyData**.",
         interactive: "prompt"
+      },
+      {
+        number: 5,
+        title: "Access Live App",
+        imageName: "5-generated-app.png",
+        heading: "5. Review and Launch",
+        text: "Wait 15-20 seconds. The background worker compiles the frontend and provisions the database. The extension will automatically type the live URL into your prompt input. Submit and share!",
+        interactive: null
       }
     ];
 
@@ -900,14 +819,14 @@
       // Fade out image, swap source, fade back in
       imgEl.classList.remove('loaded');
       setTimeout(() => {
-        imgEl.src = `assets/Screenshot-claude-mcp/${step.imageName}`;
+        imgEl.src = `assets/Screenshot-gemini-mcp/${step.imageName}`;
         imgEl.onload = () => {
           imgEl.classList.add('loaded');
         };
       }, 100);
 
       // Titles & Descriptions
-      imgTitleEl.textContent = `${step.imageName} - Claude Settings UI`;
+      imgTitleEl.textContent = `${step.imageName} - Gemini Setup UI`;
       descTitleEl.textContent = step.heading;
       descTextEl.innerHTML = step.text;
 
