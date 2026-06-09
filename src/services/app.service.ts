@@ -3,11 +3,64 @@ import path from "path";
 import crypto from "crypto";
 import Database from "better-sqlite3";
 import { v4 as uuidv4 } from "uuid";
-import { type EasyDataApp, type RetentionPolicy } from "../types/app.types.js";
+import { type BillingPlan, type EasyDataApp, type RetentionPolicy } from "../types/app.types.js";
 const DATA_DIR = process.env.DATA_DIR || "./data/apps";
 
+const defaultAppStorageQuotaBytes = 50 * 1024 * 1024;
+const defaultPaidStorageQuotaBytes = 1024 * 1024 * 1024;
+
 function getDbPath(appId: string) {
-  return path.join(DATA_DIR, `${appId}.sqlite`);
+  return path.join(DATA_DIR, appId + ".sqlite");
+}
+
+export function getFreeStorageQuotaBytes() {
+  const configured = Number(process.env.APP_STORAGE_QUOTA_BYTES);
+
+  if (Number.isInteger(configured) && configured > 0) {
+    return configured;
+  }
+
+  return defaultAppStorageQuotaBytes;
+}
+
+export function getPaidStorageQuotaBytes() {
+  const configured = Number(process.env.PAID_APP_STORAGE_QUOTA_BYTES);
+
+  if (Number.isInteger(configured) && configured > 0) {
+    return configured;
+  }
+
+  return defaultPaidStorageQuotaBytes;
+}
+
+function getStorageUpgradeCheckoutUrl(appId: string) {
+  const configured = process.env.STORAGE_UPGRADE_CHECKOUT_URL;
+
+  if (!configured) {
+    return null;
+  }
+
+  const url = new URL(configured);
+  url.searchParams.set("appId", appId);
+  return url.toString();
+}
+
+export function createDefaultBillingPlan(appId: string): BillingPlan {
+  return {
+    plan: "free",
+    paymentStatus: "not_required",
+    storageQuotaBytes: getFreeStorageQuotaBytes(),
+    checkoutUrl: getStorageUpgradeCheckoutUrl(appId),
+  };
+}
+
+function saveAppMeta(app: EasyDataApp) {
+  const db = new Database(getDbPath(app.id));
+  db.prepare("UPDATE _easydata_meta SET value = ? WHERE key = ?").run(
+    JSON.stringify(app),
+    "app"
+  );
+  db.close();
 }
 
 export function createDefaultRetentionPolicy(now = new Date()): RetentionPolicy {
@@ -41,6 +94,7 @@ export function createApp(name: string, description?: string): EasyDataApp {
     apiToken: createToken("app"),
     createdAt: new Date().toISOString(),
     retentionPolicy: createDefaultRetentionPolicy(),
+    billing: createDefaultBillingPlan(id),
   };
 
   const db = new Database(dbPath);
@@ -86,6 +140,7 @@ export function getAppMeta(appId: string): EasyDataApp {
   return {
     ...app,
     retentionPolicy: app.retentionPolicy ?? createDefaultRetentionPolicy(),
+    billing: app.billing ?? createDefaultBillingPlan(appId),
   };
 }
 
@@ -110,12 +165,52 @@ export function updateRetentionPolicy(
     retentionPolicy,
   };
 
-  const db = new Database(getDbPath(appId));
-  db.prepare("UPDATE _easydata_meta SET value = ? WHERE key = ?").run(
-    JSON.stringify(updatedApp),
-    "app"
-  );
-  db.close();
+  saveAppMeta(updatedApp);
+
+  return updatedApp;
+}
+
+export function createStorageUpgradeCheckout(appId: string) {
+  const app = getAppMeta(appId);
+  const checkoutUrl = getStorageUpgradeCheckoutUrl(appId);
+  const billing: BillingPlan = {
+    ...app.billing,
+    plan: app.billing.plan === "paid_storage" ? app.billing.plan : "free",
+    paymentStatus: app.billing.paymentStatus === "active" ? "active" : "payment_required",
+    storageQuotaBytes:
+      app.billing.paymentStatus === "active" ? getPaidStorageQuotaBytes() : getFreeStorageQuotaBytes(),
+    checkoutUrl,
+  };
+  const updatedApp = { ...app, billing };
+
+  saveAppMeta(updatedApp);
+
+  return {
+    appId,
+    paymentRequired: billing.paymentStatus !== "active",
+    checkoutUrl,
+    billing,
+  };
+}
+
+export function activatePaidStorage(
+  appId: string,
+  payment: { paymentProvider?: string | undefined; externalPaymentId?: string | undefined } = {}
+) {
+  const app = getAppMeta(appId);
+  const billing: BillingPlan = {
+    ...app.billing,
+    plan: "paid_storage",
+    paymentStatus: "active",
+    storageQuotaBytes: getPaidStorageQuotaBytes(),
+    checkoutUrl: getStorageUpgradeCheckoutUrl(appId),
+    paidAt: new Date().toISOString(),
+    ...(payment.paymentProvider && { paymentProvider: payment.paymentProvider }),
+    ...(payment.externalPaymentId && { externalPaymentId: payment.externalPaymentId }),
+  };
+  const updatedApp = { ...app, billing };
+
+  saveAppMeta(updatedApp);
 
   return updatedApp;
 }

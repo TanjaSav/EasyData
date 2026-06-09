@@ -5,10 +5,13 @@ import type { NextFunction, Request, Response } from "express";
 import multer from "multer";
 import { z } from "zod";
 import {
+  activatePaidStorage,
   createApp,
+  createStorageUpgradeCheckout,
   deleteApp,
   findExpiredApps,
   getAppMeta,
+  getPaidStorageQuotaBytes,
   listApps,
   updateRetentionPolicy,
 } from "../services/app.service.js";
@@ -99,6 +102,39 @@ const retentionPolicySchema = z.object({
   note: z.string().min(1),
 });
 
+const billingActivationSchema = z.object({
+  paymentProvider: z.string().min(1).optional(),
+  externalPaymentId: z.string().min(1).optional(),
+});
+
+function getAppStorageBilling(appId: string) {
+  const app = getAppMeta(appId);
+  const appStorageQuotaBytes = getAppStorageQuotaBytes(appId);
+  const currentStorageUsageBytes = getAppStorageUsageBytes(appId);
+  const paidStorageQuotaBytes = getPaidStorageQuotaBytes();
+  const checkoutUrl = app.billing.checkoutUrl ?? null;
+
+  return {
+    billing: {
+      ...app.billing,
+      storageQuotaBytes: appStorageQuotaBytes,
+      checkoutUrl,
+    },
+    storage: {
+      appStorageQuotaBytes,
+      currentStorageUsageBytes,
+      remainingStorageBytes: Math.max(0, appStorageQuotaBytes - currentStorageUsageBytes),
+    },
+    upgrade: {
+      plan: "paid_storage",
+      storageQuotaBytes: paidStorageQuotaBytes,
+      checkoutUrl,
+    },
+    paymentRequired:
+      currentStorageUsageBytes >= appStorageQuotaBytes && app.billing.paymentStatus !== "active",
+  };
+}
+
 const uploadSingleFile = (req: Request, res: Response, next: NextFunction) => {
   upload.single("file")(req, res, (error) => {
     if (!error) {
@@ -178,6 +214,75 @@ router.post("/", (req, res) => {
   return res.status(201).json(app);
 });
 
+
+// Returns current storage billing and usage for a specific app.
+router.get("/:id/billing", requireAppToken, (req, res) => {
+  try {
+    return res.json({
+      appId: req.params.id as string,
+      ...getAppStorageBilling(req.params.id as string),
+    });
+  } catch (error: any) {
+    return res.status(404).json({
+      error: error.message,
+    });
+  }
+});
+
+// Creates or refreshes a storage upgrade checkout session.
+router.post("/:id/billing/checkout", requireAppToken, (req, res) => {
+  try {
+    const checkout = createStorageUpgradeCheckout(req.params.id as string);
+    writeAuditEvent({
+      action: "create_storage_upgrade_checkout",
+      appId: req.params.id as string,
+      details: { checkoutUrlConfigured: Boolean(checkout.checkoutUrl) },
+    });
+
+    return res.json({
+      ...checkout,
+      ...getAppStorageBilling(req.params.id as string),
+      paymentRequired: checkout.paymentRequired,
+    });
+  } catch (error: any) {
+    return res.status(404).json({
+      error: error.message,
+    });
+  }
+});
+
+// Marks a storage upgrade as paid. This is intended for an operator or payment webhook.
+router.post("/:id/billing/activate", requireAdminToken, (req, res) => {
+  const result = billingActivationSchema.safeParse(req.body ?? {});
+
+  if (!result.success) {
+    return res.status(400).json({
+      error: "Invalid billing activation",
+      details: result.error.flatten(),
+    });
+  }
+
+  try {
+    const app = activatePaidStorage(req.params.id as string, result.data);
+    writeAuditEvent({
+      action: "activate_paid_storage",
+      appId: req.params.id as string,
+      details: {
+        paymentProvider: result.data.paymentProvider ?? null,
+        externalPaymentId: result.data.externalPaymentId ?? null,
+      },
+    });
+
+    return res.json({
+      appId: app.id,
+      ...getAppStorageBilling(app.id),
+    });
+  } catch (error: any) {
+    return res.status(404).json({
+      error: error.message,
+    });
+  }
+});
 
 // Returns the current retention policy for a specific app.
 router.get("/:id/retention", requireAppToken, (req, res) => {
@@ -480,9 +585,10 @@ router.post("/:id/upload-url", requireAppToken, (req, res) => {
       maxFileSizeBytes: uploadConfig.maxFileSizeBytes,
       allowedMimeTypes: uploadConfig.allowedMimeTypes,
       allowedExtensions: uploadConfig.allowedExtensions,
-      appStorageQuotaBytes: getAppStorageQuotaBytes(),
+      appStorageQuotaBytes: getAppStorageQuotaBytes(req.params.id as string),
       currentStorageUsageBytes: getAppStorageUsageBytes(req.params.id as string),
     },
+    ...getAppStorageBilling(req.params.id as string),
   });
 });
 
@@ -511,7 +617,7 @@ router.post(
 
     const appId = req.params.id as string;
     const storageUsageBytes = getAppStorageUsageBytes(appId);
-    const appStorageQuotaBytes = getAppStorageQuotaBytes();
+    const appStorageQuotaBytes = getAppStorageQuotaBytes(appId);
 
     if (storageUsageBytes > appStorageQuotaBytes) {
       deleteStoredFile(req.file.filename);
@@ -521,6 +627,8 @@ router.post(
         appStorageQuotaBytes,
         currentStorageUsageBytes: storageUsageBytes - req.file.size,
         attemptedFileSizeBytes: req.file.size,
+        ...getAppStorageBilling(appId),
+        paymentRequired: true,
       });
     }
 

@@ -34,6 +34,9 @@ describe("EasyData API", () => {
     expect(res.body.apiToken).toBeDefined();
     expect(res.body.retentionPolicy.policy).toBe("end_of_school_year");
     expect(res.body.retentionPolicy.retainUntil).toMatch(/^\d{4}-06-30$/);
+    expect(res.body.billing.plan).toBe("free");
+    expect(res.body.billing.paymentStatus).toBe("not_required");
+    expect(res.body.billing.storageQuotaBytes).toBeGreaterThan(0);
 
     appId = res.body.id;
     apiToken = res.body.apiToken;
@@ -258,6 +261,34 @@ describe("EasyData API", () => {
     expect(res.body.limits.allowedMimeTypes).toContain("image/png");
     expect(res.body.limits.appStorageQuotaBytes).toBeGreaterThan(0);
     expect(res.body.limits.currentStorageUsageBytes).toBeGreaterThanOrEqual(0);
+    expect(res.body.billing.plan).toBe("free");
+    expect(res.body.storage.remainingStorageBytes).toBeGreaterThanOrEqual(0);
+    expect(res.body.upgrade.plan).toBe("paid_storage");
+  });
+
+  it("creates a storage upgrade checkout", async () => {
+    const previousCheckoutUrl = process.env.STORAGE_UPGRADE_CHECKOUT_URL;
+    process.env.STORAGE_UPGRADE_CHECKOUT_URL = "https://payments.example/checkout";
+
+    const billingAppRes = await request(app).post("/apps").send({
+      name: "Billing Test App",
+    });
+
+    const checkoutRes = await request(app)
+      .post(`/apps/${billingAppRes.body.id}/billing/checkout`)
+      .set("Authorization", `Bearer ${billingAppRes.body.apiToken}`);
+
+    expect(checkoutRes.status).toBe(200);
+    expect(checkoutRes.body.paymentRequired).toBe(true);
+    expect(checkoutRes.body.checkoutUrl).toContain("https://payments.example/checkout");
+    expect(checkoutRes.body.checkoutUrl).toContain(`appId=${billingAppRes.body.id}`);
+    expect(checkoutRes.body.billing.paymentStatus).toBe("payment_required");
+
+    if (previousCheckoutUrl === undefined) {
+      delete process.env.STORAGE_UPGRADE_CHECKOUT_URL;
+    } else {
+      process.env.STORAGE_UPGRADE_CHECKOUT_URL = previousCheckoutUrl;
+    }
   });
 
   it("uploads an allowed image and stores its URL in a row", async () => {
@@ -379,9 +410,13 @@ describe("EasyData API", () => {
     expect(res.body.error).toBe("File content does not match the declared file type.");
   });
 
-  it("rejects uploads that exceed the app storage quota", async () => {
+  it("returns payment details after the app storage quota is exceeded", async () => {
     const previousQuota = process.env.APP_STORAGE_QUOTA_BYTES;
+    const previousPaidQuota = process.env.PAID_APP_STORAGE_QUOTA_BYTES;
+    const previousCheckoutUrl = process.env.STORAGE_UPGRADE_CHECKOUT_URL;
     process.env.APP_STORAGE_QUOTA_BYTES = "1";
+    process.env.PAID_APP_STORAGE_QUOTA_BYTES = "100";
+    process.env.STORAGE_UPGRADE_CHECKOUT_URL = "https://payments.example/checkout";
 
     const quotaAppRes = await request(app).post("/apps").send({
       name: "Quota Test App",
@@ -398,11 +433,53 @@ describe("EasyData API", () => {
     expect(res.status).toBe(413);
     expect(res.body.error).toBe("App storage quota exceeded");
     expect(res.body.appStorageQuotaBytes).toBe(1);
+    expect(res.body.paymentRequired).toBe(true);
+    expect(res.body.upgrade.checkoutUrl).toContain("https://payments.example/checkout");
+
+    const checkoutRes = await request(app)
+      .post(`/apps/${quotaAppRes.body.id}/billing/checkout`)
+      .set("Authorization", `Bearer ${quotaAppRes.body.apiToken}`);
+
+    expect(checkoutRes.status).toBe(200);
+    expect(checkoutRes.body.paymentRequired).toBe(true);
+    expect(checkoutRes.body.billing.paymentStatus).toBe("payment_required");
+
+    const activateRes = await request(app)
+      .post(`/apps/${quotaAppRes.body.id}/billing/activate`)
+      .set("Authorization", "Bearer test-admin-token")
+      .send({ paymentProvider: "test", externalPaymentId: "pay_123" });
+
+    expect(activateRes.status).toBe(200);
+    expect(activateRes.body.billing.paymentStatus).toBe("active");
+    expect(activateRes.body.storage.appStorageQuotaBytes).toBe(100);
+
+    const paidUploadRes = await request(app)
+      .post(`/apps/${quotaAppRes.body.id}/files`)
+      .set("Authorization", `Bearer ${quotaAppRes.body.apiToken}`)
+      .attach("file", pngBuffer, {
+        filename: "paid-quota.png",
+        contentType: "image/png",
+      });
+
+    expect(paidUploadRes.status).toBe(201);
+    expect(paidUploadRes.body.storage.appStorageQuotaBytes).toBe(100);
 
     if (previousQuota === undefined) {
       delete process.env.APP_STORAGE_QUOTA_BYTES;
     } else {
       process.env.APP_STORAGE_QUOTA_BYTES = previousQuota;
+    }
+
+    if (previousPaidQuota === undefined) {
+      delete process.env.PAID_APP_STORAGE_QUOTA_BYTES;
+    } else {
+      process.env.PAID_APP_STORAGE_QUOTA_BYTES = previousPaidQuota;
+    }
+
+    if (previousCheckoutUrl === undefined) {
+      delete process.env.STORAGE_UPGRADE_CHECKOUT_URL;
+    } else {
+      process.env.STORAGE_UPGRADE_CHECKOUT_URL = previousCheckoutUrl;
     }
   });
 

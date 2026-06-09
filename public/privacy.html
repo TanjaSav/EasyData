@@ -3,513 +3,141 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Privacy policy for the EasyData Chrome Extension. Read about our zero-data collection policy and secure Model Context Protocol integrations." />
-  <title>EasyData | Chrome Extension Privacy Policy</title>
-  
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta name="description" content="Privacy Policy for the EasyData MCP Connector Chrome Extension." />
+  <title>EasyData | Privacy Policy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-
-  <style>
-    /* Reset and Base Styles */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
-    :root {
-      --bg-light: #ffffff;
-      --panel-light: #f5f8f8;
-      --panel-border: #d9e4e8;
-      --text-main: #17202a;
-      --text-muted: #586574;
-      --accent-teal: #0f766e;
-      --accent-blue: #246b91;
-      --font-heading: "Manrope", system-ui, sans-serif;
-      --font-body: "Manrope", system-ui, sans-serif;
-      --font-paragraph: "Inter", system-ui, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg-light);
-      color: var(--text-main);
-      font-family: var(--font-body);
-      line-height: 1.6;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    p, li {
-      font-family: var(--font-paragraph);
-    }
-
-    .skip-link {
-      position: fixed;
-      left: 1rem;
-      top: 1rem;
-      z-index: 200;
-      transform: translateY(-150%);
-      border-radius: 8px;
-      background: #ffffff;
-      color: var(--text-main);
-      padding: 0.5rem 1rem;
-      font-weight: 800;
-      text-decoration: none;
-      box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.2);
-    }
-
-    .skip-link:focus {
-      transform: translateY(0);
-    }
-
-    /* Navigation */
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--panel-border);
-    }
-
-    .nav-container {
-      width: calc(100% - 2rem);
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 0;
-      min-height: 4rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.625rem;
-      text-decoration: none;
-      color: var(--text-main);
-      font-family: var(--font-heading);
-      font-weight: 800;
-      font-size: 1.25rem;
-      transition: transform 0.2s ease;
-    }
-
-    .logo:hover {
-      transform: translateY(-1px);
-    }
-
-    .logo-mark {
-      height: 32px;
-      width: auto;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-    }
-
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 700;
-      transition: color 0.2s ease;
-    }
-
-    .nav-links a:hover {
-      color: var(--text-main);
-    }
-
-    .btn-nav {
-      background: rgba(23, 32, 42, 0.05);
-      padding: 0.45rem 1.1rem;
-      border-radius: 8px;
-      border: 1px solid var(--panel-border);
-      font-weight: 700 !important;
-      transition: all 0.2s ease;
-    }
-
-    .btn-nav:hover {
-      background: var(--text-main);
-      color: var(--bg-light) !important;
-      border-color: var(--text-main);
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .language-switcher {
-      display: flex;
-      background: var(--panel-light);
-      border: 1px solid var(--panel-border);
-      border-radius: 6px;
-      padding: 2px;
-    }
-
-    .lang-btn {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-family: var(--font-body);
-      font-size: 0.75rem;
-      font-weight: 800;
-      padding: 4px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .lang-btn.active {
-      background: var(--text-main);
-      color: var(--bg-light);
-    }
-
-    /* Main Container */
-    main {
-      max-width: 840px;
-      margin: 7.5rem auto 4rem;
-      padding: 0 2rem;
-    }
-
-    /* Hero Section */
-    .hero {
-      text-align: center;
-      margin-bottom: 4rem;
-    }
-
-    .badge-privacy {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.4rem 1rem;
-      border-radius: 9999px;
-      background: rgba(36, 107, 145, 0.08);
-      border: 1px solid rgba(36, 107, 145, 0.2);
-      color: var(--accent-blue);
-      font-size: 0.75rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 1.25rem;
-    }
-
-    .hero h1 {
-      font-family: var(--font-heading);
-      font-size: 2.75rem;
-      font-weight: 900;
-      line-height: 1.15;
-      letter-spacing: -0.02em;
-      margin-bottom: 1.25rem;
-      color: var(--text-main);
-    }
-
-    .hero p {
-      font-size: 1.1rem;
-      color: var(--text-muted);
-      max-width: 680px;
-      margin: 0 auto;
-    }
-
-    /* Policy Block Styles */
-    .policy-section {
-      margin-bottom: 2.5rem;
-    }
-
-    .policy-card {
-      background: #fcfdfe;
-      border: 1px solid var(--panel-border);
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.01);
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .policy-card h2 {
-      font-family: var(--font-heading);
-      font-size: 1.3rem;
-      font-weight: 800;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      border-bottom: 1px solid var(--panel-border);
-      padding-bottom: 0.5rem;
-    }
-
-    .policy-card h2 span {
-      font-size: 1.5rem;
-    }
-
-    .policy-card p, .policy-card ul {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      line-height: 1.7;
-    }
-
-    .policy-card ul {
-      list-style-type: disc;
-      padding-left: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .policy-card strong {
-      color: var(--text-main);
-    }
-
-    /* Footer */
-    footer {
-      border-top: 1px solid var(--panel-border);
-      padding: 1.5rem 0;
-      background: var(--panel-light);
-      text-align: center;
-    }
-
-    footer p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-  </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { ink: '#17202a', muted: '#586574', line: '#d9e4e8', soft: '#f5f8f8', teal: '#0f766e', ocean: '#246b91', ambered: '#c98725' }, fontFamily: { sans: ['"Inter"', 'system-ui', 'sans-serif'] } } }
+    };
+  </script>
 </head>
-<body>
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+<body class="bg-white font-sans text-ink antialiased">
+  <a class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:font-extrabold focus:text-ink focus:ring-2 focus:ring-ocean/20" href="#main-content">Skip to main content</a>
 
-  <!-- Header / Navigation -->
-  <header>
-    <div class="nav-container">
-      <a class="logo" href="/">
-        <img class="logo-mark" src="/assets/Logo.svg" alt="EasyData Logo" />
+  <header class="fixed inset-x-0 top-0 z-20 border-b border-ink/10 bg-white/85 backdrop-blur-md">
+    <nav class="mx-4 flex min-h-16 max-w-[1180px] items-center justify-between gap-6 sm:mx-auto" aria-label="Main navigation">
+      <a class="inline-flex items-center gap-2.5 text-xl font-extrabold no-underline" href="/">
+        <img class="h-auto w-[140px]" src="/assets/Logo.svg" alt="EasyData" />
       </a>
-      <nav class="nav-links">
-        <a href="/gemini-mcp.html" id="nav-gemini">Gemini Guide</a>
-        <a href="/mcp.html" id="nav-claude">Claude Guide</a>
-        <a href="/gdpr.html" id="nav-gdpr">GDPR Guide</a>
-        <a class="btn-nav" href="/" id="nav-back">Back to EasyData</a>
-      </nav>
-      <div class="header-actions">
-        <div class="language-switcher" aria-label="Language selector">
-          <button class="lang-btn active" id="lang-en" type="button" onclick="changeLanguage('en')">EN</button>
-          <button class="lang-btn" id="lang-is" type="button" onclick="changeLanguage('is')">ÍS</button>
-        </div>
-      </div>
-    </div>
+      <a class="inline-flex min-h-10 items-center justify-center rounded-lg px-3 text-sm font-extrabold text-ink transition hover:bg-soft hover:text-ocean focus:outline-none focus:ring-2 focus:ring-ocean/20" href="/">Home</a>
+    </nav>
   </header>
 
-  <!-- Main Content Wrapper -->
-  <main id="main-content">
-    
-    <!-- Hero Section -->
-    <section class="hero">
-      <div class="badge-privacy" id="badge-text">Privacy Policy</div>
-      <h1 id="hero-title">Chrome Extension Privacy Policy</h1>
-      <p id="hero-desc">Learn how the EasyData MCP Connector respects your workspace, handles page contexts, and maintains user data safety.</p>
+  <main id="main-content" class="pt-28">
+    <section class="mx-4 max-w-[1180px] border-b border-line pb-10 sm:mx-auto">
+      <p class="text-sm font-extrabold uppercase tracking-wide text-teal">Privacy Policy</p>
+      <h1 class="mt-4 max-w-4xl text-4xl font-black leading-none tracking-normal sm:text-5xl">EasyData MCP Connector Privacy Policy</h1>
+      <p class="mt-5 max-w-3xl text-lg leading-8 text-muted">Bilingual privacy policy for the EasyData MCP Connector Chrome Extension.</p>
+      <p class="mt-3 text-sm font-semibold text-muted">Síðast uppfært / Last Updated: June 2026</p>
     </section>
 
-    <!-- Policy Cards -->
-    <div class="policy-section">
-      <div class="policy-card">
-        <h2><span>🛡️</span> <span id="section-1-title">Overview & Developer Statement</span></h2>
-        <p id="section-1-text">The <strong>EasyData MCP Connector</strong> Chrome extension is built to help users seamlessly transfer prompt requests between their favorite AI chatbots (Gemini, Claude) and the EasyData platform. We believe in absolute privacy: the extension operates local context triggers and does not track, store, or sell any of your information.</p>
-      </div>
-    </div>
+    <section class="mx-4 grid max-w-[1180px] gap-8 py-10 sm:mx-auto lg:grid-cols-[220px_1fr]">
+      <aside class="self-start rounded-lg border border-line bg-soft p-4 lg:sticky lg:top-24">
+        <nav class="grid gap-2 text-sm font-bold text-muted" aria-label="Privacy sections">
+          <a class="rounded-md px-2 py-1.5 text-ink hover:bg-white hover:text-ocean" href="#english">English</a>
+          <a class="rounded-md px-2 py-1.5 hover:bg-white hover:text-ocean" href="#icelandic">Íslenska</a>
+          <a class="rounded-md px-2 py-1.5 hover:bg-white hover:text-ocean" href="mailto:privacy@easydata.is">privacy@easydata.is</a>
+        </nav>
+      </aside>
 
-    <div class="policy-section">
-      <div class="policy-card">
-        <h2><span>🔑</span> <span id="section-2-title">Permissions We Require</span></h2>
-        <p id="section-2-text">The extension uses standard permission limits to operate safely in your browser. Below is a detailed breakdown of the permissions requested in our manifest:</p>
-        <ul id="section-2-list">
-          <li><strong>contextMenus:</strong> Enables the context menu item ("Send schema to EasyData") when you highlight text inside chat panels. No page data is read unless you select text and explicitly click this item.</li>
-          <li><strong>Host Permission (https://easydata.is/*):</strong> Allows the background worker script to forward your selected text request securely to the EasyData API to provision your database applications.</li>
-        </ul>
-      </div>
-    </div>
+      <div class="space-y-10">
+        <article id="english" class="rounded-lg border border-line bg-white p-6 shadow-sm">
+          <h2 class="text-2xl font-black">English Version</h2>
 
-    <div class="policy-section">
-      <div class="policy-card">
-        <h2><span>🛑</span> <span id="section-3-title">Zero Data Collection & Storage</span></h2>
-        <p id="section-3-text">The extension is designed around data minimization. We do not collect, monitor, or store any data. Specifically:</p>
-        <ul id="section-3-list">
-          <li><strong>No Browsing History:</strong> We do not log which pages you visit or analyze your chats.</li>
-          <li><strong>No Personal Identifiers:</strong> We do not store email addresses, names, or account profiles.</li>
-          <li><strong>No Cookies or Third-Party Tracking:</strong> The extension operates without trackers, analytical tags, or advertising components.</li>
-        </ul>
-      </div>
-    </div>
+          <section class="mt-6 border-t border-line pt-6">
+            <h3 class="text-xl font-extrabold">1. Overview & Developer Statement</h3>
+            <p class="mt-3 leading-7 text-muted">The <strong class="text-ink">EasyData MCP Connector</strong> Chrome extension is built to help users seamlessly transfer prompt requests between their favorite AI chatbots, including Gemini and Claude, and the EasyData platform. We believe in absolute privacy: the extension operates local context triggers and does not track, store, or sell any of your information.</p>
+          </section>
 
-    <div class="policy-section">
-      <div class="policy-card">
-        <h2><span>🔒</span> <span id="section-4-title">Data Transfer & Security</span></h2>
-        <p id="section-4-text">All data sent by the extension is initiated directly by the user. When you explicitly trigger the "Send schema to EasyData" action, the highlighted text is sent via a secure HTTPS connection directly to <strong>https://easydata.is</strong> (or your configured local server). We implement Transport Layer Security (TLS) to guarantee the confidentiality of your schema transmissions.</p>
-      </div>
-    </div>
+          <section class="mt-6 border-t border-line pt-6">
+            <h3 class="text-xl font-extrabold">2. Permissions We Require</h3>
+            <p class="mt-3 leading-7 text-muted">The extension uses standard permission limits to operate safely in your browser. Below is a detailed breakdown of the permissions requested in our manifest:</p>
+            <ul class="mt-4 list-disc space-y-3 pl-6 leading-7 text-muted">
+              <li><code class="rounded bg-soft px-1.5 py-0.5 text-ink">contextMenus</code>: Enables the context menu item “Send schema to EasyData” when you highlight text inside chat panels. No page data is read unless you select text and explicitly click this item.</li>
+              <li><strong class="text-ink">Host Permission</strong> <code class="rounded bg-soft px-1.5 py-0.5 text-ink">https://easydata.is/*</code>: Allows the background worker script to forward your selected text request securely to the EasyData API to provision your database applications.</li>
+            </ul>
+          </section>
 
-    <div class="policy-section">
-      <div class="policy-card">
-        <h2><span>⚖️</span> <span id="section-5-title">GDPR and Educational Safety Compliance</span></h2>
-        <p id="section-5-text">In accordance with the General Data Protection Regulation (GDPR) and school data privacy guidelines, the extension contains no telemetry or behavioral analysis. It serves purely as a bridge between the AI interface and the EasyData application engine. Teachers can safely deploy the extension across school Chromebooks and client stations without risking student privacy or storing personal records.</p>
-      </div>
-    </div>
+          <section class="mt-6 border-t border-line pt-6">
+            <h3 class="text-xl font-extrabold">3. Zero Data Collection & Storage</h3>
+            <p class="mt-3 leading-7 text-muted">The extension is designed around data minimization. We do not collect, monitor, or store any data. Specifically:</p>
+            <ul class="mt-4 list-disc space-y-3 pl-6 leading-7 text-muted">
+              <li><strong class="text-ink">No Browsing History:</strong> We do not log which pages you visit or analyze your chats.</li>
+              <li><strong class="text-ink">No Personal Identifiers:</strong> We do not store email addresses, names, or account profiles.</li>
+              <li><strong class="text-ink">No Cookies or Third-Party Tracking:</strong> The extension operates without trackers, analytical tags, or advertising components.</li>
+            </ul>
+          </section>
 
-    <div class="policy-section">
-      <div class="policy-card">
-        <h2><span>📧</span> <span id="section-6-title">Contact & Support</span></h2>
-        <p id="section-6-text">If you have any questions or feedback regarding the extension's operations or privacy guarantees, please reach out to us at <strong>privacy@easydata.is</strong>.</p>
-      </div>
-    </div>
+          <section class="mt-6 border-t border-line pt-6">
+            <h3 class="text-xl font-extrabold">4. Data Transfer & Security</h3>
+            <p class="mt-3 leading-7 text-muted">All data sent by the extension is initiated directly by the user. When you explicitly trigger the “Send schema to EasyData” action, the highlighted text is sent via a secure HTTPS connection directly to <code class="rounded bg-soft px-1.5 py-0.5 text-ink">https://easydata.is</code> or your configured local server. We implement Transport Layer Security (TLS) to guarantee the confidentiality of your schema transmissions.</p>
+          </section>
 
+          <section class="mt-6 border-t border-line pt-6">
+            <h3 class="text-xl font-extrabold">5. GDPR and Educational Safety Compliance</h3>
+            <p class="mt-3 leading-7 text-muted">In accordance with the General Data Protection Regulation (GDPR) and school data privacy guidelines, the extension contains no telemetry or behavioral analysis. It serves purely as a bridge between the AI interface and the EasyData application engine. Teachers can safely deploy the extension across school Chromebooks and client stations without risking student privacy or storing personal records.</p>
+          </section>
+
+          <section class="mt-6 border-t border-line pt-6">
+            <h3 class="text-xl font-extrabold">6. Contact & Support</h3>
+            <p class="mt-3 leading-7 text-muted">If you have any questions or feedback regarding the extension's operations or privacy guarantees, please contact <a class="font-bold text-ocean underline underline-offset-4" href="mailto:privacy@easydata.is">privacy@easydata.is</a>.</p>
+          </section>
+        </article>
+
+        <article id="icelandic" class="rounded-lg border border-line bg-soft p-6">
+          <h2 class="text-2xl font-black">Íslensk Útgáfa</h2>
+
+          <section class="mt-6 border-t border-line pt-6">
+            <h3 class="text-xl font-extrabold">1. Yfirlit og yfirlýsing þróunara</h3>
+            <p class="mt-3 leading-7 text-muted"><strong class="text-ink">EasyData MCP Connector</strong> Chrome viðbótin er hönnuð til að hjálpa notendum að flytja beiðnir auðveldlega á milli AI spjallbotna, þar á meðal Gemini og Claude, og EasyData vettvangsins. Við trúum á fullkomið persónuverndaröryggi: viðbótin vinnur á staðnum í vafranum þínum og fylgist ekki með, geymir eða selur upplýsingarnar þínar.</p>
+          </section>
+
+          <section class="mt-6 border-t border-line pt-6">
+            <h3 class="text-xl font-extrabold">2. Heimildir sem við biðjum um</h3>
+            <p class="mt-3 leading-7 text-muted">Viðbótin notar lágmarksheimildir til að starfa á öruggan hátt í vafranum. Hér að neðan er sundurliðun á þeim heimildum sem krafist er í manifest skránni:</p>
+            <ul class="mt-4 list-disc space-y-3 pl-6 leading-7 text-muted">
+              <li><code class="rounded bg-white px-1.5 py-0.5 text-ink">contextMenus</code>: Virkjar hægri-smells flýtileiðina „Senda skema á EasyData“ þegar þú velur texta inni í spjallglugganum. Engin önnur síðugögn eru lesin nema þegar þú velur texta og smellir sjálfur á flýtileiðina.</li>
+              <li><strong class="text-ink">Hýsingarheimild</strong> <code class="rounded bg-white px-1.5 py-0.5 text-ink">https://easydata.is/*</code>: Leyfir bakgrunnskóða viðbótarinnar að senda valda textann á öruggan hátt á vefþjónustu EasyData til að búa til gagnagrunnsforritið þitt.</li>
+            </ul>
+          </section>
+
+          <section class="mt-6 border-t border-line pt-6">
+            <h3 class="text-xl font-extrabold">3. Engin gagnasöfnun eða geymsla</h3>
+            <p class="mt-3 leading-7 text-muted">Viðbótin er hönnuð með lágmarksgagnasöfnun í huga. Við söfnum engum gögnum eða fylgjumst með notkun þinni. Sérstaklega gildir:</p>
+            <ul class="mt-4 list-disc space-y-3 pl-6 leading-7 text-muted">
+              <li><strong class="text-ink">Enginn vafraferill:</strong> Við skráum ekki hvaða vefsíður þú heimsækir eða greinum spjall þitt við aðrar gervigreindir.</li>
+              <li><strong class="text-ink">Engin persónugreinanleg gögn:</strong> Við geymum engin netföng, nöfn eða notendasnið.</li>
+              <li><strong class="text-ink">Engar kökur eða eftirlit þriðja aðila:</strong> Viðbótin inniheldur engin rakningartól, greiningarkóða eða auglýsingar.</li>
+            </ul>
+          </section>
+
+          <section class="mt-6 border-t border-line pt-6">
+            <h3 class="text-xl font-extrabold">4. Gagnaflutningur og öryggi</h3>
+            <p class="mt-3 leading-7 text-muted">Allur gagnaflutningur er gerður að frumkvæði notandans sjálfs. Þegar þú smellir á „Senda skema á EasyData“ er valdi textinn sendur dulkóðaður yfir örugga HTTPS tengingu beint til <code class="rounded bg-white px-1.5 py-0.5 text-ink">https://easydata.is</code> eða á þinn eigin staðbundna vefþjón. Við notum Transport Layer Security (TLS) til að tryggja trúnað og öryggi gagnaflutningsins.</p>
+          </section>
+
+          <section class="mt-6 border-t border-line pt-6">
+            <h3 class="text-xl font-extrabold">5. GDPR og öryggi í skólastarfi</h3>
+            <p class="mt-3 leading-7 text-muted">Í samræmi við persónuverndarreglugerð Evrópusambandsins (GDPR) og reglur um gagnaöryggi í skólum, inniheldur viðbótin engin notendagreiningartæki eða fjarvistarmælingar. Hún þjónar eingöngu sem brú á milli spjallbotnsins og EasyData kerfisins. Kennarar geta öruggir sett viðbótina upp á Chromebook tölvum skóla og tölvum nemenda án þess að hætta sé á persónuverndarbrestum eða söfnun nemendaupplýsinga.</p>
+          </section>
+
+          <section class="mt-6 border-t border-line pt-6">
+            <h3 class="text-xl font-extrabold">6. Hafa samband og aðstoð</h3>
+            <p class="mt-3 leading-7 text-muted">Ef þú hefur einhverjar spurningar eða ábendingar varðandi virkni viðbótarinnar eða persónuvernd, vinsamlegast sendu okkur tölvupóst á <a class="font-bold text-ocean underline underline-offset-4" href="mailto:privacy@easydata.is">privacy@easydata.is</a>.</p>
+          </section>
+        </article>
+      </div>
+    </section>
   </main>
 
-  <!-- Footer Section -->
-  <footer>
-    <div class="nav-container" style="justify-content: center;">
-      <p id="footer-text">&copy; 2026 EasyData. Built to comply with Chrome Web Store and GDPR guidelines.</p>
+  <footer class="border-t border-line bg-soft py-8 text-center">
+    <div class="mx-4 max-w-[1180px] sm:mx-auto">
+      <p class="text-sm text-muted">&copy; 2026 EasyData. Supporting open-source Model Context Protocol standards.</p>
     </div>
   </footer>
-
-  <script>
-    const uiText = {
-      en: {
-        title: "EasyData | Chrome Extension Privacy Policy",
-        badge: "Privacy Policy",
-        heroTitle: "Chrome Extension Privacy Policy",
-        heroDesc: "Learn how the EasyData MCP Connector respects your workspace, handles page contexts, and maintains user data safety.",
-        
-        section1Title: "Overview & Developer Statement",
-        section1Text: "The <strong>EasyData MCP Connector</strong> Chrome extension is built to help users seamlessly transfer prompt requests between their favorite AI chatbots (Gemini, Claude) and the EasyData platform. We believe in absolute privacy: the extension operates local context triggers and does not track, store, or sell any of your information.",
-        
-        section2Title: "Permissions We Require",
-        section2Text: "The extension uses standard permission limits to operate safely in your browser. Below is a detailed breakdown of the permissions requested in our manifest:",
-        section2List: `
-          <li><strong>contextMenus:</strong> Enables the context menu item ("Send schema to EasyData") when you highlight text inside chat panels. No page data is read unless you select text and explicitly click this item.</li>
-          <li><strong>Host Permission (https://easydata.is/*):</strong> Allows the background worker script to forward your selected text request securely to the EasyData API to provision your database applications.</li>
-        `,
-        
-        section3Title: "Zero Data Collection & Storage",
-        section3Text: "The extension is designed around data minimization. We do not collect, monitor, or store any data. Specifically:",
-        section3List: `
-          <li><strong>No Browsing History:</strong> We do not log which pages you visit or analyze your chats.</li>
-          <li><strong>No Personal Identifiers:</strong> We do not store email addresses, names, or account profiles.</li>
-          <li><strong>No Cookies or Third-Party Tracking:</strong> The extension operates without trackers, analytical tags, or advertising components.</li>
-        `,
-        
-        section4Title: "Data Transfer & Security",
-        section4Text: "All data sent by the extension is initiated directly by the user. When you explicitly trigger the \"Send schema to EasyData\" action, the highlighted text is sent via a secure HTTPS connection directly to <strong>https://easydata.is</strong> (or your configured local server). We implement Transport Layer Security (TLS) to guarantee the confidentiality of your schema transmissions.",
-        
-        section5Title: "GDPR and Educational Safety Compliance",
-        section5Text: "In accordance with the General Data Protection Regulation (GDPR) and school data privacy guidelines, the extension contains no telemetry or behavioral analysis. It serves purely as a bridge between the AI interface and the EasyData application engine. Teachers can safely deploy the extension across school Chromebooks and client stations without risking student privacy or storing personal records.",
-        
-        section6Title: "Contact & Support",
-        section6Text: "If you have any questions or feedback regarding the extension's operations or privacy guarantees, please reach out to us at <strong>privacy@easydata.is</strong>.",
-        
-        navGemini: "Gemini Guide",
-        navClaude: "Claude Guide",
-        navGdpr: "GDPR Guide",
-        navBack: "Back to EasyData",
-        footerText: "&copy; 2026 EasyData. Built to comply with Chrome Web Store and GDPR guidelines."
-      },
-      is: {
-        title: "EasyData | Persónuverndarstefna viðbótar",
-        badge: "Persónuverndarstefna",
-        heroTitle: "Persónuverndarstefna viðbótarinnar",
-        heroDesc: "Hér getur þú lesið um hvernig EasyData MCP Connector viðbótin virðir vinnusvæðið þitt, meðhöndlar vefsíðugögn og tryggir öryggi gagna.",
-        
-        section1Title: "Yfirlit og yfirlýsing þróunara",
-        section1Text: "<strong>EasyData MCP Connector</strong> Chrome viðbótin er hönnuð til að hjálpa notendum að flytja beiðnir auðveldlega á milli AI spjallbotna (Gemini, Claude) og EasyData vettvangsins. Við trúum á fullkomið persónuverndaröryggi: viðbótin vinnur á staðnum í vafranum þínum og fylgist ekki með, geymir eða selur upplýsingarnar þínar.",
-        
-        section2Title: "Heimildir sem við biðjum um",
-        section2Text: "Viðbótin notar lágmarksheimildir til að starfa á öruggan hátt í vafranum. Hér að neðan er sundurliðun á þeim heimildum sem krafist er í manifest skránni:",
-        section2List: `
-          <li><strong>contextMenus:</strong> Virkjar hægri-smells flýtileiðina („Senda skema á EasyData“) þegar þú velur texta inni í spjallglugganum. Engin önnur síðugögn eru lesin nema þegar þú velur texta og smellir sjálfur á flýtileiðina.</li>
-          <li><strong>Hýsingarheimild (https://easydata.is/*):</strong> Leyfir bakgrunnskóða viðbótarinnar að senda valda textann á öruggan hátt á vefþjónustu EasyData til að búa til gagnagrunnsforritið þitt.</li>
-        `,
-        
-        section3Title: "Engin gagnasöfnun eða geymsla",
-        section3Text: "Viðbótin er hönnuð með lágmarksgagnasöfnun í huga. Við söfnum engum gögnum eða fylgjumst með notkun þinni. Sérstaklega gildir:",
-        section3List: `
-          <li><strong>Enginn vafraferill:</strong> Við skráum ekki hvaða vefsíður þú heimsækir eða greinum spjall þitt við aðrar gervigreindir.</li>
-          <li><strong>Engin persónugreinanleg gögn:</strong> Við geymum engin netföng, nöfn eða notendasnið.</li>
-          <li><strong>Engar kökur eða eftirlit þriðja aðila:</strong> Viðbótin inniheldur engin rakningartól, greiningarkóða eða auglýsingar.</li>
-        `,
-        
-        section4Title: "Gagnaflutningur og öryggi",
-        section4Text: "Allur gagnaflutningur er gerður að frumkvæði notandans sjálfs. Þegar þú smellir á „Senda skema á EasyData“ er valdi textinn sendur dulkóðaður yfir örugga HTTPS tengingu beint til <strong>https://easydata.is</strong> (eða á þinn eigin staðbundna vefþjón). Við notum Transport Layer Security (TLS) til að tryggja trúnað og öryggi gagnaflutningsins.",
-        
-        section5Title: "GDPR og öryggi í skólastarfi",
-        section5Text: "Í samræmi við persónuverndarreglugerð Evrópusambandsins (GDPR) og reglur um gagnaöryggi í skólum, inniheldur viðbótin engin notendagreiningartæki eða fjarvistarmælingar. Hún þjónar eingöngu sem brú á milli spjallbotnsins og EasyData kerfisins. Kennarar geta öruggir sett viðbótina upp á Chromebook tölvum skóla og tölvum nemenda á þess að hætta sé á persónuverndarbrestum eða söfnun nemendaupplýsinga.",
-        
-        section6Title: "Hafa samband og aðstoð",
-        section6Text: "Ef þú hefur einhverjar spurningar eða ábendingar varðandi virkni viðbótarinnar eða persónuvernd, vinsamlegast sendu okkur tölvupóst á <strong>privacy@easydata.is</strong>.",
-        
-        navGemini: "Gemini Leiðarvísir",
-        navClaude: "Claude Leiðarvísir",
-        navGdpr: "Persónuvernd",
-        navBack: "Heim á EasyData",
-        footerText: "&copy; 2026 EasyData. Hannað í samræmi við reglur Chrome Web Store og GDPR."
-      }
-    };
-
-    let urlParams = new URLSearchParams(window.location.search);
-    let currentLang = urlParams.get("lang") || localStorage.getItem("easydata-lang") || "en";
-    if (!["en", "is"].includes(currentLang)) currentLang = "en";
-
-    function applyUiText() {
-      const activeUi = uiText[currentLang];
-      document.documentElement.lang = currentLang === 'is' ? 'is' : 'en';
-      document.title = activeUi.title;
-      
-      document.getElementById('badge-text').textContent = activeUi.badge;
-      document.getElementById('hero-title').textContent = activeUi.heroTitle;
-      document.getElementById('hero-desc').textContent = activeUi.heroDesc;
-      
-      document.getElementById('section-1-title').textContent = activeUi.section1Title;
-      document.getElementById('section-1-text').innerHTML = activeUi.section1Text;
-      
-      document.getElementById('section-2-title').textContent = activeUi.section2Title;
-      document.getElementById('section-2-text').textContent = activeUi.section2Text;
-      document.getElementById('section-2-list').innerHTML = activeUi.section2List;
-      
-      document.getElementById('section-3-title').textContent = activeUi.section3Title;
-      document.getElementById('section-3-text').textContent = activeUi.section3Text;
-      document.getElementById('section-3-list').innerHTML = activeUi.section3List;
-      
-      document.getElementById('section-4-title').textContent = activeUi.section4Title;
-      document.getElementById('section-4-text').textContent = activeUi.section4Text;
-      
-      document.getElementById('section-5-title').textContent = activeUi.section5Title;
-      document.getElementById('section-5-text').textContent = activeUi.section5Text;
-      
-      document.getElementById('section-6-title').textContent = activeUi.section6Title;
-      document.getElementById('section-6-text').innerHTML = activeUi.section6Text;
-      
-      document.getElementById('nav-gemini').textContent = activeUi.navGemini;
-      document.getElementById('nav-claude').textContent = activeUi.navClaude;
-      document.getElementById('nav-gdpr').textContent = activeUi.navGdpr;
-      document.getElementById('nav-back').textContent = activeUi.navBack;
-      document.getElementById('footer-text').innerHTML = activeUi.footerText;
-      
-      document.getElementById('lang-en').classList.toggle('active', currentLang === 'en');
-      document.getElementById('lang-is').classList.toggle('active', currentLang === 'is');
-    }
-
-    function changeLanguage(lang) {
-      currentLang = lang;
-      localStorage.setItem('easydata-lang', lang);
-      applyUiText();
-    }
-
-    window.onload = applyUiText;
-  </script>
 </body>
 </html>

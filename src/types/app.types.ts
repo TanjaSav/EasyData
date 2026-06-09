@@ -4,6 +4,16 @@ export type RetentionPolicy = {
   note: string;
 };
 
+export type BillingPlan = {
+  plan: "free" | "paid_storage";
+  paymentStatus: "not_required" | "payment_required" | "active";
+  storageQuotaBytes: number;
+  checkoutUrl?: string | null;
+  paidAt?: string;
+  paymentProvider?: string;
+  externalPaymentId?: string;
+};
+
 export type EasyDataApp = {
   id: string;
   name: string;
@@ -11,4 +21,5 @@ export type EasyDataApp = {
   apiToken: string;
   createdAt: string;
   retentionPolicy: RetentionPolicy;
+  billing: BillingPlan;
 };

@@ -1,25 +1,32 @@
 import crypto from "crypto";
 import fs from "fs";
 import path from "path";
-import { getAppMeta } from "./app.service.js";
+import {
+  getAppMeta,
+  getFreeStorageQuotaBytes,
+  getPaidStorageQuotaBytes,
+} from "./app.service.js";
 
 export const uploadDir = process.env.UPLOAD_DIR || "./uploads";
 
-const defaultAppStorageQuotaBytes = 50 * 1024 * 1024;
 const defaultSignedUrlTtlSeconds = 60 * 60;
 
 function getUploadDirPath() {
   return path.resolve(uploadDir);
 }
 
-export function getAppStorageQuotaBytes() {
-  const configured = Number(process.env.APP_STORAGE_QUOTA_BYTES);
-
-  if (Number.isInteger(configured) && configured > 0) {
-    return configured;
+export function getAppStorageQuotaBytes(appId?: string) {
+  if (!appId) {
+    return getFreeStorageQuotaBytes();
   }
 
-  return defaultAppStorageQuotaBytes;
+  const app = getAppMeta(appId);
+
+  if (app.billing.paymentStatus === "active" && app.billing.plan === "paid_storage") {
+    return getPaidStorageQuotaBytes();
+  }
+
+  return getFreeStorageQuotaBytes();
 }
 
 export function getSignedUrlTtlSeconds() {

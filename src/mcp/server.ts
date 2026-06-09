@@ -2,7 +2,7 @@ import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mc
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { pathToFileURL } from "node:url";
 import { z } from "zod";
-import { createApp, listApps } from "../services/app.service.js";
+import { createApp, getAppMeta, getPaidStorageQuotaBytes, listApps } from "../services/app.service.js";
 import {
   getGeneratedAppFullUrl,
   writeGeneratedApp,
@@ -378,8 +378,17 @@ export function createEasyDataMcpServer() {
                 fieldName: "file",
                 note: "Local storage mode. Upload using multipart/form-data. Store the returned fileName in SQLite, not the signed viewUrl. Use POST /apps/{appId}/files/{fileName}/view-url with Authorization to refresh an expiring view URL when rendering.",
                 limits: {
-                  appStorageQuotaBytes: getAppStorageQuotaBytes(),
+                  appStorageQuotaBytes: getAppStorageQuotaBytes(appId),
                   currentStorageUsageBytes: getAppStorageUsageBytes(appId),
+                },
+                billing: {
+                  ...getAppMeta(appId).billing,
+                  storageQuotaBytes: getAppStorageQuotaBytes(appId),
+                },
+                upgrade: {
+                  plan: "paid_storage",
+                  storageQuotaBytes: getPaidStorageQuotaBytes(),
+                  checkoutUrl: getAppMeta(appId).billing.checkoutUrl ?? null,
                 },
               },
               null,
