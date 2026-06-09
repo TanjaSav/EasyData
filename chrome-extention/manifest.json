@@ -1,25 +1,26 @@
 {
   "manifest_version": 3,
-  "name": "Gemini MCP Connector",
-  "version": "1.8",
-  "description": "Securely connects Gemini with the EasyData MCP server via the right-click context menu.",
+  "name": "EasyData MCP Connector",
+  "version": "2.1",
+  "description": "Connects Gemini and Claude with the EasyData MCP server via context menus and static content scripts.",
   "permissions": [
-    "activeTab",
-    "contextMenus",
-    "scripting"
+    "contextMenus"
   ],
   "host_permissions": [
-    "https://easydata.is/*",
-    "http://localhost:3000/*"
+    "https://easydata.is/*"
   ],
   "background": {
     "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
   },
   "content_scripts": [
     { 
       "matches": [
         "https://gemini.google.com/*",
-        "https://aistudio.google.com/*"
+        "https://aistudio.google.com/*",
+        "https://claude.ai/*"
       ],
       "js": ["content.js"],
       "run_at": "document_idle"
