@@ -52,6 +52,23 @@ app.get("/", (req, res) => {
   res.sendFile("index.html", { root: "public" });
 });
 
+// Clean URLs for guides and privacy policy
+app.get(["/privacy", "/privacy-policy"], (req, res) => {
+  res.sendFile("privacy.html", { root: "public" });
+});
+
+app.get("/gdpr", (req, res) => {
+  res.sendFile("gdpr.html", { root: "public" });
+});
+
+app.get("/gemini-mcp", (req, res) => {
+  res.sendFile("gemini-mcp.html", { root: "public" });
+});
+
+app.get(["/mcp-guide", "/claude-guide"], (req, res) => {
+  res.sendFile("mcp.html", { root: "public" });
+});
+
 // Health check endpoint
 app.get("/health", (req, res) => {
   res.json({
