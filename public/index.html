@@ -11,12 +11,9 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      theme: { extend: { colors: { ink: '#17202a', muted: '#586574', line: '#d9e4e8', soft: '#f5f8f8', teal: '#0f766e', ocean: '#246b91', ambered: '#c98725' }, fontFamily: { sans: ['"Manrope"', 'system-ui', 'sans-serif'] } } }
+      theme: { extend: { colors: { ink: '#17202a', muted: '#586574', line: '#d9e4e8', soft: '#f5f8f8', teal: '#0f766e', ocean: '#246b91', ambered: '#c98725' }, fontFamily: { sans: ['"Inter"', 'system-ui', 'sans-serif'] } } }
     };
   </script>
-  <style>
-    p { font-family: "Inter", system-ui, sans-serif; }
-  </style>
 </head>
 <body class="bg-white font-sans text-ink antialiased">
   <a class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:font-extrabold focus:text-ink focus:ring-2 focus:ring-ocean/20" href="#main-content">Skip to main content</a>
@@ -26,9 +23,9 @@
         <img class="w-[140px] h-auto" src="/assets/Logo.svg" alt="" aria-hidden="true" />
         <!-- <span>EasyData</span> -->
       </a>
-      <div class="flex items-center gap-3 text-sm font-bold text-muted">
-        <a class="inline-flex min-h-10 items-center justify-center rounded-lg px-3 text-sm font-extrabold text-ink transition hover:bg-soft hover:text-ocean focus:outline-none" href="/mcp.html" data-i18n="nav-mcp">Connect MCP</a>
-        <div class="inline-flex rounded-lg border border-line bg-soft p-1" aria-label="Language selector">
+      <div class="flex items-center gap-3 text-lg font-bold text-muted">
+        <a class="inline-flex min-h-10 items-center justify-center rounded-lg px-3 text-lg font-extrabold text-ink transition hover:bg-soft hover:text-ocean focus:outline-none" href="/mcp.html?platform=claude&lang=en" data-i18n="nav-mcp">Connect MCP</a>
+        <div class="inline-flex p-1" aria-label="Language selector">
           <button class="rounded-md px-2 py-1 text-xs font-extrabold text-white bg-ink" id="lang-en" type="button" onclick="changeLanguage('en')">EN</button>
           <button class="rounded-md px-2 py-1 text-xs font-extrabold text-muted" id="lang-is" type="button" onclick="changeLanguage('is')">ÍS</button>
         </div>
@@ -37,12 +34,11 @@
   </header>
 
   <main id="main-content">
-    <section class="grid min-h-[76vh] items-center border-b border-line bg-[linear-gradient(90deg,rgba(255,255,255,.96)_0%,rgba(255,255,255,.88)_42%,rgba(255,255,255,.35)_78%),url('/assets/easydata-hero.png')] bg-cover bg-center bg-no-repeat pb-14 pt-32 text-left">
+    <section class="min-h-[64vh] items-center border-b border-line bg-[linear-gradient(90deg,rgba(255,255,255,.96)_0%,rgba(255,255,255,.88)_42%,rgba(255,255,255,.35)_78%),url('/assets/easydata-hero.png')] bg-cover bg-center bg-no-repeat pb-14 pt-32 " aria-label="Hero section">
       <div class="mx-4 max-w-[1180px] sm:mx-auto">
-        <div class="sm:-ml-40 lg:-ml-80">
-          <h1 class="text-5xl font-black font-semibold leading-[.96] tracking-normal sm:text-5xl lg:text-6xl"><span data-i18n="hero-title">Simple database <br/> platform for <br/> educators</span></h1>
+          <h1 class=" mx-[40px] text-5xl font-black font-semibold leading-[.96] tracking-normal sm:text-5xl lg:text-6xl"><span data-i18n="hero-title">Simple database platform for educators</span></h1>
           <!-- <p class="mt-6 max-w-2xl text-lg leading-8 text-muted sm:text-xl">EasyData lets teachers and small teams create data-backed web apps without managing servers, dashboards, or database credentials</p> -->
-        </div>
+        
       </div>
     </section>
 
@@ -53,7 +49,7 @@
 
           <form class="mt-8" id="creator-form">
             <label class="mb-2 block font-extrabold" for="prompt" data-i18n="prompt-label">App request</label>
-            <textarea class="min-h-52 w-full resize-y rounded-lg border border-line p-4 font-inherit leading-7 outline-none focus:ring-2 focus:ring-ocean/10" id="prompt" name="prompt" required minlength="10" data-i18n-placeholder="prompt-placeholder" placeholder="Prompt example:
+            <textarea class="min-h-52 w-full resize-y rounded-lg border border-line p-4 font-inherit outline-none focus:ring-1 focus:ring-ocean/10" id="prompt" name="prompt" required minlength="10" data-i18n-placeholder="prompt-placeholder" placeholder="Prompt example:
 Use EasyData MCP to create a student project submission app. Students should enter their name, project title, notes, and a photo URL. The teacher should be able to view all submissions. Publish it and return the hosted URL."></textarea>
             <div class="mt-4 flex flex-wrap items-center gap-3">
               <button class="inline-flex min-h-11 items-center justify-center rounded-lg bg-ink px-5 font-extrabold text-white shadow-sm transition hover:bg-ocean focus:outline-none focus:ring-2 focus:ring-ocean/20 disabled:cursor-wait disabled:opacity-70" id="submit-button" type="submit" data-i18n="create-button">Create</button>
@@ -66,12 +62,12 @@ Use EasyData MCP to create a student project submission app. Students should ent
             <p class="mt-2 leading-7 text-muted" id="result-summary"></p>
             <p class="mt-2"><code class="rounded bg-white px-2 py-1 text-sm" id="result-id"></code></p>
             <div class="mt-4 flex flex-wrap gap-3">
-              <a class="inline-flex min-h-11 items-center justify-center rounded-lg bg-ink px-5 font-extrabold text-white shadow-sm transition hover:bg-ocean focus:outline-none focus:ring-2 focus:ring-ocean/20" id="open-app" href="#" data-i18n="open-app">Open app</a>
+              <a class="inline-flex min-h-11 items-center justify-center rounded-lg bg-ink px-5 font-semibold text-white  transition focus:ring-ocean/80" id="open-app" href="#" data-i18n="open-app">Open app</a>
             </div>
           </section>
         </section>
 
-        <aside class="self-start rounded-lg border border-line bg-soft p-5 lg:sticky lg:top-24 lg:mt-16">
+        <aside class="self-start p-4 lg:sticky lg:top-24 lg:mt-14">
           <h2 class="text-xl font-extrabold" data-i18n="what-happens">What happens</h2>
           <ul class="mt-3 list-disc space-y-2 pl-5 leading-7 text-muted">
             <li data-i18n="what-1">AI connects to the EasyData MCP server</li>
@@ -122,7 +118,7 @@ Use EasyData MCP to create a student project submission app. Students should ent
         "create-button": "Búa til",
         "open-app": "Opna app",
         "what-happens": "Hvað gerist",
-        "what-1": "Claude tengist EasyData MCP netþjóninum",
+        "what-1": "AI tengist EasyData MCP netþjóninum",
         "what-2": "Það býr til nýtt app og töflur",
         "what-3": "EasyData vistar HTML kóðann",
         "what-4": "Þú færð hýsta vefslóð til að opna",

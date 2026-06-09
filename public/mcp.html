@@ -184,12 +184,11 @@
     /* Hero Section */
     .hero {
       display: grid;
-      min-height: 46vh;
+      min-height: auto;
       align-items: center;
-      border-bottom: 1px solid var(--panel-border);
       background: #ffffff;
-      margin-bottom: 3rem;
-      padding: 8rem 0 4rem;
+      margin-bottom: 1rem;
+      padding: 64px 0;
       text-align: left;
     }
 
@@ -197,22 +196,6 @@
       width: calc(100% - 2rem);
       max-width: 1180px;
       margin: 0 auto;
-    }
-
-    .badge-mcp {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.4rem 1rem;
-      border-radius: 9999px;
-      background: rgba(16, 185, 129, 0.1);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      color: #0f766e;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 1.25rem;
     }
 
     .hero h1 {
@@ -629,8 +612,6 @@
     .platform-selector {
       display: inline-flex;
       gap: 0.25rem;
-      border: 1px solid var(--panel-border);
-      background: #ffffff;
       border-radius: 8px;
       padding: 0.25rem;
     }
@@ -665,7 +646,7 @@
     .platform-selector-wrap {
       width: calc(100% - 2rem);
       max-width: 1180px;
-      margin: -1rem auto 2rem;
+      margin: 5rem auto 1rem;
       display: flex;
       justify-content: flex-start;
     }
@@ -691,7 +672,7 @@
 
       .hero {
         min-height: auto;
-        padding-top: 8rem;
+        padding-top: 2.5rem;
       }
 
       .hero h1 {
@@ -743,22 +724,21 @@
 
   <!-- Main Content Wrapper -->
   <main id="main-content">
-    
-    <!-- Hero Section -->
-    <section class="hero">
-      <div class="hero-inner">
-        <p class="badge-mcp" id="hero-badge">Claude GUI Connectors</p>
-        <h1 id="hero-title">Connect MCP via Claude Settings</h1>
-        <p id="hero-desc">Follow the steps below to configure a custom database connection directly within your Claude settings interface using remote MCP URLs</p>
-      </div>
-    </section>
-
     <div class="platform-selector-wrap">
       <div class="platform-selector" aria-label="Platform guide selector">
         <button class="platform-btn active" id="platform-claude" type="button" onclick="selectPlatform('claude')">Claude</button>
         <button class="platform-btn" id="platform-gemini" type="button" onclick="selectPlatform('gemini')">Gemini</button>
+        <button class="platform-btn" id="platform-chatgpt" type="button" onclick="selectPlatform('chatgpt')">ChatGPT</button>
       </div>
     </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-inner">
+        <h1 id="hero-title">Connect MCP via Claude Settings</h1>
+        <p id="hero-desc">Follow the steps below to configure a custom database connection directly within your Claude settings interface using remote MCP URLs</p>
+      </div>
+    </section>
 
     <!-- Steps Layout Section -->
     <section class="steps-container" id="visual-guide">
@@ -866,12 +846,13 @@
         pageTitle: "EasyData | Connecting MCP Guide",
         claude: "Claude",
         gemini: "Gemini",
-        heroBadgeClaude: "Claude GUI Connectors",
+        chatgpt: "ChatGPT",
         heroTitleClaude: "Connect MCP via Claude Settings",
         heroDescClaude: "Follow the steps below to configure a custom database connection directly within your Claude settings interface using remote MCP URLs",
-        heroBadgeGemini: "Gemini Web App Bridge",
         heroTitleGemini: "Build Apps inside Gemini",
         heroDescGemini: "Install the EasyData Chrome extension to let Gemini create hosted database-backed apps from selected chat text.",
+        heroTitleChatgpt: "Connect MCP inside ChatGPT",
+        heroDescChatgpt: "Use ChatGPT Apps and developer mode to add EasyData as a custom remote MCP connector for database-backed app creation.",
         urlLabel: "EasyData Remote URL:",
         urlHeading: "Connection URL",
         promptLabel: "Sample Prompt to Activate:",
@@ -894,12 +875,13 @@
         pageTitle: "EasyData | MCP leiðarvísir",
         claude: "Claude",
         gemini: "Gemini",
-        heroBadgeClaude: "Claude GUI tengi",
+        chatgpt: "ChatGPT",
         heroTitleClaude: "Tengja MCP í gegnum Claude stillingar",
         heroDescClaude: "Fylgdu skrefunum hér að neðan til að stilla sérsniðna gagnagrunnstengingu beint í Claude með ytri MCP vefslóð.",
-        heroBadgeGemini: "Gemini vefbrú",
         heroTitleGemini: "Smíða öpp inni í Gemini",
         heroDescGemini: "Settu upp EasyData Chrome viðbótina til að láta Gemini búa til hýst gagnadrifin öpp úr völdum spjalltexta.",
+        heroTitleChatgpt: "Tengja MCP inni í ChatGPT",
+        heroDescChatgpt: "Notaðu ChatGPT Apps og developer mode til að bæta EasyData við sem sérsniðnu ytra MCP tengi fyrir gagnadrifna appsmíði.",
         urlLabel: "Ytri EasyData vefslóð:",
         urlHeading: "Tengivefslóð",
         promptLabel: "Dæmi um fyrirmæli:",
@@ -1041,20 +1023,88 @@
           { number: 4, title: "Smíða", heading: "4. EasyData smíðar appið", text: "Viðbótin sendir valda textann til EasyData. EasyData býr til gagnagrunn, skrifar HTML appið og birtir það.", mockup: "build", interactive: null },
           { number: 5, title: "Opna app", heading: "5. Opnaðu tilbúna appið", text: "Þegar appið er tilbúið setur viðbótin hýstu vefslóðina og samantektina aftur inn á Gemini síðuna.", mockup: "result", interactive: null }
         ]
+      },
+      chatgpt: {
+        en: [
+          { number: 1, title: "Check Plan", imageName: "ChatGPT/1.png", heading: "1. Check your tariff plan", text: "Full MCP support, including write and modify actions, works on ChatGPT Business, Enterprise, and Edu plans. Some MCP access connectors may also be available on Plus and Pro when connectors are enabled.", interactive: null },
+          { number: 2, title: "Open Settings", imageName: "ChatGPT/2.png", heading: "2. Open settings", text: "Open ChatGPT in the browser, click your profile menu, and go to <strong>Settings</strong>.", interactive: null },
+          { number: 3, title: "Go to Apps", imageName: "ChatGPT/3.png", heading: "3. Go to Apps", text: "In <strong>Apps</strong>, go to <strong>Advanced settings</strong> and choose <strong>Create app</strong>.", interactive: null },
+          { number: 4, title: "Create App", imageName: "ChatGPT/4.png", heading: "4. Choose Create app", text: "Select <strong>Create app</strong> to start adding EasyData as a custom MCP connector.", interactive: null },
+          { number: 5, title: "Name Connector", imageName: "ChatGPT/5.png", heading: "5. Name the connector", text: "Name the connector <code>EasyData</code> so it is easy to recognize when you use tools in ChatGPT.", interactive: null },
+          { number: 6, title: "Paste URL", imageName: "ChatGPT/6.png", heading: "6. Paste the EasyData MCP URL and click Create", text: "Paste the public HTTPS endpoint below, then click <strong>Create</strong> to save the connector.", interactive: "url" },
+          { number: 7, title: "Connect EasyData", imageName: "ChatGPT/7.png", heading: "7. Choose Connect EasyData to ChatGPT", text: "Select <strong>Connect EasyData to ChatGPT</strong> and approve the connection when ChatGPT asks for confirmation.", interactive: null },
+          { number: 8, title: "Start Chat", imageName: "ChatGPT/8.png", heading: "8. Start a ChatGPT conversation", text: "Open a new chat and explicitly ask ChatGPT to use the EasyData MCP connector. ChatGPT may ask for confirmation before write or modify actions.", interactive: "prompt" }
+        ],
+        is: [
+          { number: 1, title: "Áætlun", imageName: "ChatGPT/1.png", heading: "1. Athugaðu áskriftarleiðina", text: "Fullur MCP stuðningur, þar á meðal skrif- og breytingaraðgerðir, virkar í ChatGPT Business, Enterprise og Edu. Sum MCP aðgangstengi geta einnig verið tiltæk í Plus og Pro þegar connectors eru virk.", interactive: null },
+          { number: 2, title: "Stillingar", imageName: "ChatGPT/2.png", heading: "2. Opnaðu stillingar", text: "Opnaðu ChatGPT í vafra, smelltu á prófílvalmyndina og farðu í <strong>Settings</strong>.", interactive: null },
+          { number: 3, title: "Apps", imageName: "ChatGPT/3.png", heading: "3. Farðu í Apps", text: "Í <strong>Apps</strong>, farðu í <strong>Advanced settings</strong> og veldu <strong>Create app</strong>.", interactive: null },
+          { number: 4, title: "Create app", imageName: "ChatGPT/4.png", heading: "4. Veldu Create app", text: "Veldu <strong>Create app</strong> til að byrja að bæta EasyData við sem sérsniðnu MCP tengi.", interactive: null },
+          { number: 5, title: "Nafn", imageName: "ChatGPT/5.png", heading: "5. Gefðu tenginu nafn", text: "Gefðu tenginu nafnið <code>EasyData</code> svo auðvelt sé að þekkja það þegar þú notar tól í ChatGPT.", interactive: null },
+          { number: 6, title: "Vefslóð", imageName: "ChatGPT/6.png", heading: "6. Límdu EasyData MCP vefslóðina og smelltu á Create", text: "Límdu opinberu HTTPS vefslóðina hér að neðan og smelltu síðan á <strong>Create</strong> til að vista tengið.", interactive: "url" },
+          { number: 7, title: "Tengja", imageName: "ChatGPT/7.png", heading: "7. Veldu Connect EasyData to ChatGPT", text: "Veldu <strong>Connect EasyData to ChatGPT</strong> og samþykktu tenginguna þegar ChatGPT biður um staðfestingu.", interactive: null },
+          { number: 8, title: "Spjall", imageName: "ChatGPT/8.png", heading: "8. Byrjaðu ChatGPT spjall", text: "Opnaðu nýtt spjall og biddu ChatGPT skýrt um að nota EasyData MCP tengið. ChatGPT gæti beðið um staðfestingu áður en skrif- eða breytingaraðgerðir eru keyrðar.", interactive: "prompt" }
+        ]
       }
     };
 
     let currentStepIdx = 0;
 
-    let currentLang = localStorage.getItem("easydata-lang") || "en";
-    let currentPlatform = localStorage.getItem("easydata-platform") || "claude";
+    let urlParams = new URLSearchParams(window.location.search);
+    let currentLang = urlParams.get("lang") || localStorage.getItem("easydata-lang") || "en";
+    let currentPlatform = urlParams.get("platform") || localStorage.getItem("easydata-platform") || "claude";
+    if (!["en", "is"].includes(currentLang)) currentLang = "en";
+    if (urlParams.has("lang")) localStorage.setItem("easydata-lang", currentLang);
+    if (urlParams.has("platform")) localStorage.setItem("easydata-platform", currentPlatform);
+    if (!stepsData[currentPlatform]) currentPlatform = "claude";
     let steps = stepsData[currentPlatform][currentLang] || stepsData.claude.en;
     let activeUi = uiText[currentLang];
 
     function mockupSvg(type) {
       const labels = currentLang === "is"
-        ? { extension: "Chrome viðbætur", load: "Load unpacked", prompt: "Skrifaðu appbeiðni í Gemini", context: "Create App with EasyData", build: "EasyData er að smíða appið", result: "Appið er tilbúið" }
-        : { extension: "Chrome Extensions", load: "Load unpacked", prompt: "Write your app request in Gemini", context: "Create App with EasyData", build: "EasyData is building the app", result: "Your app is ready" };
+        ? {
+            extension: "Chrome viðbætur",
+            load: "Load unpacked",
+            prompt: "Skrifaðu appbeiðni í Gemini",
+            context: "Create App with EasyData",
+            build: "EasyData er að smíða appið",
+            result: "Appið er tilbúið",
+            chatgptPlan: "Business / Enterprise / Edu",
+            chatgptSettings: "ChatGPT stillingar",
+            chatgptDevmode: "Developer mode",
+            chatgptCreate: "Create custom MCP connector",
+            chatgptUrl: "https://easydata.is/mcp",
+            chatgptApprove: "Samþykkja og birta",
+            chatgptPrompt: "Notaðu EasyData MCP"
+          }
+        : {
+            extension: "Chrome Extensions",
+            load: "Load unpacked",
+            prompt: "Write your app request in Gemini",
+            context: "Create App with EasyData",
+            build: "EasyData is building the app",
+            result: "Your app is ready",
+            chatgptPlan: "Business / Enterprise / Edu",
+            chatgptSettings: "ChatGPT Settings",
+            chatgptDevmode: "Developer mode",
+            chatgptCreate: "Create custom MCP connector",
+            chatgptUrl: "https://easydata.is/mcp",
+            chatgptApprove: "Approve and publish",
+            chatgptPrompt: "Use EasyData MCP"
+          };
+      const chatgptScreens = {
+        "chatgpt-plan": { title: "ChatGPT", primary: labels.chatgptPlan, secondary: "Full MCP support", accent: "#0f766e" },
+        "chatgpt-settings": { title: "Settings", primary: labels.chatgptSettings, secondary: "Profile menu", accent: "#246b91" },
+        "chatgpt-devmode": { title: "Apps", primary: labels.chatgptDevmode, secondary: "Custom connectors", accent: "#7c3aed" },
+        "chatgpt-create": { title: "Apps", primary: labels.chatgptCreate, secondary: "Name: EasyData", accent: "#0f766e" },
+        "chatgpt-url": { title: "EasyData", primary: labels.chatgptUrl, secondary: "Remote MCP URL", accent: "#246b91" },
+        "chatgpt-approve": { title: "Review", primary: labels.chatgptApprove, secondary: "Workspace connector", accent: "#b45309" },
+        "chatgpt-prompt": { title: "ChatGPT", primary: labels.chatgptPrompt, secondary: "Create a data-backed app", accent: "#0f766e" }
+      };
+      if (chatgptScreens[type]) {
+        const item = chatgptScreens[type];
+        return `<svg viewBox="0 0 600 350" role="img"><rect width="600" height="350" rx="12" fill="#f5f8f8"/><rect x="42" y="38" width="516" height="274" rx="14" fill="#fff" stroke="#d9e4e8"/><rect x="42" y="38" width="516" height="46" rx="14" fill="#17202a"/><circle cx="76" cy="61" r="7" fill="#f87171"/><circle cx="100" cy="61" r="7" fill="#facc15"/><circle cx="124" cy="61" r="7" fill="#4ade80"/><text x="154" y="68" fill="#fff" font-size="16" font-weight="800" font-family="Manrope, sans-serif">${item.title}</text><rect x="82" y="116" width="436" height="126" rx="14" fill="#f5f8f8" stroke="#d9e4e8"/><circle cx="124" cy="158" r="22" fill="${item.accent}"/><text x="116" y="166" fill="#fff" font-size="22" font-weight="900" font-family="Manrope, sans-serif">E</text><text x="164" y="154" fill="#17202a" font-size="21" font-weight="800" font-family="Manrope, sans-serif">${item.primary}</text><text x="164" y="184" fill="#586574" font-size="14" font-family="Inter, sans-serif">${item.secondary}</text><rect x="164" y="206" width="190" height="16" rx="8" fill="${item.accent}" opacity="0.22"/><rect x="82" y="264" width="436" height="16" rx="8" fill="#d9e4e8"/></svg>`;
+      }
       if (type === "extension") return `<svg viewBox="0 0 600 350" role="img"><rect width="600" height="350" rx="12" fill="#f5f8f8"/><rect x="36" y="44" width="528" height="262" rx="10" fill="#fff" stroke="#d9e4e8"/><text x="60" y="86" fill="#17202a" font-size="24" font-weight="800" font-family="Manrope, sans-serif">${labels.extension}</text><rect x="60" y="116" width="150" height="42" rx="8" fill="#0f766e"/><text x="84" y="143" fill="#fff" font-size="15" font-weight="800" font-family="Manrope, sans-serif">${labels.load}</text><rect x="60" y="188" width="260" height="82" rx="10" fill="#f5f8f8" stroke="#d9e4e8"/><circle cx="92" cy="229" r="20" fill="#246b91"/><text x="86" y="236" fill="#fff" font-size="22" font-weight="900" font-family="Manrope, sans-serif">E</text><text x="126" y="224" fill="#17202a" font-size="17" font-weight="800" font-family="Manrope, sans-serif">EasyData Gemini</text><text x="126" y="247" fill="#586574" font-size="13" font-family="Inter, sans-serif">Chrome extension</text></svg>`;
       if (type === "prompt") return `<svg viewBox="0 0 600 350" role="img"><rect width="600" height="350" rx="12" fill="#fff"/><rect x="54" y="70" width="492" height="210" rx="18" fill="#f5f8f8" stroke="#d9e4e8"/><text x="82" y="120" fill="#17202a" font-size="22" font-weight="800" font-family="Manrope, sans-serif">Gemini</text><rect x="82" y="182" width="436" height="58" rx="12" fill="#fff" stroke="#d9e4e8"/><text x="104" y="216" fill="#586574" font-size="15" font-family="Inter, sans-serif">${labels.prompt}</text></svg>`;
       if (type === "context") return `<svg viewBox="0 0 600 350" role="img"><rect width="600" height="350" rx="12" fill="#fff"/><rect x="70" y="190" width="460" height="64" rx="14" fill="#f5f8f8" stroke="#d9e4e8"/><rect x="106" y="204" width="310" height="20" rx="4" fill="#cfe8e5"/><rect x="240" y="80" width="245" height="142" rx="10" fill="#fff" stroke="#d9e4e8"/><text x="264" y="120" fill="#586574" font-size="15" font-family="Inter, sans-serif">Copy</text><text x="264" y="152" fill="#586574" font-size="15" font-family="Inter, sans-serif">Paste</text><rect x="256" y="172" width="205" height="32" rx="6" fill="#0f766e"/><text x="272" y="193" fill="#fff" font-size="13" font-weight="800" font-family="Manrope, sans-serif">${labels.context}</text></svg>`;
@@ -1154,6 +1204,7 @@
         imgEl.style.display = 'none';
         svgEl.style.display = 'flex';
         svgEl.innerHTML = mockupSvg(step.mockup);
+        imgEl.removeAttribute('src');
       } else {
         svgEl.style.display = 'none';
         svgEl.innerHTML = '';
@@ -1233,13 +1284,20 @@
       document.title = activeUi.pageTitle;
       document.getElementById('platform-claude').textContent = activeUi.claude;
       document.getElementById('platform-gemini').textContent = activeUi.gemini;
+      document.getElementById('platform-chatgpt').textContent = activeUi.chatgpt;
       document.getElementById('platform-claude').classList.toggle('active', currentPlatform === 'claude');
       document.getElementById('platform-gemini').classList.toggle('active', currentPlatform === 'gemini');
+      document.getElementById('platform-chatgpt').classList.toggle('active', currentPlatform === 'chatgpt');
       document.getElementById('lang-en').classList.toggle('active', currentLang === 'en');
       document.getElementById('lang-is').classList.toggle('active', currentLang === 'is');
-      document.getElementById('hero-badge').textContent = currentPlatform === 'gemini' ? activeUi.heroBadgeGemini : activeUi.heroBadgeClaude;
-      document.getElementById('hero-title').textContent = currentPlatform === 'gemini' ? activeUi.heroTitleGemini : activeUi.heroTitleClaude;
-      document.getElementById('hero-desc').textContent = currentPlatform === 'gemini' ? activeUi.heroDescGemini : activeUi.heroDescClaude;
+      const heroByPlatform = {
+        claude: [activeUi.heroTitleClaude, activeUi.heroDescClaude],
+        gemini: [activeUi.heroTitleGemini, activeUi.heroDescGemini],
+        chatgpt: [activeUi.heroTitleChatgpt, activeUi.heroDescChatgpt]
+      };
+      const activeHero = heroByPlatform[currentPlatform] || heroByPlatform.claude;
+      document.getElementById('hero-title').textContent = activeHero[0];
+      document.getElementById('hero-desc').textContent = activeHero[1];
       document.getElementById('url-label').textContent = activeUi.urlLabel;
       document.getElementById('url-heading').textContent = activeUi.urlHeading;
       document.getElementById('btn-copy-url').textContent = activeUi.copyUrl;
@@ -1259,6 +1317,7 @@
     }
 
     function reloadCurrentGuide() {
+      if (!stepsData[currentPlatform]) currentPlatform = "claude";
       steps = stepsData[currentPlatform][currentLang] || stepsData.claude.en;
       if (currentStepIdx >= steps.length) currentStepIdx = 0;
       applyUiText();
