@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Learn how to connect Model Context Protocol (MCP) servers to Claude using the graphical Connectors interface. Visual step-by-step guide with screenshot slides." />
-  <title>EasyData | Connecting MCP to Claude Guide</title>
+  <meta name="description" content="Learn how to connect the EasyData Chrome extension to Google Gemini and build apps." />
+  <title>EasyData | Gemini Extension Guide</title>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -714,8 +714,7 @@
         <!-- <span>EasyData</span> -->
       </a>
       <nav class="nav-links">
-        <a href="/gemini-mcp.html">Gemini Guide</a>
-        <a href="/gdpr.html">GDPR Guide</a>
+        <a href="/mcp.html">Claude Guide</a>
         <a href="#quick-paths" id="nav-paths">Connection Rules</a>
         <a href="#troubleshooting" id="nav-trouble">Troubleshooting</a>
         <a class="btn-nav" href="/" id="nav-back">Back to EasyData</a>
@@ -1059,7 +1058,7 @@
 
     let urlParams = new URLSearchParams(window.location.search);
     let currentLang = urlParams.get("lang") || localStorage.getItem("easydata-lang") || "en";
-    let currentPlatform = urlParams.get("platform") || localStorage.getItem("easydata-platform") || "claude";
+    let currentPlatform = urlParams.get("platform") || localStorage.getItem("easydata-platform") || "gemini";
     if (!["en", "is"].includes(currentLang)) currentLang = "en";
     if (urlParams.has("lang")) localStorage.setItem("easydata-lang", currentLang);
     if (urlParams.has("platform")) localStorage.setItem("easydata-platform", currentPlatform);

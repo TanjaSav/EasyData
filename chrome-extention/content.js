@@ -28,14 +28,16 @@ if (!window.mcpListenerAdded) {
 
   function findSendButton() {
     return document.querySelector('button[aria-label*="Send message"]') ||
+           document.querySelector('button[aria-label*="Send Message"]') ||
            document.querySelector('button.send-button') ||
            document.querySelector('.send-button-container button') ||
            document.querySelector('button[aria-label*="Run"]') ||
            document.querySelector('.run-button button') ||
-           document.querySelector('.run-button');
+           document.querySelector('.run-button') ||
+           document.querySelector('button[aria-label*="send"]');
   }
 
-  function isGeminiGenerating() {
+  function isAssistantGenerating() {
     const sendBtn = findSendButton();
     if (sendBtn) {
       const text = (sendBtn.textContent || "").toLowerCase();
@@ -45,6 +47,12 @@ if (!window.mcpListenerAdded) {
       if (text.includes("stop") || label.includes("stop")) {
         return true;
       }
+    }
+
+    // Check if a dedicated stop button is visible (common in Claude and newer Gemini UI)
+    const stopBtn = document.querySelector('button[aria-label*="Stop"], button[aria-label*="stop"]');
+    if (stopBtn && (stopBtn.offsetWidth > 0 || stopBtn.offsetHeight > 0)) {
+      return true;
     }
     
     // Check for progress bars/loading states ONLY if they are currently visible on screen
@@ -115,7 +123,7 @@ if (!window.mcpListenerAdded) {
     if (input) {
       input.focus();
       
-      // Clear and type cleanly using browser execCommands so Gemini's state stays in sync
+      // Clear and type cleanly using browser execCommands so the assistant's state stays in sync
       if (input.tagName === 'TEXTAREA') {
         input.value = resultText;
         dispatchInputEvents(input, resultText);
@@ -205,15 +213,14 @@ if (!window.mcpListenerAdded) {
         sendResultToChat(resultText);
       });
     } catch (e) {
-      // In case the extension context was invalidated or background script failed
       hideLoading();
       sendResultToChat(`[EasyData Tool Error]: Extension message dispatcher failed. Please reload the page to reactivate. Error: ${e.message}`);
     }
   }
 
   function checkForToolCalls() {
-    // ONLY run tools if Gemini is NOT actively generating/typing its response
-    if (isGeminiGenerating()) {
+    // ONLY run tools if assistant is NOT actively generating/typing its response
+    if (isAssistantGenerating()) {
       return;
     }
 
@@ -360,7 +367,7 @@ CRITICAL PROTOCOL:
           dispatchInputEvents(inputBox, request.data);
         }
       } else {
-        alert("Please ensure your typing cursor is active inside Gemini's chat input area before clicking the option.");
+        alert("Please ensure your typing cursor is active inside the chat input area before clicking the option.");
       }
     } else if (request.action === "showLoading") {
       showLoading(request.message);
@@ -409,7 +416,7 @@ CRITICAL PROTOCOL:
     }
   });
 
-  // Watch the page for Gemini message output streams
+  // Watch the page for message output streams
   const observer = new MutationObserver(() => {
     checkForToolCalls();
   });

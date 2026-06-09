@@ -2,12 +2,22 @@ chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: "enrichWithMCP",
     title: "Enrich with MCP Data",
-    contexts: ["selection"]
+    contexts: ["selection"],
+    documentUrlPatterns: [
+      "https://gemini.google.com/*",
+      "https://aistudio.google.com/*",
+      "https://claude.ai/*"
+    ]
   });
   chrome.contextMenus.create({
     id: "createAppWithEasyData",
     title: "Create App with EasyData",
-    contexts: ["selection"]
+    contexts: ["selection"],
+    documentUrlPatterns: [
+      "https://gemini.google.com/*",
+      "https://aistudio.google.com/*",
+      "https://claude.ai/*"
+    ]
   });
 });
 
@@ -92,45 +102,35 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     if (info.menuItemId === "enrichWithMCP") {
       const url = "https://easydata.is/mcp";
 
-      // 1. Dynamically inject content.js into the current active tab
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        files: ['content.js']
-      }).then(() => {
-        const payload = {
-          jsonrpc: "2.0",
-          method: "resources/read",
-          params: { 
-            uri: `easydata://query?q=${encodeURIComponent(prompt)}` 
-          },
-          id: 1
-        };
+      const payload = {
+        jsonrpc: "2.0",
+        method: "resources/read",
+        params: { 
+          uri: `easydata://query?q=${encodeURIComponent(prompt)}` 
+        },
+        id: 1
+      };
 
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
 
-        return fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json, text/event-stream'
-          },
-          body: JSON.stringify(payload),
-          signal: controller.signal
-        })
-        .then(res => {
-          clearTimeout(timeoutId);
-          if (!res.ok) throw new Error("HTTP Error: " + res.status);
-          return res;
-        })
-        .catch((err) => {
-          clearTimeout(timeoutId);
-          throw err;
-        });
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json, text/event-stream'
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal
       })
-      .then(response => {
-        if (!response.ok) throw new Error("HTTP Error: " + response.status);
-        return consumeStream(response);
+      .then(res => {
+        clearTimeout(timeoutId);
+        if (!res.ok) throw new Error("HTTP Error: " + res.status);
+        return consumeStream(res);
+      })
+      .catch((err) => {
+        clearTimeout(timeoutId);
+        throw err;
       })
       .then(text => {
         const lines = text.split("\n");
@@ -151,7 +151,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
           textResult = data.result.text; // Fallback structure parsing
         }
         
-        // 3. Forward the text context payload back into Gemini's DOM interface
+        // Forward the text context payload back into Gemini/Claude's DOM interface
         chrome.tabs.sendMessage(tab.id, { action: "insertMCP", data: `\n\n[MCP Context]:\n${textResult}\n` });
       })
       .catch(error => {
@@ -159,18 +159,10 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         chrome.tabs.sendMessage(tab.id, { action: "insertMCP", data: `\n\n[MCP Connection Error: ${error.message}]\n` });
       });
     } else if (info.menuItemId === "createAppWithEasyData") {
-      // 1. Dynamically inject content.js into the current active tab to ensure it is running
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        files: ['content.js']
-      }).then(() => {
-        // 2. Delegate the generation to content.js so it runs in the stable tab context
-        chrome.tabs.sendMessage(tab.id, { 
-          action: "startGeneration",
-          prompt: prompt
-        });
-      }).catch(error => {
-        console.error("Failed to inject content script:", error);
+      // Delegate the generation to content.js which is already running statically
+      chrome.tabs.sendMessage(tab.id, { 
+        action: "startGeneration",
+        prompt: prompt
       });
     }
   }
