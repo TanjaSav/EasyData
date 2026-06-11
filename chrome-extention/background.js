@@ -45,7 +45,15 @@ async function consumeStream(res) {
   return text;
 }
 
-function executeRemoteTool(name, args) {
+function getBaseUrl() {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['easyDataServerUrl'], (result) => {
+      resolve(result.easyDataServerUrl || "https://easydata.is");
+    });
+  });
+}
+
+async function executeRemoteTool(name, args) {
   const payload = {
     jsonrpc: "2.0",
     method: "tools/call",
@@ -56,7 +64,8 @@ function executeRemoteTool(name, args) {
     id: Date.now()
   };
 
-  const url = "https://easydata.is/mcp";
+  const baseUrl = await getBaseUrl();
+  const url = `${baseUrl}/mcp`;
   const timeoutMs = 25000;
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
@@ -98,9 +107,10 @@ function executeRemoteTool(name, args) {
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.selectionText) {
     const prompt = info.selectionText;
+    const baseUrl = await getBaseUrl();
 
     if (info.menuItemId === "enrichWithMCP") {
-      const url = "https://easydata.is/mcp";
+      const url = `${baseUrl}/mcp`;
 
       const payload = {
         jsonrpc: "2.0",
@@ -162,7 +172,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       // Delegate the generation to content.js which is already running statically
       chrome.tabs.sendMessage(tab.id, { 
         action: "startGeneration",
-        prompt: prompt
+        prompt: prompt,
+        baseUrl: baseUrl
       });
     }
   }

@@ -375,9 +375,10 @@ CRITICAL PROTOCOL:
       hideLoading();
     } else if (request.action === "startGeneration") {
       const prompt = request.prompt;
+      const baseUrl = request.baseUrl || "https://easydata.is";
       showLoading("Contacting EasyData AI services...");
       
-      const url = "https://easydata.is/ai/create-app";
+      const url = `${baseUrl}/ai/create-app`;
 
       const performFetch = async (url) => {
         const res = await fetch(url, {

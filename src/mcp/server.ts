@@ -16,6 +16,7 @@ import {
   updateRow,
   deleteRow,
 } from "../services/table.service.js";
+import { analyzeSensitiveColumns } from "../services/sensitivity.service.js";
 import {
   getAppStorageQuotaBytes,
   getAppStorageUsageBytes,
@@ -168,20 +169,40 @@ export function createEasyDataMcpServer() {
         .describe("The list of columns for the new table"),
     },
     async ({ appId, tableName, columns, confirmSensitiveData }) => {
-      const result = createTable(appId, {
-        tableName,
-        columns,
-        confirmSensitiveData,
-      });
+      try {
+        const result = createTable(appId, {
+          tableName,
+          columns,
+          confirmSensitiveData,
+        });
 
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2),
-          },
-        ],
-      };
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (error: any) {
+        if (error.message.includes("Sensitive schema requires confirmSensitiveData: true")) {
+          const warnings = analyzeSensitiveColumns(columns);
+          const formattedWarnings = warnings.map(w => 
+            `⚠️ COLUMN: "${w.field}" (Category: ${w.category})\nGDPR WARNING: ${w.message}\n`
+          ).join("\n");
+          
+          return {
+            content: [
+              {
+                type: "text",
+                text: `[GDPR Compliance Error]: Storing sensitive personal student data may violate GDPR regulations.\n\n${formattedWarnings}\nTo override this and proceed, you must set "confirmSensitiveData": true in your next tool invocation, confirming that the teacher has reviewed this warning and has formal school consent.`
+              }
+            ]
+          };
+        }
+        
+        throw error;
+      }
     }
   );
 
@@ -211,21 +232,41 @@ export function createEasyDataMcpServer() {
         .describe("The new columns that should be added"),
     },
     async ({ appId, tableName, columns, confirmSensitiveData }) => {
-      const result = alterTable(
-        appId,
-        tableName,
-        columns,
-        confirmSensitiveData ?? false
-      );
+      try {
+        const result = alterTable(
+          appId,
+          tableName,
+          columns,
+          confirmSensitiveData ?? false
+        );
 
-      return {
-        content: [
-          {
-            type: "text",
-            text: JSON.stringify(result, null, 2),
-          },
-        ],
-      };
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(result, null, 2),
+            },
+          ],
+        };
+      } catch (error: any) {
+        if (error.message.includes("Sensitive schema requires confirmSensitiveData: true")) {
+          const warnings = analyzeSensitiveColumns(columns);
+          const formattedWarnings = warnings.map(w => 
+            `⚠️ COLUMN: "${w.field}" (Category: ${w.category})\nGDPR WARNING: ${w.message}\n`
+          ).join("\n");
+          
+          return {
+            content: [
+              {
+                type: "text",
+                text: `[GDPR Compliance Error]: Storing sensitive personal student data may violate GDPR regulations.\n\n${formattedWarnings}\nTo override this and proceed, you must set "confirmSensitiveData": true in your next tool invocation, confirming that the teacher has reviewed this warning and has formal school consent.`
+              }
+            ]
+          };
+        }
+        
+        throw error;
+      }
     }
   );
 

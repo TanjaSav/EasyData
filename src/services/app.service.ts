@@ -11,6 +11,16 @@ function getDbPath(appId: string) {
 }
 
 export function createDefaultRetentionPolicy(now = new Date()): RetentionPolicy {
+  if (process.env.SANDBOX_MODE === "true") {
+    // 24 hours sandbox retention
+    const retainUntilDate = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    return {
+      policy: "custom",
+      retainUntil: retainUntilDate.toISOString().slice(0, 10),
+      note: "Sandbox environment limit: App database and uploaded files will be automatically deleted 24 hours after creation.",
+    };
+  }
+
   const year = now.getUTCMonth() <= 5 ? now.getUTCFullYear() : now.getUTCFullYear() + 1;
 
   return {
@@ -128,6 +138,16 @@ export function deleteApp(appId: string) {
   }
 
   fs.unlinkSync(dbPath);
+
+  // Clean up the generated single-page app HTML folder if it exists
+  const generatedDir = path.join("public", "generated", appId);
+  if (fs.existsSync(generatedDir)) {
+    try {
+      fs.rmSync(generatedDir, { recursive: true, force: true });
+    } catch (err) {
+      console.error(`Failed to delete generated directory ${generatedDir}:`, err);
+    }
+  }
 
   return {
     success: true,

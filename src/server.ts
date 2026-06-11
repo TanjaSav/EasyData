@@ -7,6 +7,9 @@ import appRoutes, { legacyRowsRouter, mcpRateLimit } from "./routes/app.routes.j
 import aiRoutes from "./routes/ai.routes.js";
 import { createEasyDataMcpServer } from "./mcp/server.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { deleteApp, findExpiredApps } from "./services/app.service.js";
+import { deleteStoredFilesForApp } from "./services/file.service.js";
+import { writeAuditEvent } from "./services/audit.service.js";
 
 // Load environment variables from .env
 dotenv.config();
@@ -159,4 +162,36 @@ app.use("/ai", aiRoutes);
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`EasyData running on port ${PORT}`);
+  
+  if (process.env.SANDBOX_MODE === "true") {
+    console.log("Sandbox mode is enabled. Databases will expire after 24 hours.");
+    console.log("Starting hourly background sandbox database and upload cleanup task...");
+    
+    // Run cleanup immediately on startup
+    runSandboxCleanup();
+    
+    // Then run every hour
+    setInterval(runSandboxCleanup, 60 * 60 * 1000);
+  }
 });
+
+function runSandboxCleanup() {
+  try {
+    const expiredApps = findExpiredApps();
+    if (expiredApps.length > 0) {
+      console.log(`[Sandbox Cleanup] Found ${expiredApps.length} expired apps to delete.`);
+      for (const app of expiredApps) {
+        const deletedFiles = deleteStoredFilesForApp(app.id);
+        deleteApp(app.id);
+        writeAuditEvent({
+          action: "retention_cleanup_delete_app",
+          appId: app.id,
+          details: { deletedFiles, reason: "Sandbox 24-hour expiration" },
+        });
+        console.log(`[Sandbox Cleanup] Successfully purged expired app ${app.id} (${app.name})`);
+      }
+    }
+  } catch (error) {
+    console.error("[Sandbox Cleanup Error] Failed to run periodic cleanup:", error);
+  }
+}

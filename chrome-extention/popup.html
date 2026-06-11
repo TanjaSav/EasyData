@@ -151,6 +151,28 @@
   </div>
 
   <div class="card">
+    <p class="card-title font-semibold">Server Configuration</p>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <select id="serverSelect" style="
+        width: 100%;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 8px;
+        font-size: 13px;
+        font-family: inherit;
+        outline: none;
+        cursor: pointer;
+      ">
+        <option value="https://easydata.is">Production (easydata.is)</option>
+        <option value="https://sandbox.easydata.is">Hosted Sandbox</option>
+        <option value="http://localhost:3000">Local (localhost:3000)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card">
     <div class="status-row">
       <span>EasyData Server:</span>
       <div class="indicator">
