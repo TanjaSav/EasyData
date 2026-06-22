@@ -16,16 +16,8 @@ Follow these steps to load the extension into Google Chrome:
    * **Path**: `C:/Users/eldva/Documents/github/easydata/chrome-extention`
 6. Click **Select Folder**. The **Gemini MCP Connector** extension will appear in your active extensions list.
 
-### Step B: Ensure the EasyData Server is Running
-The extension relies on a backend server to coordinate databases and code compilation:
-1. Open your terminal in the `easydata` repository directory.
-2. Start the local server by running:
-   ```bash
-   npm run dev
-   ```
-3. Keep this terminal window open. You can verify it is active by visiting [http://localhost:3000/health](http://localhost:3000/health) in your browser.
-
-*Note: If you are connecting remotely, the extension will communicate directly with `https://easydata.is/mcp`.*
+### Step B: Connection to easydata.is
+The extension is pre-configured to communicate directly with the production cloud service at `https://easydata.is`. You do not need to run a local server or open a terminal. 
 
 ---
 
@@ -123,10 +115,10 @@ A simple, one-sentence prompt will result in a basic app with generic fields. A 
 ---
 
 ## 4. Managing Your Apps & Data
-All applications you create are compiled and hosted on your local server:
-* **Viewing Apps:** Open `http://localhost:3000/generated/{appId}/` in your browser.
-* **Database Location:** All data is saved in individual SQLite databases located in the `data/apps/` folder of the project.
-* **Uploaded Files:** Files uploaded via forms are saved in the `uploads/` folder in the root directory.
+All applications you create are compiled and hosted on the cloud platform:
+* **Viewing Apps:** Open `https://easydata.is/generated/{appId}/` in your browser.
+* **Database Location**: Databases are managed securely in the cloud under isolation policies.
+* **Automatic Expiration**: Sandbox apps automatically expire and are wiped after 24 hours to protect privacy.
 
 ---
 
@@ -139,13 +131,3 @@ If the right-click loading screen disappears without pasting the link, your Chro
 3. Turn the extension toggle **Off**, then **On** again.
 4. Click the circular **Reload** icon on the extension card.
 5. Reload your `gemini.google.com` tab and try again.
-
-### OpenAI Rate Limit / Codex Key Errors
-If you see a rate limit or Codex account error during app creation, you need to configure your own API key:
-1. Open the `.env` file in the root of the `easydata` repository:
-   * File path: [C:/Users/eldva/Documents/github/easydata/.env](file:///C:/Users/eldva/Documents/github/easydata/.env)
-2. Add your OpenAI API key to the configuration:
-   ```env
-   OPENAI_API_KEY=your-actual-api-key-here
-   ```
-3. Restart the server in your terminal (`Ctrl + C` then `npm run dev`).
