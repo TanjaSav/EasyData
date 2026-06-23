@@ -151,6 +151,41 @@
   </div>
 
   <div class="card">
+    <p class="card-title font-semibold">Teacher App Templates</p>
+    <div style="display: flex; flex-direction: column; gap: 8px;">
+      <select id="templateSelect" style="
+        width: 100%;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 8px;
+        font-size: 13px;
+        font-family: inherit;
+        outline: none;
+        cursor: pointer;
+      ">
+        <option value="">Select a template...</option>
+        <option value="showcase">Student Project Showcase</option>
+        <option value="reading">Daily Reading Log</option>
+        <option value="exit">Classroom Exit Ticket</option>
+        <option value="attendance">Class Attendance Tracker</option>
+      </select>
+      <button id="copyTemplateBtn" class="btn btn-secondary" style="font-size: 12px; padding: 8px;" disabled>
+        Copy Template Prompt
+      </button>
+      <div id="copySuccessMsg" style="font-size: 11px; color: #10B981; display: none; text-align: center; font-weight: 500;">✓ Copied! Paste into Gemini.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="card-title font-semibold">GDPR & Privacy Safety</p>
+    <div style="font-size: 11px; color: var(--text-muted); line-height: 1.4;">
+      ⚠️ Classroom apps collecting student names, photos, or emails require parental consent under GDPR/Icelandic rules. Ensure you anonymize fields when possible!
+    </div>
+  </div>
+
+  <div class="card">
     <p class="card-title font-semibold">Server Configuration</p>
     <div style="display: flex; flex-direction: column; gap: 8px;">
       <select id="serverSelect" style="
