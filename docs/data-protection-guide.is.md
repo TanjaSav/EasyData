@@ -27,10 +27,11 @@ Notaðu sérsniðna dagsetningu ef verkefnið þarf að geyma gögn lengur. Ekki
 
 ## Útflutningur og eyðing
 
-Áður en gögnum er eytt má flytja þau út:
+Áður en gögnum er eytt má flytja þau út sem JSON eða CSV:
 
 ```http
 GET /apps/:id/export
+GET /apps/:id/export?format=csv
 ```
 
 Staka færslu má eyða með:

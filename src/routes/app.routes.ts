@@ -24,6 +24,7 @@ import {
   updateRow,
   deleteRow,
   exportAppData,
+  exportAppDataAsCsv,
 } from "../services/table.service.js";
 import {
   upload,
@@ -33,6 +34,7 @@ import {
 import { requireAdminToken, requireAppToken } from "../middleware/auth.middleware.js";
 import { rateLimit } from "../middleware/rate-limit.middleware.js";
 import { writeAuditEvent } from "../services/audit.service.js";
+import { recordClientError } from "../services/client-error.service.js";
 import {
   createSignedFileUrl,
   deleteStoredFile,
@@ -358,6 +360,16 @@ router.get("/:id/export", requireAppToken, (req, res) => {
     const app = getAppMeta(req.params.id as string);
     const { apiToken, ...safeApp } = app;
 
+    if (req.query.format === "csv") {
+      const exported = exportAppDataAsCsv(req.params.id as string);
+      const safeName = app.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || app.id;
+
+      res.setHeader("Content-Type", "text/csv; charset=utf-8");
+      res.setHeader("Content-Disposition", `attachment; filename="${safeName}-export.csv"`);
+      res.setHeader("X-EasyData-Exported-At", exported.exportedAt);
+      return res.send(exported.csv);
+    }
+
     return res.json({
       app: safeApp,
       data: exportAppData(req.params.id as string),
@@ -572,6 +584,17 @@ router.delete(
     }
   }
 );
+
+
+// Records browser-side errors from generated apps for debugging.
+router.post("/:id/client-errors", (req, res) => {
+  try {
+    const event = recordClientError(req.params.id as string, req.body ?? {});
+    return res.status(201).json({ success: true, event });
+  } catch (error: any) {
+    return res.status(400).json({ error: error.message });
+  }
+});
 
 // Returns the local upload endpoint for the selected app
 router.post("/:id/upload-url", requireAppToken, (req, res) => {

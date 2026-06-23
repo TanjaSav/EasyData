@@ -31,6 +31,7 @@ Teachers can export app data before deletion through:
 
 ```http
 GET /apps/:id/export
+GET /apps/:id/export?format=csv
 ```
 
 Teachers can delete individual records through:

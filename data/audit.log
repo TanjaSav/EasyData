@@ -39,3 +39,728 @@
 {"timestamp":"2026-06-05T08:41:59.576Z","action":"update_retention_policy","appId":"4cc8ff82-9411-40ee-8e87-c4a4d180747b","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
 {"timestamp":"2026-06-05T08:41:59.610Z","action":"retention_cleanup_delete_app","appId":"4cc8ff82-9411-40ee-8e87-c4a4d180747b","details":{"deletedFiles":0}}
 {"timestamp":"2026-06-05T08:46:03.659Z","action":"update_row","appId":"7853eb83-ab14-4b0a-abb5-e4dff42cf35f","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-09T13:48:58.073Z","action":"create_app","appId":"7b933e6f-3ee8-4ada-8f4c-64a85064d035"}
+{"timestamp":"2026-06-09T13:48:58.252Z","action":"create_table","appId":"7b933e6f-3ee8-4ada-8f4c-64a85064d035","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-09T13:48:58.278Z","action":"update_retention_policy","appId":"7b933e6f-3ee8-4ada-8f4c-64a85064d035","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-09T13:48:58.290Z","action":"alter_table","appId":"7b933e6f-3ee8-4ada-8f4c-64a85064d035","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-09T13:48:58.356Z","action":"insert_row","appId":"7b933e6f-3ee8-4ada-8f4c-64a85064d035","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-09T13:48:58.375Z","action":"insert_row","appId":"7b933e6f-3ee8-4ada-8f4c-64a85064d035","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-09T13:48:58.395Z","action":"create_app","appId":"ee3e4bd3-c30d-460b-bfc1-7e0a404383f1"}
+{"timestamp":"2026-06-09T13:48:58.402Z","action":"create_storage_upgrade_checkout","appId":"ee3e4bd3-c30d-460b-bfc1-7e0a404383f1","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-09T13:48:58.434Z","action":"upload_file","appId":"7b933e6f-3ee8-4ada-8f4c-64a85064d035","details":{"fileName":"7b933e6f-3ee8-4ada-8f4c-64a85064d035-4aa244a998c8fb2ad99910b590549372.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-09T13:48:58.470Z","action":"insert_row","appId":"7b933e6f-3ee8-4ada-8f4c-64a85064d035","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-09T13:48:58.484Z","action":"create_app","appId":"22663415-61fd-497b-b87b-fd2498a827fa"}
+{"timestamp":"2026-06-09T13:48:58.491Z","action":"create_table","appId":"22663415-61fd-497b-b87b-fd2498a827fa","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-09T13:48:58.507Z","action":"upload_file","appId":"22663415-61fd-497b-b87b-fd2498a827fa","details":{"fileName":"22663415-61fd-497b-b87b-fd2498a827fa-ee75813bf87e86a289e2bb4f12c22f5c.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-09T13:48:58.522Z","action":"insert_row","appId":"22663415-61fd-497b-b87b-fd2498a827fa","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-09T13:48:58.539Z","action":"delete_row","appId":"22663415-61fd-497b-b87b-fd2498a827fa","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-09T13:48:58.622Z","action":"create_app","appId":"326dd36a-c898-4997-9123-c5d9ffa54f6f"}
+{"timestamp":"2026-06-09T13:48:58.655Z","action":"create_storage_upgrade_checkout","appId":"326dd36a-c898-4997-9123-c5d9ffa54f6f","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-09T13:48:58.666Z","action":"activate_paid_storage","appId":"326dd36a-c898-4997-9123-c5d9ffa54f6f","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-09T13:48:58.682Z","action":"upload_file","appId":"326dd36a-c898-4997-9123-c5d9ffa54f6f","details":{"fileName":"326dd36a-c898-4997-9123-c5d9ffa54f6f-86e54641055f7a2c1788cc78a6e128f6.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-09T13:48:58.787Z","action":"create_app","appId":"bea8bc67-8bb4-4b7c-9f4e-a6203bb78807"}
+{"timestamp":"2026-06-09T13:48:58.814Z","action":"upload_file","appId":"bea8bc67-8bb4-4b7c-9f4e-a6203bb78807","details":{"fileName":"bea8bc67-8bb4-4b7c-9f4e-a6203bb78807-1b8dd051a2d60cc91d6ab46e1693d069.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-09T13:48:58.826Z","action":"delete_app","appId":"bea8bc67-8bb4-4b7c-9f4e-a6203bb78807","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-09T13:48:58.847Z","action":"create_app","appId":"3d9297b8-4374-493a-ac36-00a74ea0bdd1"}
+{"timestamp":"2026-06-09T13:48:58.857Z","action":"update_retention_policy","appId":"3d9297b8-4374-493a-ac36-00a74ea0bdd1","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-09T13:48:59.113Z","action":"retention_cleanup_delete_app","appId":"3d9297b8-4374-493a-ac36-00a74ea0bdd1","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-12T15:21:00.944Z","action":"insert_row","appId":"cc2c3aa2-6195-4763-a35a-0ef1c8816fa7","tableName":"progress","rowId":"1"}
+{"timestamp":"2026-06-12T15:21:31.240Z","action":"update_row","appId":"cc2c3aa2-6195-4763-a35a-0ef1c8816fa7","tableName":"progress","rowId":"1"}
+{"timestamp":"2026-06-12T15:22:52.506Z","action":"update_row","appId":"cc2c3aa2-6195-4763-a35a-0ef1c8816fa7","tableName":"progress","rowId":"1"}
+{"timestamp":"2026-06-12T15:23:13.507Z","action":"update_row","appId":"cc2c3aa2-6195-4763-a35a-0ef1c8816fa7","tableName":"progress","rowId":"1"}
+{"timestamp":"2026-06-12T15:25:11.067Z","action":"insert_row","appId":"cc2c3aa2-6195-4763-a35a-0ef1c8816fa7","tableName":"progress","rowId":"2"}
+{"timestamp":"2026-06-12T15:25:20.185Z","action":"update_row","appId":"cc2c3aa2-6195-4763-a35a-0ef1c8816fa7","tableName":"progress","rowId":"2"}
+{"timestamp":"2026-06-12T15:25:24.760Z","action":"update_row","appId":"cc2c3aa2-6195-4763-a35a-0ef1c8816fa7","tableName":"progress","rowId":"2"}
+{"timestamp":"2026-06-12T15:25:34.998Z","action":"update_row","appId":"cc2c3aa2-6195-4763-a35a-0ef1c8816fa7","tableName":"progress","rowId":"2"}
+{"timestamp":"2026-06-12T15:25:59.147Z","action":"update_row","appId":"cc2c3aa2-6195-4763-a35a-0ef1c8816fa7","tableName":"progress","rowId":"1"}
+{"timestamp":"2026-06-12T15:26:24.397Z","action":"update_row","appId":"cc2c3aa2-6195-4763-a35a-0ef1c8816fa7","tableName":"progress","rowId":"2"}
+{"timestamp":"2026-06-12T15:26:42.163Z","action":"update_row","appId":"cc2c3aa2-6195-4763-a35a-0ef1c8816fa7","tableName":"progress","rowId":"2"}
+{"timestamp":"2026-06-12T15:26:56.343Z","action":"insert_row","appId":"cc2c3aa2-6195-4763-a35a-0ef1c8816fa7","tableName":"progress","rowId":"3"}
+{"timestamp":"2026-06-12T15:27:53.255Z","action":"update_row","appId":"cc2c3aa2-6195-4763-a35a-0ef1c8816fa7","tableName":"progress","rowId":"3"}
+{"timestamp":"2026-06-22T09:25:37.293Z","action":"create_app","appId":"56704286-8d15-4ffc-bfbb-6eabcf4b8d75"}
+{"timestamp":"2026-06-22T09:25:37.479Z","action":"create_table","appId":"56704286-8d15-4ffc-bfbb-6eabcf4b8d75","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T09:25:37.497Z","action":"update_retention_policy","appId":"56704286-8d15-4ffc-bfbb-6eabcf4b8d75","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T09:25:37.511Z","action":"alter_table","appId":"56704286-8d15-4ffc-bfbb-6eabcf4b8d75","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T09:25:37.548Z","action":"insert_row","appId":"56704286-8d15-4ffc-bfbb-6eabcf4b8d75","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T09:25:37.566Z","action":"insert_row","appId":"56704286-8d15-4ffc-bfbb-6eabcf4b8d75","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T09:25:37.582Z","action":"create_app","appId":"940e3db2-b98a-4938-88ec-c7b8064b0f5c"}
+{"timestamp":"2026-06-22T09:25:37.589Z","action":"create_storage_upgrade_checkout","appId":"940e3db2-b98a-4938-88ec-c7b8064b0f5c","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T09:25:37.606Z","action":"upload_file","appId":"56704286-8d15-4ffc-bfbb-6eabcf4b8d75","details":{"fileName":"56704286-8d15-4ffc-bfbb-6eabcf4b8d75-a608a31df71de70abea5740ae995710b.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T09:25:37.634Z","action":"insert_row","appId":"56704286-8d15-4ffc-bfbb-6eabcf4b8d75","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T09:25:37.648Z","action":"create_app","appId":"88b74d06-eb9b-4519-99a2-57d6fb20a61c"}
+{"timestamp":"2026-06-22T09:25:37.653Z","action":"create_table","appId":"88b74d06-eb9b-4519-99a2-57d6fb20a61c","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T09:25:37.659Z","action":"upload_file","appId":"88b74d06-eb9b-4519-99a2-57d6fb20a61c","details":{"fileName":"88b74d06-eb9b-4519-99a2-57d6fb20a61c-8fa3c8378882d2a58ae1c5da069354a6.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T09:25:37.665Z","action":"insert_row","appId":"88b74d06-eb9b-4519-99a2-57d6fb20a61c","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T09:25:37.675Z","action":"delete_row","appId":"88b74d06-eb9b-4519-99a2-57d6fb20a61c","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T09:25:37.721Z","action":"create_app","appId":"efa9051e-28b7-4b70-a4c3-01dc331aceb9"}
+{"timestamp":"2026-06-22T09:25:37.736Z","action":"create_storage_upgrade_checkout","appId":"efa9051e-28b7-4b70-a4c3-01dc331aceb9","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T09:25:37.743Z","action":"activate_paid_storage","appId":"efa9051e-28b7-4b70-a4c3-01dc331aceb9","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T09:25:37.750Z","action":"upload_file","appId":"efa9051e-28b7-4b70-a4c3-01dc331aceb9","details":{"fileName":"efa9051e-28b7-4b70-a4c3-01dc331aceb9-b26f6678f25bbe5ba09e793528ab6ffe.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T09:25:37.818Z","action":"create_app","appId":"aafcdba3-d551-4c05-8bbb-dcbf9d0a558b"}
+{"timestamp":"2026-06-22T09:25:37.825Z","action":"upload_file","appId":"aafcdba3-d551-4c05-8bbb-dcbf9d0a558b","details":{"fileName":"aafcdba3-d551-4c05-8bbb-dcbf9d0a558b-1ff605ad75202ce3ec28ad007ceb95ff.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T09:25:37.829Z","action":"delete_app","appId":"aafcdba3-d551-4c05-8bbb-dcbf9d0a558b","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T09:25:37.840Z","action":"create_app","appId":"e66ea5a1-9d75-47d3-b839-86d7fa2006e8"}
+{"timestamp":"2026-06-22T09:25:37.850Z","action":"update_retention_policy","appId":"e66ea5a1-9d75-47d3-b839-86d7fa2006e8","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T09:25:37.946Z","action":"retention_cleanup_delete_app","appId":"e66ea5a1-9d75-47d3-b839-86d7fa2006e8","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T10:02:57.840Z","action":"create_app","appId":"29f00b4f-c8e3-4e1a-963e-022ed4f8b9c1"}
+{"timestamp":"2026-06-22T10:02:58.110Z","action":"create_table","appId":"29f00b4f-c8e3-4e1a-963e-022ed4f8b9c1","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T10:02:58.153Z","action":"update_retention_policy","appId":"29f00b4f-c8e3-4e1a-963e-022ed4f8b9c1","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T10:02:58.178Z","action":"alter_table","appId":"29f00b4f-c8e3-4e1a-963e-022ed4f8b9c1","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T10:02:58.275Z","action":"insert_row","appId":"29f00b4f-c8e3-4e1a-963e-022ed4f8b9c1","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T10:02:58.328Z","action":"insert_row","appId":"29f00b4f-c8e3-4e1a-963e-022ed4f8b9c1","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T10:02:58.358Z","action":"create_app","appId":"79d5c5c4-c22c-4c43-97d9-86b19a0ffe47"}
+{"timestamp":"2026-06-22T10:02:58.372Z","action":"create_storage_upgrade_checkout","appId":"79d5c5c4-c22c-4c43-97d9-86b19a0ffe47","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T10:02:58.412Z","action":"upload_file","appId":"29f00b4f-c8e3-4e1a-963e-022ed4f8b9c1","details":{"fileName":"29f00b4f-c8e3-4e1a-963e-022ed4f8b9c1-5e09cab34d375cef1c1e4da6cda0ebb3.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T10:02:58.490Z","action":"insert_row","appId":"29f00b4f-c8e3-4e1a-963e-022ed4f8b9c1","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T10:02:58.516Z","action":"create_app","appId":"6cfbf41d-c10e-4628-9c0a-9430f4b8aa81"}
+{"timestamp":"2026-06-22T10:02:58.528Z","action":"create_table","appId":"6cfbf41d-c10e-4628-9c0a-9430f4b8aa81","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T10:02:58.542Z","action":"upload_file","appId":"6cfbf41d-c10e-4628-9c0a-9430f4b8aa81","details":{"fileName":"6cfbf41d-c10e-4628-9c0a-9430f4b8aa81-b91266fadcffea6908c2ead994075e78.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T10:02:58.552Z","action":"insert_row","appId":"6cfbf41d-c10e-4628-9c0a-9430f4b8aa81","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T10:02:58.559Z","action":"delete_row","appId":"6cfbf41d-c10e-4628-9c0a-9430f4b8aa81","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T10:02:58.588Z","action":"create_app","appId":"1cf1008f-98b9-4b5d-8d59-9974b2ee8f4a"}
+{"timestamp":"2026-06-22T10:02:58.620Z","action":"create_storage_upgrade_checkout","appId":"1cf1008f-98b9-4b5d-8d59-9974b2ee8f4a","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T10:02:58.635Z","action":"activate_paid_storage","appId":"1cf1008f-98b9-4b5d-8d59-9974b2ee8f4a","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T10:02:58.649Z","action":"upload_file","appId":"1cf1008f-98b9-4b5d-8d59-9974b2ee8f4a","details":{"fileName":"1cf1008f-98b9-4b5d-8d59-9974b2ee8f4a-d53938c8689dc462705c268e37d6ad83.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T10:02:58.776Z","action":"create_app","appId":"6220fa9a-7f6a-4820-8e3c-b426a06e4e17"}
+{"timestamp":"2026-06-22T10:02:58.792Z","action":"upload_file","appId":"6220fa9a-7f6a-4820-8e3c-b426a06e4e17","details":{"fileName":"6220fa9a-7f6a-4820-8e3c-b426a06e4e17-c806da8bba45f9f52b543d2c6bb309ac.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T10:02:58.800Z","action":"delete_app","appId":"6220fa9a-7f6a-4820-8e3c-b426a06e4e17","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T10:02:58.812Z","action":"create_app","appId":"4f4ff725-4af9-4166-85f4-894a2d08710b"}
+{"timestamp":"2026-06-22T10:02:58.825Z","action":"update_retention_policy","appId":"4f4ff725-4af9-4166-85f4-894a2d08710b","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T10:02:59.100Z","action":"retention_cleanup_delete_app","appId":"4f4ff725-4af9-4166-85f4-894a2d08710b","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T10:03:46.790Z","action":"create_app","appId":"998df63d-60f5-43bd-a7a1-941c8431f656"}
+{"timestamp":"2026-06-22T10:03:46.904Z","action":"create_table","appId":"998df63d-60f5-43bd-a7a1-941c8431f656","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T10:03:46.922Z","action":"update_retention_policy","appId":"998df63d-60f5-43bd-a7a1-941c8431f656","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T10:03:46.935Z","action":"alter_table","appId":"998df63d-60f5-43bd-a7a1-941c8431f656","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T10:03:47.002Z","action":"insert_row","appId":"998df63d-60f5-43bd-a7a1-941c8431f656","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T10:03:47.049Z","action":"insert_row","appId":"998df63d-60f5-43bd-a7a1-941c8431f656","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T10:03:47.080Z","action":"create_app","appId":"ba3e1694-9754-47ae-b5d3-8e7daf20eefb"}
+{"timestamp":"2026-06-22T10:03:47.088Z","action":"create_storage_upgrade_checkout","appId":"ba3e1694-9754-47ae-b5d3-8e7daf20eefb","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T10:03:47.140Z","action":"upload_file","appId":"998df63d-60f5-43bd-a7a1-941c8431f656","details":{"fileName":"998df63d-60f5-43bd-a7a1-941c8431f656-775750ccd645c0f5ee2147c294872888.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T10:03:47.223Z","action":"insert_row","appId":"998df63d-60f5-43bd-a7a1-941c8431f656","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T10:03:47.242Z","action":"create_app","appId":"872f9408-ffed-46c6-9356-8a5e4ce0e917"}
+{"timestamp":"2026-06-22T10:03:47.250Z","action":"create_table","appId":"872f9408-ffed-46c6-9356-8a5e4ce0e917","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T10:03:47.260Z","action":"upload_file","appId":"872f9408-ffed-46c6-9356-8a5e4ce0e917","details":{"fileName":"872f9408-ffed-46c6-9356-8a5e4ce0e917-7d7a38dc1f597a4ee2f0c920302ae8d9.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T10:03:47.271Z","action":"insert_row","appId":"872f9408-ffed-46c6-9356-8a5e4ce0e917","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T10:03:47.293Z","action":"delete_row","appId":"872f9408-ffed-46c6-9356-8a5e4ce0e917","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T10:03:47.345Z","action":"create_app","appId":"b7472331-6eea-4e96-8989-a53d95d7ba2c"}
+{"timestamp":"2026-06-22T10:03:47.364Z","action":"create_storage_upgrade_checkout","appId":"b7472331-6eea-4e96-8989-a53d95d7ba2c","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T10:03:47.376Z","action":"activate_paid_storage","appId":"b7472331-6eea-4e96-8989-a53d95d7ba2c","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T10:03:47.390Z","action":"upload_file","appId":"b7472331-6eea-4e96-8989-a53d95d7ba2c","details":{"fileName":"b7472331-6eea-4e96-8989-a53d95d7ba2c-c047b1347313470b4bf99201e95e5b33.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T10:03:47.512Z","action":"create_app","appId":"98eb8df2-30d4-47a9-869a-dbf57e8f0312"}
+{"timestamp":"2026-06-22T10:03:47.533Z","action":"upload_file","appId":"98eb8df2-30d4-47a9-869a-dbf57e8f0312","details":{"fileName":"98eb8df2-30d4-47a9-869a-dbf57e8f0312-d6d4516eb931500edaf2a4399ef147c6.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T10:03:47.546Z","action":"delete_app","appId":"98eb8df2-30d4-47a9-869a-dbf57e8f0312","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T10:03:47.576Z","action":"create_app","appId":"0d041fa4-ab4c-4d6d-936d-5a5df0dce70f"}
+{"timestamp":"2026-06-22T10:03:47.589Z","action":"update_retention_policy","appId":"0d041fa4-ab4c-4d6d-936d-5a5df0dce70f","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T10:03:47.831Z","action":"retention_cleanup_delete_app","appId":"0d041fa4-ab4c-4d6d-936d-5a5df0dce70f","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T10:04:17.917Z","action":"create_app","appId":"b7898c95-cd30-4017-ac9e-d3bd70bd293f"}
+{"timestamp":"2026-06-22T10:04:18.103Z","action":"create_table","appId":"b7898c95-cd30-4017-ac9e-d3bd70bd293f","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T10:04:18.120Z","action":"update_retention_policy","appId":"b7898c95-cd30-4017-ac9e-d3bd70bd293f","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T10:04:18.129Z","action":"alter_table","appId":"b7898c95-cd30-4017-ac9e-d3bd70bd293f","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T10:04:18.180Z","action":"insert_row","appId":"b7898c95-cd30-4017-ac9e-d3bd70bd293f","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T10:04:18.209Z","action":"insert_row","appId":"b7898c95-cd30-4017-ac9e-d3bd70bd293f","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T10:04:18.238Z","action":"create_app","appId":"b694022d-0b7d-40b7-a72e-6bc102595b48"}
+{"timestamp":"2026-06-22T10:04:18.244Z","action":"create_storage_upgrade_checkout","appId":"b694022d-0b7d-40b7-a72e-6bc102595b48","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T10:04:18.272Z","action":"upload_file","appId":"b7898c95-cd30-4017-ac9e-d3bd70bd293f","details":{"fileName":"b7898c95-cd30-4017-ac9e-d3bd70bd293f-5f8d912fe67ad818dd5df2639f294957.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T10:04:18.305Z","action":"insert_row","appId":"b7898c95-cd30-4017-ac9e-d3bd70bd293f","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T10:04:18.326Z","action":"create_app","appId":"d1e70616-7810-4e9a-9a28-46150703fa94"}
+{"timestamp":"2026-06-22T10:04:18.337Z","action":"create_table","appId":"d1e70616-7810-4e9a-9a28-46150703fa94","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T10:04:18.353Z","action":"upload_file","appId":"d1e70616-7810-4e9a-9a28-46150703fa94","details":{"fileName":"d1e70616-7810-4e9a-9a28-46150703fa94-89cef4f373d995d07e160b5cb3bff08a.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T10:04:18.362Z","action":"insert_row","appId":"d1e70616-7810-4e9a-9a28-46150703fa94","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T10:04:18.370Z","action":"delete_row","appId":"d1e70616-7810-4e9a-9a28-46150703fa94","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T10:04:18.409Z","action":"create_app","appId":"2fc4b56a-61db-4cdb-9239-f6b125f5242e"}
+{"timestamp":"2026-06-22T10:04:18.438Z","action":"create_storage_upgrade_checkout","appId":"2fc4b56a-61db-4cdb-9239-f6b125f5242e","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T10:04:18.449Z","action":"activate_paid_storage","appId":"2fc4b56a-61db-4cdb-9239-f6b125f5242e","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T10:04:18.462Z","action":"upload_file","appId":"2fc4b56a-61db-4cdb-9239-f6b125f5242e","details":{"fileName":"2fc4b56a-61db-4cdb-9239-f6b125f5242e-525264ef130543b8c9bc5e5d62340e5b.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T10:04:18.650Z","action":"create_app","appId":"e0d0fe1a-b44f-43e8-aa86-40d3c9c56e79"}
+{"timestamp":"2026-06-22T10:04:18.667Z","action":"upload_file","appId":"e0d0fe1a-b44f-43e8-aa86-40d3c9c56e79","details":{"fileName":"e0d0fe1a-b44f-43e8-aa86-40d3c9c56e79-8e744dd52b744deb48a8e582847a55ed.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T10:04:18.678Z","action":"delete_app","appId":"e0d0fe1a-b44f-43e8-aa86-40d3c9c56e79","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T10:04:18.706Z","action":"create_app","appId":"055d2796-b7d6-4bd4-9879-87a384f7d5c1"}
+{"timestamp":"2026-06-22T10:04:18.726Z","action":"update_retention_policy","appId":"055d2796-b7d6-4bd4-9879-87a384f7d5c1","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T10:04:18.970Z","action":"retention_cleanup_delete_app","appId":"055d2796-b7d6-4bd4-9879-87a384f7d5c1","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T10:21:07.780Z","action":"insert_row","appId":"dfb758c1-0aad-4b72-883f-9fa32d90e26f","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T10:21:36.232Z","action":"update_row","appId":"dfb758c1-0aad-4b72-883f-9fa32d90e26f","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T10:23:44.687Z","action":"insert_row","appId":"512a68df-4210-44c6-a878-9cf22abe2daa","tableName":"scores","rowId":"1"}
+{"timestamp":"2026-06-22T10:24:14.181Z","action":"insert_row","appId":"512a68df-4210-44c6-a878-9cf22abe2daa","tableName":"scores","rowId":"2"}
+{"timestamp":"2026-06-22T10:26:16.404Z","action":"insert_row","appId":"512a68df-4210-44c6-a878-9cf22abe2daa","tableName":"scores","rowId":"3"}
+{"timestamp":"2026-06-22T10:27:50.095Z","action":"insert_row","appId":"512a68df-4210-44c6-a878-9cf22abe2daa","tableName":"scores","rowId":"4"}
+{"timestamp":"2026-06-22T11:10:20.035Z","action":"insert_row","appId":"da573b91-01b4-4010-8853-9c826160390e","tableName":"submissions","rowId":"4"}
+{"timestamp":"2026-06-22T11:10:59.392Z","action":"insert_row","appId":"da573b91-01b4-4010-8853-9c826160390e","tableName":"submissions","rowId":"5"}
+{"timestamp":"2026-06-22T11:16:02.386Z","action":"insert_row","appId":"781b8dc4-f693-49f5-9f9d-d35b0d6c0a5e","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T11:16:13.083Z","action":"insert_row","appId":"781b8dc4-f693-49f5-9f9d-d35b0d6c0a5e","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T11:16:21.386Z","action":"insert_row","appId":"781b8dc4-f693-49f5-9f9d-d35b0d6c0a5e","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T11:17:06.783Z","action":"upload_file","appId":"781b8dc4-f693-49f5-9f9d-d35b0d6c0a5e","details":{"fileName":"781b8dc4-f693-49f5-9f9d-d35b0d6c0a5e-5c017acf4551328121e16e74ece23ebb.png","size":1395238,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T11:20:56.643Z","action":"create_app","appId":"4d314447-bcc6-41f7-a46d-973c1128ce49"}
+{"timestamp":"2026-06-22T11:20:57.267Z","action":"create_table","appId":"4d314447-bcc6-41f7-a46d-973c1128ce49","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T11:20:57.295Z","action":"update_retention_policy","appId":"4d314447-bcc6-41f7-a46d-973c1128ce49","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T11:20:57.318Z","action":"alter_table","appId":"4d314447-bcc6-41f7-a46d-973c1128ce49","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T11:20:57.508Z","action":"insert_row","appId":"4d314447-bcc6-41f7-a46d-973c1128ce49","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T11:20:57.576Z","action":"insert_row","appId":"4d314447-bcc6-41f7-a46d-973c1128ce49","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T11:20:57.633Z","action":"create_app","appId":"b4062b0e-959f-4bad-b1e2-9df50c7b2ca0"}
+{"timestamp":"2026-06-22T11:20:57.653Z","action":"create_storage_upgrade_checkout","appId":"b4062b0e-959f-4bad-b1e2-9df50c7b2ca0","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T11:20:57.782Z","action":"upload_file","appId":"4d314447-bcc6-41f7-a46d-973c1128ce49","details":{"fileName":"4d314447-bcc6-41f7-a46d-973c1128ce49-2e959e16f1bb16c6be7ff34eb8bb47f1.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T11:20:57.925Z","action":"insert_row","appId":"4d314447-bcc6-41f7-a46d-973c1128ce49","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T11:20:58.002Z","action":"create_app","appId":"ff2643b4-6149-4910-897b-968f0c8c5506"}
+{"timestamp":"2026-06-22T11:20:58.033Z","action":"create_table","appId":"ff2643b4-6149-4910-897b-968f0c8c5506","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T11:20:58.082Z","action":"upload_file","appId":"ff2643b4-6149-4910-897b-968f0c8c5506","details":{"fileName":"ff2643b4-6149-4910-897b-968f0c8c5506-ed2c7e95bd95e6c123de5b730e064ec9.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T11:20:58.096Z","action":"insert_row","appId":"ff2643b4-6149-4910-897b-968f0c8c5506","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T11:20:58.115Z","action":"delete_row","appId":"ff2643b4-6149-4910-897b-968f0c8c5506","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T11:20:58.199Z","action":"create_app","appId":"d6f005ed-cad5-47ca-b7ce-ea968c15b215"}
+{"timestamp":"2026-06-22T11:20:58.259Z","action":"create_storage_upgrade_checkout","appId":"d6f005ed-cad5-47ca-b7ce-ea968c15b215","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T11:20:58.298Z","action":"activate_paid_storage","appId":"d6f005ed-cad5-47ca-b7ce-ea968c15b215","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T11:20:58.324Z","action":"upload_file","appId":"d6f005ed-cad5-47ca-b7ce-ea968c15b215","details":{"fileName":"d6f005ed-cad5-47ca-b7ce-ea968c15b215-62161fcfaaef59eb38ef9c2b22456289.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T11:20:58.657Z","action":"create_app","appId":"d93e5cbd-dbab-4c3e-9990-1d688948d678"}
+{"timestamp":"2026-06-22T11:20:58.705Z","action":"upload_file","appId":"d93e5cbd-dbab-4c3e-9990-1d688948d678","details":{"fileName":"d93e5cbd-dbab-4c3e-9990-1d688948d678-322b6394e7cc615a7a540720334cb8b6.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T11:20:58.720Z","action":"delete_app","appId":"d93e5cbd-dbab-4c3e-9990-1d688948d678","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T11:20:58.757Z","action":"create_app","appId":"e10746f6-0dfc-4b4c-b9a3-89e684fe7a99"}
+{"timestamp":"2026-06-22T11:20:58.779Z","action":"update_retention_policy","appId":"e10746f6-0dfc-4b4c-b9a3-89e684fe7a99","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T11:20:59.527Z","action":"retention_cleanup_delete_app","appId":"e10746f6-0dfc-4b4c-b9a3-89e684fe7a99","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T11:22:23.581Z","action":"insert_row","appId":"da573b91-01b4-4010-8853-9c826160390e","tableName":"submissions","rowId":"6"}
+{"timestamp":"2026-06-22T11:24:09.656Z","action":"upload_file","appId":"781b8dc4-f693-49f5-9f9d-d35b0d6c0a5e","details":{"fileName":"781b8dc4-f693-49f5-9f9d-d35b0d6c0a5e-633b5bd9b45479f4e1ea0051b9f54d19.jpg","size":19702,"mimetype":"image/jpeg"}}
+{"timestamp":"2026-06-22T11:24:14.350Z","action":"insert_row","appId":"781b8dc4-f693-49f5-9f9d-d35b0d6c0a5e","tableName":"submissions","rowId":"4"}
+{"timestamp":"2026-06-22T11:41:18.791Z","action":"upload_file","appId":"762884c7-700b-4dcb-a065-e364f995aa9e","details":{"fileName":"762884c7-700b-4dcb-a065-e364f995aa9e-7d6bf069a837094bb755094dcc44ae1e.jpg","size":19702,"mimetype":"image/jpeg"}}
+{"timestamp":"2026-06-22T11:41:18.807Z","action":"insert_row","appId":"762884c7-700b-4dcb-a065-e364f995aa9e","tableName":"submissions","rowId":"4"}
+{"timestamp":"2026-06-22T11:46:50.086Z","action":"insert_row","appId":"da573b91-01b4-4010-8853-9c826160390e","tableName":"submissions","rowId":"7"}
+{"timestamp":"2026-06-22T12:34:17.698Z","action":"create_app","appId":"15616fe2-efc3-47e4-98ec-44428c7fc88d"}
+{"timestamp":"2026-06-22T12:34:17.972Z","action":"create_table","appId":"15616fe2-efc3-47e4-98ec-44428c7fc88d","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T12:34:17.994Z","action":"update_retention_policy","appId":"15616fe2-efc3-47e4-98ec-44428c7fc88d","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T12:34:18.022Z","action":"alter_table","appId":"15616fe2-efc3-47e4-98ec-44428c7fc88d","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T12:34:18.178Z","action":"insert_row","appId":"15616fe2-efc3-47e4-98ec-44428c7fc88d","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T12:34:18.223Z","action":"insert_row","appId":"15616fe2-efc3-47e4-98ec-44428c7fc88d","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T12:34:18.251Z","action":"create_app","appId":"353eab18-fcd5-4624-87f2-bd6377880fe6"}
+{"timestamp":"2026-06-22T12:34:18.262Z","action":"create_storage_upgrade_checkout","appId":"353eab18-fcd5-4624-87f2-bd6377880fe6","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T12:34:18.440Z","action":"upload_file","appId":"15616fe2-efc3-47e4-98ec-44428c7fc88d","details":{"fileName":"15616fe2-efc3-47e4-98ec-44428c7fc88d-2ac7852c3fb4d0392ac79744aeed9fe4.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T12:34:18.496Z","action":"insert_row","appId":"15616fe2-efc3-47e4-98ec-44428c7fc88d","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T12:34:18.546Z","action":"create_app","appId":"6ce82063-7f8d-4980-a230-250942606404"}
+{"timestamp":"2026-06-22T12:34:18.596Z","action":"create_table","appId":"6ce82063-7f8d-4980-a230-250942606404","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T12:34:18.637Z","action":"upload_file","appId":"6ce82063-7f8d-4980-a230-250942606404","details":{"fileName":"6ce82063-7f8d-4980-a230-250942606404-61dc5e1060bf1035e2c3563b980af69d.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T12:34:18.655Z","action":"insert_row","appId":"6ce82063-7f8d-4980-a230-250942606404","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T12:34:18.669Z","action":"delete_row","appId":"6ce82063-7f8d-4980-a230-250942606404","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T12:34:18.753Z","action":"create_app","appId":"215af053-8bda-444d-99e2-9a0c6ac02b2b"}
+{"timestamp":"2026-06-22T12:34:18.828Z","action":"create_storage_upgrade_checkout","appId":"215af053-8bda-444d-99e2-9a0c6ac02b2b","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T12:34:18.872Z","action":"activate_paid_storage","appId":"215af053-8bda-444d-99e2-9a0c6ac02b2b","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T12:34:18.918Z","action":"upload_file","appId":"215af053-8bda-444d-99e2-9a0c6ac02b2b","details":{"fileName":"215af053-8bda-444d-99e2-9a0c6ac02b2b-e29b99e8ceba06565318a0aeee5c329f.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T12:34:19.205Z","action":"create_app","appId":"f0fa1b8d-189c-4394-acf3-be6524dc351d"}
+{"timestamp":"2026-06-22T12:34:19.248Z","action":"upload_file","appId":"f0fa1b8d-189c-4394-acf3-be6524dc351d","details":{"fileName":"f0fa1b8d-189c-4394-acf3-be6524dc351d-65e593f8e8a03ac8a491ac6e4f3bce90.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T12:34:19.273Z","action":"delete_app","appId":"f0fa1b8d-189c-4394-acf3-be6524dc351d","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T12:34:19.325Z","action":"create_app","appId":"db430643-dca2-4199-8840-191086f3f4ba"}
+{"timestamp":"2026-06-22T12:34:19.357Z","action":"update_retention_policy","appId":"db430643-dca2-4199-8840-191086f3f4ba","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T12:34:19.846Z","action":"retention_cleanup_delete_app","appId":"db430643-dca2-4199-8840-191086f3f4ba","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T13:08:52.357Z","action":"create_app","appId":"1115efba-eeb7-486c-8d77-246eee320650"}
+{"timestamp":"2026-06-22T13:08:52.576Z","action":"create_table","appId":"1115efba-eeb7-486c-8d77-246eee320650","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:08:52.622Z","action":"update_retention_policy","appId":"1115efba-eeb7-486c-8d77-246eee320650","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T13:08:52.639Z","action":"alter_table","appId":"1115efba-eeb7-486c-8d77-246eee320650","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:08:52.711Z","action":"insert_row","appId":"1115efba-eeb7-486c-8d77-246eee320650","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T13:08:52.743Z","action":"insert_row","appId":"1115efba-eeb7-486c-8d77-246eee320650","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T13:08:52.799Z","action":"create_app","appId":"37688308-761b-4690-bf99-f173d912784a"}
+{"timestamp":"2026-06-22T13:08:52.808Z","action":"create_storage_upgrade_checkout","appId":"37688308-761b-4690-bf99-f173d912784a","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T13:08:52.902Z","action":"upload_file","appId":"1115efba-eeb7-486c-8d77-246eee320650","details":{"fileName":"1115efba-eeb7-486c-8d77-246eee320650-671c0bfed76c145d74f8804b267e39c7.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:08:52.944Z","action":"insert_row","appId":"1115efba-eeb7-486c-8d77-246eee320650","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T13:08:52.978Z","action":"create_app","appId":"73ffe60c-e6f3-4304-845a-27f976128fc9"}
+{"timestamp":"2026-06-22T13:08:52.989Z","action":"create_table","appId":"73ffe60c-e6f3-4304-845a-27f976128fc9","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:08:53.006Z","action":"upload_file","appId":"73ffe60c-e6f3-4304-845a-27f976128fc9","details":{"fileName":"73ffe60c-e6f3-4304-845a-27f976128fc9-e0870b26920ce74afe4518df222b8a7d.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:08:53.015Z","action":"insert_row","appId":"73ffe60c-e6f3-4304-845a-27f976128fc9","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T13:08:53.042Z","action":"delete_row","appId":"73ffe60c-e6f3-4304-845a-27f976128fc9","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T13:08:53.078Z","action":"create_app","appId":"796c250a-9fe5-4e4a-9a9b-6bb79f3ab86a"}
+{"timestamp":"2026-06-22T13:08:53.105Z","action":"create_storage_upgrade_checkout","appId":"796c250a-9fe5-4e4a-9a9b-6bb79f3ab86a","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T13:08:53.126Z","action":"activate_paid_storage","appId":"796c250a-9fe5-4e4a-9a9b-6bb79f3ab86a","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T13:08:53.140Z","action":"upload_file","appId":"796c250a-9fe5-4e4a-9a9b-6bb79f3ab86a","details":{"fileName":"796c250a-9fe5-4e4a-9a9b-6bb79f3ab86a-3b379dfc37361dcac01099c548dbffcd.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:08:53.264Z","action":"create_app","appId":"b0696d57-20a0-48ad-ab78-7dd31c051c6e"}
+{"timestamp":"2026-06-22T13:08:53.274Z","action":"upload_file","appId":"b0696d57-20a0-48ad-ab78-7dd31c051c6e","details":{"fileName":"b0696d57-20a0-48ad-ab78-7dd31c051c6e-c207393b1ccf1a9bbd86e082e35ef72f.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:08:53.279Z","action":"delete_app","appId":"b0696d57-20a0-48ad-ab78-7dd31c051c6e","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T13:08:53.302Z","action":"create_app","appId":"3fa9fae9-786c-44ff-9ee4-b1615ae8e2a3"}
+{"timestamp":"2026-06-22T13:08:53.326Z","action":"update_retention_policy","appId":"3fa9fae9-786c-44ff-9ee4-b1615ae8e2a3","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T13:08:53.598Z","action":"retention_cleanup_delete_app","appId":"3fa9fae9-786c-44ff-9ee4-b1615ae8e2a3","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T13:09:50.175Z","action":"create_app","appId":"040f745f-83aa-45e3-b571-fa833537094a"}
+{"timestamp":"2026-06-22T13:09:50.283Z","action":"create_table","appId":"040f745f-83aa-45e3-b571-fa833537094a","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:09:50.296Z","action":"update_retention_policy","appId":"040f745f-83aa-45e3-b571-fa833537094a","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T13:09:50.305Z","action":"alter_table","appId":"040f745f-83aa-45e3-b571-fa833537094a","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:09:50.340Z","action":"insert_row","appId":"040f745f-83aa-45e3-b571-fa833537094a","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T13:09:50.355Z","action":"insert_row","appId":"040f745f-83aa-45e3-b571-fa833537094a","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T13:09:50.375Z","action":"create_app","appId":"8a53a743-94eb-4b9f-a112-66b43ba91173"}
+{"timestamp":"2026-06-22T13:09:50.414Z","action":"create_storage_upgrade_checkout","appId":"8a53a743-94eb-4b9f-a112-66b43ba91173","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T13:09:50.461Z","action":"upload_file","appId":"040f745f-83aa-45e3-b571-fa833537094a","details":{"fileName":"040f745f-83aa-45e3-b571-fa833537094a-a3f655289e9c9a26c0862aad9e0d7be9.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:09:50.492Z","action":"insert_row","appId":"040f745f-83aa-45e3-b571-fa833537094a","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T13:09:50.507Z","action":"create_app","appId":"e2150176-30bb-4a76-8830-a39cd9e61810"}
+{"timestamp":"2026-06-22T13:09:50.514Z","action":"create_table","appId":"e2150176-30bb-4a76-8830-a39cd9e61810","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:09:50.520Z","action":"upload_file","appId":"e2150176-30bb-4a76-8830-a39cd9e61810","details":{"fileName":"e2150176-30bb-4a76-8830-a39cd9e61810-13a4a2d9ad678f562de76e64e67cfc03.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:09:50.526Z","action":"insert_row","appId":"e2150176-30bb-4a76-8830-a39cd9e61810","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T13:09:50.532Z","action":"delete_row","appId":"e2150176-30bb-4a76-8830-a39cd9e61810","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T13:09:50.555Z","action":"create_app","appId":"d991569b-262b-40c4-8d72-078a609ba681"}
+{"timestamp":"2026-06-22T13:09:50.567Z","action":"create_storage_upgrade_checkout","appId":"d991569b-262b-40c4-8d72-078a609ba681","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T13:09:50.575Z","action":"activate_paid_storage","appId":"d991569b-262b-40c4-8d72-078a609ba681","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T13:09:50.583Z","action":"upload_file","appId":"d991569b-262b-40c4-8d72-078a609ba681","details":{"fileName":"d991569b-262b-40c4-8d72-078a609ba681-4afc2c1792db538b92600b5e882df380.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:09:50.650Z","action":"create_app","appId":"b4e9afbf-7481-4021-a430-d1211dae2085"}
+{"timestamp":"2026-06-22T13:09:50.663Z","action":"upload_file","appId":"b4e9afbf-7481-4021-a430-d1211dae2085","details":{"fileName":"b4e9afbf-7481-4021-a430-d1211dae2085-c195fd0dced6943b85d3ff55db699da1.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:09:50.667Z","action":"delete_app","appId":"b4e9afbf-7481-4021-a430-d1211dae2085","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T13:09:50.677Z","action":"create_app","appId":"a76a0595-ebc7-413d-a808-8eb5a8ac6e54"}
+{"timestamp":"2026-06-22T13:09:50.684Z","action":"update_retention_policy","appId":"a76a0595-ebc7-413d-a808-8eb5a8ac6e54","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T13:09:50.806Z","action":"retention_cleanup_delete_app","appId":"a76a0595-ebc7-413d-a808-8eb5a8ac6e54","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T13:11:49.666Z","action":"create_app","appId":"39f94dbb-3bd9-4512-aca2-f9f2eba4b50f"}
+{"timestamp":"2026-06-22T13:11:49.770Z","action":"create_table","appId":"39f94dbb-3bd9-4512-aca2-f9f2eba4b50f","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:11:49.792Z","action":"update_retention_policy","appId":"39f94dbb-3bd9-4512-aca2-f9f2eba4b50f","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T13:11:49.803Z","action":"alter_table","appId":"39f94dbb-3bd9-4512-aca2-f9f2eba4b50f","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:11:49.845Z","action":"insert_row","appId":"39f94dbb-3bd9-4512-aca2-f9f2eba4b50f","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T13:11:49.861Z","action":"insert_row","appId":"39f94dbb-3bd9-4512-aca2-f9f2eba4b50f","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T13:11:49.880Z","action":"create_app","appId":"b4c19a20-e840-4808-8e35-5f3c6b1140ee"}
+{"timestamp":"2026-06-22T13:11:49.902Z","action":"create_storage_upgrade_checkout","appId":"b4c19a20-e840-4808-8e35-5f3c6b1140ee","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T13:11:49.932Z","action":"upload_file","appId":"39f94dbb-3bd9-4512-aca2-f9f2eba4b50f","details":{"fileName":"39f94dbb-3bd9-4512-aca2-f9f2eba4b50f-49ebfd46c6efe1b38b3b08f636e602af.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:11:49.963Z","action":"insert_row","appId":"39f94dbb-3bd9-4512-aca2-f9f2eba4b50f","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T13:11:49.977Z","action":"create_app","appId":"301a1a4a-5776-411d-a2d8-e0e6b93fd0cb"}
+{"timestamp":"2026-06-22T13:11:49.984Z","action":"create_table","appId":"301a1a4a-5776-411d-a2d8-e0e6b93fd0cb","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:11:49.992Z","action":"upload_file","appId":"301a1a4a-5776-411d-a2d8-e0e6b93fd0cb","details":{"fileName":"301a1a4a-5776-411d-a2d8-e0e6b93fd0cb-c78405dd5f9cd94b9e1673231be93276.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:11:49.998Z","action":"insert_row","appId":"301a1a4a-5776-411d-a2d8-e0e6b93fd0cb","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T13:11:50.007Z","action":"delete_row","appId":"301a1a4a-5776-411d-a2d8-e0e6b93fd0cb","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T13:11:50.029Z","action":"create_app","appId":"c36ec016-7f27-40b7-9209-64e420b1dc7f"}
+{"timestamp":"2026-06-22T13:11:50.043Z","action":"create_storage_upgrade_checkout","appId":"c36ec016-7f27-40b7-9209-64e420b1dc7f","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T13:11:50.051Z","action":"activate_paid_storage","appId":"c36ec016-7f27-40b7-9209-64e420b1dc7f","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T13:11:50.060Z","action":"upload_file","appId":"c36ec016-7f27-40b7-9209-64e420b1dc7f","details":{"fileName":"c36ec016-7f27-40b7-9209-64e420b1dc7f-4c574759572e7d4113946c0b30bded7d.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:11:50.145Z","action":"create_app","appId":"8365c56e-ead3-4a98-a334-d71a814941ab"}
+{"timestamp":"2026-06-22T13:11:50.156Z","action":"upload_file","appId":"8365c56e-ead3-4a98-a334-d71a814941ab","details":{"fileName":"8365c56e-ead3-4a98-a334-d71a814941ab-e281c6e4e24b24e84483596632fe0331.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:11:50.161Z","action":"delete_app","appId":"8365c56e-ead3-4a98-a334-d71a814941ab","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T13:11:50.174Z","action":"create_app","appId":"0f67b33b-47f2-4435-a805-ce2d9c760ebe"}
+{"timestamp":"2026-06-22T13:11:50.182Z","action":"update_retention_policy","appId":"0f67b33b-47f2-4435-a805-ce2d9c760ebe","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T13:11:50.324Z","action":"retention_cleanup_delete_app","appId":"0f67b33b-47f2-4435-a805-ce2d9c760ebe","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T13:12:26.471Z","action":"insert_row","appId":"00f5ad9f-97bb-4a28-91fc-97cc085078a5","tableName":"student_work","rowId":"1"}
+{"timestamp":"2026-06-22T13:12:26.485Z","action":"insert_row","appId":"00f5ad9f-97bb-4a28-91fc-97cc085078a5","tableName":"student_work","rowId":"2"}
+{"timestamp":"2026-06-22T13:12:26.502Z","action":"insert_row","appId":"00f5ad9f-97bb-4a28-91fc-97cc085078a5","tableName":"student_work","rowId":"3"}
+{"timestamp":"2026-06-22T13:12:42.442Z","action":"upload_file","appId":"00f5ad9f-97bb-4a28-91fc-97cc085078a5","details":{"fileName":"00f5ad9f-97bb-4a28-91fc-97cc085078a5-ad0379853c1df41b964c7dbe34d882fa.jpg","size":19702,"mimetype":"image/jpeg"}}
+{"timestamp":"2026-06-22T13:12:49.707Z","action":"insert_row","appId":"00f5ad9f-97bb-4a28-91fc-97cc085078a5","tableName":"student_work","rowId":"4"}
+{"timestamp":"2026-06-22T13:34:16.227Z","action":"create_app","appId":"39c3be33-0046-48dd-bf50-ccefb824cb51"}
+{"timestamp":"2026-06-22T13:34:16.328Z","action":"create_table","appId":"39c3be33-0046-48dd-bf50-ccefb824cb51","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:34:16.342Z","action":"update_retention_policy","appId":"39c3be33-0046-48dd-bf50-ccefb824cb51","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T13:34:16.353Z","action":"alter_table","appId":"39c3be33-0046-48dd-bf50-ccefb824cb51","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:34:16.387Z","action":"insert_row","appId":"39c3be33-0046-48dd-bf50-ccefb824cb51","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T13:34:16.403Z","action":"insert_row","appId":"39c3be33-0046-48dd-bf50-ccefb824cb51","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T13:34:16.417Z","action":"create_app","appId":"beb38af5-191d-48a1-ae20-e59a64459a47"}
+{"timestamp":"2026-06-22T13:34:16.436Z","action":"create_storage_upgrade_checkout","appId":"beb38af5-191d-48a1-ae20-e59a64459a47","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T13:34:16.467Z","action":"upload_file","appId":"39c3be33-0046-48dd-bf50-ccefb824cb51","details":{"fileName":"39c3be33-0046-48dd-bf50-ccefb824cb51-35051a9a6581c288923be0e2ec710813.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:34:16.493Z","action":"insert_row","appId":"39c3be33-0046-48dd-bf50-ccefb824cb51","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T13:34:16.509Z","action":"create_app","appId":"49ac2d04-c717-47d4-8d9d-f74846bfc977"}
+{"timestamp":"2026-06-22T13:34:16.516Z","action":"create_table","appId":"49ac2d04-c717-47d4-8d9d-f74846bfc977","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:34:16.524Z","action":"upload_file","appId":"49ac2d04-c717-47d4-8d9d-f74846bfc977","details":{"fileName":"49ac2d04-c717-47d4-8d9d-f74846bfc977-8216b8bb3c379e72cdf3db42b3af369c.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:34:16.533Z","action":"insert_row","appId":"49ac2d04-c717-47d4-8d9d-f74846bfc977","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T13:34:16.541Z","action":"delete_row","appId":"49ac2d04-c717-47d4-8d9d-f74846bfc977","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T13:34:16.564Z","action":"create_app","appId":"2025ba75-c4f5-4796-9b36-7ce1148c1097"}
+{"timestamp":"2026-06-22T13:34:16.579Z","action":"create_storage_upgrade_checkout","appId":"2025ba75-c4f5-4796-9b36-7ce1148c1097","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T13:34:16.587Z","action":"activate_paid_storage","appId":"2025ba75-c4f5-4796-9b36-7ce1148c1097","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T13:34:16.595Z","action":"upload_file","appId":"2025ba75-c4f5-4796-9b36-7ce1148c1097","details":{"fileName":"2025ba75-c4f5-4796-9b36-7ce1148c1097-c63a69cfb5c0d4b1b53b89912728f3f2.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:34:16.664Z","action":"create_app","appId":"e1523146-808a-489d-b293-a625a5c8bf6a"}
+{"timestamp":"2026-06-22T13:34:16.671Z","action":"upload_file","appId":"e1523146-808a-489d-b293-a625a5c8bf6a","details":{"fileName":"e1523146-808a-489d-b293-a625a5c8bf6a-f8791f2750ba3f710e25feaf8f8bded5.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:34:16.676Z","action":"delete_app","appId":"e1523146-808a-489d-b293-a625a5c8bf6a","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T13:34:16.688Z","action":"create_app","appId":"982496f9-1ea3-42ea-bf53-2b9746b30252"}
+{"timestamp":"2026-06-22T13:34:16.694Z","action":"update_retention_policy","appId":"982496f9-1ea3-42ea-bf53-2b9746b30252","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T13:34:16.830Z","action":"retention_cleanup_delete_app","appId":"982496f9-1ea3-42ea-bf53-2b9746b30252","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T13:35:45.647Z","action":"create_app","appId":"df183fb0-66ab-4428-bf97-78cb43d2903b"}
+{"timestamp":"2026-06-22T13:35:45.856Z","action":"create_table","appId":"df183fb0-66ab-4428-bf97-78cb43d2903b","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:35:45.894Z","action":"update_retention_policy","appId":"df183fb0-66ab-4428-bf97-78cb43d2903b","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T13:35:45.904Z","action":"alter_table","appId":"df183fb0-66ab-4428-bf97-78cb43d2903b","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:35:45.955Z","action":"insert_row","appId":"df183fb0-66ab-4428-bf97-78cb43d2903b","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T13:35:45.978Z","action":"insert_row","appId":"df183fb0-66ab-4428-bf97-78cb43d2903b","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T13:35:46.006Z","action":"create_app","appId":"1c6c859d-2403-4046-8c21-ab89a182dafc"}
+{"timestamp":"2026-06-22T13:35:46.017Z","action":"create_storage_upgrade_checkout","appId":"1c6c859d-2403-4046-8c21-ab89a182dafc","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T13:35:46.148Z","action":"upload_file","appId":"df183fb0-66ab-4428-bf97-78cb43d2903b","details":{"fileName":"df183fb0-66ab-4428-bf97-78cb43d2903b-e792a3e80c66427b3884c7490888fb49.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:35:46.219Z","action":"insert_row","appId":"df183fb0-66ab-4428-bf97-78cb43d2903b","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T13:35:46.252Z","action":"create_app","appId":"b0c97fb1-3aa6-4518-b6b2-e8e26862838b"}
+{"timestamp":"2026-06-22T13:35:46.274Z","action":"create_table","appId":"b0c97fb1-3aa6-4518-b6b2-e8e26862838b","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:35:46.293Z","action":"upload_file","appId":"b0c97fb1-3aa6-4518-b6b2-e8e26862838b","details":{"fileName":"b0c97fb1-3aa6-4518-b6b2-e8e26862838b-d946762fd1193dfef74dcb301e485ab2.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:35:46.333Z","action":"insert_row","appId":"b0c97fb1-3aa6-4518-b6b2-e8e26862838b","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T13:35:46.362Z","action":"delete_row","appId":"b0c97fb1-3aa6-4518-b6b2-e8e26862838b","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T13:35:46.447Z","action":"create_app","appId":"40ff4303-919a-43e6-8a52-9214f052bbee"}
+{"timestamp":"2026-06-22T13:35:46.511Z","action":"create_storage_upgrade_checkout","appId":"40ff4303-919a-43e6-8a52-9214f052bbee","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T13:35:46.531Z","action":"activate_paid_storage","appId":"40ff4303-919a-43e6-8a52-9214f052bbee","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T13:35:46.540Z","action":"upload_file","appId":"40ff4303-919a-43e6-8a52-9214f052bbee","details":{"fileName":"40ff4303-919a-43e6-8a52-9214f052bbee-dc5ad4d275783b0d3057275234c06f4e.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:35:46.728Z","action":"create_app","appId":"25a75bcb-2297-46b7-8a1e-a5c3420cbaa4"}
+{"timestamp":"2026-06-22T13:35:46.743Z","action":"upload_file","appId":"25a75bcb-2297-46b7-8a1e-a5c3420cbaa4","details":{"fileName":"25a75bcb-2297-46b7-8a1e-a5c3420cbaa4-ad843c2eb64eed1399f30833a7533c59.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:35:46.749Z","action":"delete_app","appId":"25a75bcb-2297-46b7-8a1e-a5c3420cbaa4","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T13:35:46.766Z","action":"create_app","appId":"3aa6d990-95f1-4da5-85fb-b2ce076dc035"}
+{"timestamp":"2026-06-22T13:35:46.782Z","action":"update_retention_policy","appId":"3aa6d990-95f1-4da5-85fb-b2ce076dc035","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T13:35:47.064Z","action":"retention_cleanup_delete_app","appId":"3aa6d990-95f1-4da5-85fb-b2ce076dc035","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T13:36:19.094Z","action":"create_app","appId":"c3b6de0b-d4a7-40fa-94c0-7fe0bce9cfd9"}
+{"timestamp":"2026-06-22T13:36:19.195Z","action":"create_table","appId":"c3b6de0b-d4a7-40fa-94c0-7fe0bce9cfd9","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:36:19.209Z","action":"update_retention_policy","appId":"c3b6de0b-d4a7-40fa-94c0-7fe0bce9cfd9","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T13:36:19.217Z","action":"alter_table","appId":"c3b6de0b-d4a7-40fa-94c0-7fe0bce9cfd9","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:36:19.253Z","action":"insert_row","appId":"c3b6de0b-d4a7-40fa-94c0-7fe0bce9cfd9","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T13:36:19.268Z","action":"insert_row","appId":"c3b6de0b-d4a7-40fa-94c0-7fe0bce9cfd9","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T13:36:19.282Z","action":"create_app","appId":"bbb434e2-0442-4de2-bfbf-2093006307d2"}
+{"timestamp":"2026-06-22T13:36:19.288Z","action":"create_storage_upgrade_checkout","appId":"bbb434e2-0442-4de2-bfbf-2093006307d2","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T13:36:19.313Z","action":"upload_file","appId":"c3b6de0b-d4a7-40fa-94c0-7fe0bce9cfd9","details":{"fileName":"c3b6de0b-d4a7-40fa-94c0-7fe0bce9cfd9-5ee8c576b04dc2a84596dffb5d3e520c.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:36:19.356Z","action":"insert_row","appId":"c3b6de0b-d4a7-40fa-94c0-7fe0bce9cfd9","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T13:36:19.371Z","action":"create_app","appId":"e3c4c56a-0efe-43e0-a9aa-1edc52a4847a"}
+{"timestamp":"2026-06-22T13:36:19.378Z","action":"create_table","appId":"e3c4c56a-0efe-43e0-a9aa-1edc52a4847a","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:36:19.385Z","action":"upload_file","appId":"e3c4c56a-0efe-43e0-a9aa-1edc52a4847a","details":{"fileName":"e3c4c56a-0efe-43e0-a9aa-1edc52a4847a-772242f2ebec81bb4ccb8f388a3937da.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:36:19.391Z","action":"insert_row","appId":"e3c4c56a-0efe-43e0-a9aa-1edc52a4847a","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T13:36:19.397Z","action":"delete_row","appId":"e3c4c56a-0efe-43e0-a9aa-1edc52a4847a","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T13:36:19.416Z","action":"create_app","appId":"f5a4481f-5c8c-4b8d-b39f-d98ddf751b9a"}
+{"timestamp":"2026-06-22T13:36:19.429Z","action":"create_storage_upgrade_checkout","appId":"f5a4481f-5c8c-4b8d-b39f-d98ddf751b9a","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T13:36:19.436Z","action":"activate_paid_storage","appId":"f5a4481f-5c8c-4b8d-b39f-d98ddf751b9a","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T13:36:19.444Z","action":"upload_file","appId":"f5a4481f-5c8c-4b8d-b39f-d98ddf751b9a","details":{"fileName":"f5a4481f-5c8c-4b8d-b39f-d98ddf751b9a-b24b84f220636936fa756aab8e010f10.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:36:19.509Z","action":"create_app","appId":"e12d7b89-13cf-4399-bcfe-6320b3e9fbfd"}
+{"timestamp":"2026-06-22T13:36:19.524Z","action":"upload_file","appId":"e12d7b89-13cf-4399-bcfe-6320b3e9fbfd","details":{"fileName":"e12d7b89-13cf-4399-bcfe-6320b3e9fbfd-6aade3a259cb739e5e1b8f51f0bced74.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:36:19.529Z","action":"delete_app","appId":"e12d7b89-13cf-4399-bcfe-6320b3e9fbfd","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T13:36:19.539Z","action":"create_app","appId":"bf120198-6948-4a16-9e76-b716f2182791"}
+{"timestamp":"2026-06-22T13:36:19.546Z","action":"update_retention_policy","appId":"bf120198-6948-4a16-9e76-b716f2182791","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T13:36:19.684Z","action":"retention_cleanup_delete_app","appId":"bf120198-6948-4a16-9e76-b716f2182791","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T13:36:59.607Z","action":"create_app","appId":"905b982c-737e-4d40-8cee-ff12519161d9"}
+{"timestamp":"2026-06-22T13:36:59.720Z","action":"create_table","appId":"905b982c-737e-4d40-8cee-ff12519161d9","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:36:59.733Z","action":"update_retention_policy","appId":"905b982c-737e-4d40-8cee-ff12519161d9","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T13:36:59.744Z","action":"alter_table","appId":"905b982c-737e-4d40-8cee-ff12519161d9","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:36:59.780Z","action":"insert_row","appId":"905b982c-737e-4d40-8cee-ff12519161d9","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T13:36:59.795Z","action":"insert_row","appId":"905b982c-737e-4d40-8cee-ff12519161d9","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T13:36:59.811Z","action":"create_app","appId":"203ff2d8-1484-4d77-b0b5-f316fd01530a"}
+{"timestamp":"2026-06-22T13:36:59.819Z","action":"create_storage_upgrade_checkout","appId":"203ff2d8-1484-4d77-b0b5-f316fd01530a","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T13:36:59.839Z","action":"upload_file","appId":"905b982c-737e-4d40-8cee-ff12519161d9","details":{"fileName":"905b982c-737e-4d40-8cee-ff12519161d9-8719009d0a015ce86f7a0e2f76eb05c7.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:36:59.893Z","action":"insert_row","appId":"905b982c-737e-4d40-8cee-ff12519161d9","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T13:36:59.921Z","action":"create_app","appId":"6ef21cba-6812-4860-8de7-9517a12dc0ec"}
+{"timestamp":"2026-06-22T13:36:59.930Z","action":"create_table","appId":"6ef21cba-6812-4860-8de7-9517a12dc0ec","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T13:36:59.942Z","action":"upload_file","appId":"6ef21cba-6812-4860-8de7-9517a12dc0ec","details":{"fileName":"6ef21cba-6812-4860-8de7-9517a12dc0ec-19945f08d2abb5b800186c8692985881.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:36:59.949Z","action":"insert_row","appId":"6ef21cba-6812-4860-8de7-9517a12dc0ec","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T13:36:59.957Z","action":"delete_row","appId":"6ef21cba-6812-4860-8de7-9517a12dc0ec","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T13:36:59.980Z","action":"create_app","appId":"bcbc8e47-905f-4a7a-a204-f3d8f4dee6b1"}
+{"timestamp":"2026-06-22T13:36:59.995Z","action":"create_storage_upgrade_checkout","appId":"bcbc8e47-905f-4a7a-a204-f3d8f4dee6b1","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T13:37:00.004Z","action":"activate_paid_storage","appId":"bcbc8e47-905f-4a7a-a204-f3d8f4dee6b1","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T13:37:00.013Z","action":"upload_file","appId":"bcbc8e47-905f-4a7a-a204-f3d8f4dee6b1","details":{"fileName":"bcbc8e47-905f-4a7a-a204-f3d8f4dee6b1-251075acc2e923c2e5b287b06a66c1f5.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:37:00.082Z","action":"create_app","appId":"bd48da9b-3dd0-4b5c-ae2b-28e5e6bf3c9d"}
+{"timestamp":"2026-06-22T13:37:00.090Z","action":"upload_file","appId":"bd48da9b-3dd0-4b5c-ae2b-28e5e6bf3c9d","details":{"fileName":"bd48da9b-3dd0-4b5c-ae2b-28e5e6bf3c9d-ad03d71ef7f7844ee1a026b2ad351ed3.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T13:37:00.095Z","action":"delete_app","appId":"bd48da9b-3dd0-4b5c-ae2b-28e5e6bf3c9d","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T13:37:00.106Z","action":"create_app","appId":"8a3c40cc-8963-4098-81f2-1f7c1fa5c046"}
+{"timestamp":"2026-06-22T13:37:00.112Z","action":"update_retention_policy","appId":"8a3c40cc-8963-4098-81f2-1f7c1fa5c046","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T13:37:00.253Z","action":"retention_cleanup_delete_app","appId":"8a3c40cc-8963-4098-81f2-1f7c1fa5c046","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T14:02:45.996Z","action":"create_app","appId":"f4e846a7-943e-498a-bf64-5edc14aee7d6"}
+{"timestamp":"2026-06-22T14:02:46.160Z","action":"create_table","appId":"f4e846a7-943e-498a-bf64-5edc14aee7d6","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:02:46.173Z","action":"update_retention_policy","appId":"f4e846a7-943e-498a-bf64-5edc14aee7d6","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T14:02:46.183Z","action":"alter_table","appId":"f4e846a7-943e-498a-bf64-5edc14aee7d6","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:02:46.219Z","action":"insert_row","appId":"f4e846a7-943e-498a-bf64-5edc14aee7d6","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T14:02:46.235Z","action":"insert_row","appId":"f4e846a7-943e-498a-bf64-5edc14aee7d6","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T14:02:46.266Z","action":"create_app","appId":"5e52ab16-43d0-4f72-b8a2-96a9990119c8"}
+{"timestamp":"2026-06-22T14:02:46.275Z","action":"create_storage_upgrade_checkout","appId":"5e52ab16-43d0-4f72-b8a2-96a9990119c8","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T14:02:46.313Z","action":"upload_file","appId":"f4e846a7-943e-498a-bf64-5edc14aee7d6","details":{"fileName":"f4e846a7-943e-498a-bf64-5edc14aee7d6-ef04529e910184221b8843e2f9196049.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:02:46.355Z","action":"insert_row","appId":"f4e846a7-943e-498a-bf64-5edc14aee7d6","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T14:02:46.371Z","action":"create_app","appId":"bb8e740f-4ede-44f4-b2e6-64042e107ebc"}
+{"timestamp":"2026-06-22T14:02:46.378Z","action":"create_table","appId":"bb8e740f-4ede-44f4-b2e6-64042e107ebc","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:02:46.385Z","action":"upload_file","appId":"bb8e740f-4ede-44f4-b2e6-64042e107ebc","details":{"fileName":"bb8e740f-4ede-44f4-b2e6-64042e107ebc-b8ce611c03b5a9910cf6f8b02f36a073.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:02:46.391Z","action":"insert_row","appId":"bb8e740f-4ede-44f4-b2e6-64042e107ebc","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T14:02:46.399Z","action":"delete_row","appId":"bb8e740f-4ede-44f4-b2e6-64042e107ebc","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T14:02:46.420Z","action":"create_app","appId":"7ff04020-f4e1-4a81-9b21-3064f0d3c7fa"}
+{"timestamp":"2026-06-22T14:02:46.435Z","action":"create_storage_upgrade_checkout","appId":"7ff04020-f4e1-4a81-9b21-3064f0d3c7fa","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T14:02:46.442Z","action":"activate_paid_storage","appId":"7ff04020-f4e1-4a81-9b21-3064f0d3c7fa","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T14:02:46.450Z","action":"upload_file","appId":"7ff04020-f4e1-4a81-9b21-3064f0d3c7fa","details":{"fileName":"7ff04020-f4e1-4a81-9b21-3064f0d3c7fa-f0ce4f6cd86ce3cb6c77ec12ba1a3e4c.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:02:46.515Z","action":"create_app","appId":"7381b4b9-9a47-427e-ad74-03cd76fcdab5"}
+{"timestamp":"2026-06-22T14:02:46.524Z","action":"upload_file","appId":"7381b4b9-9a47-427e-ad74-03cd76fcdab5","details":{"fileName":"7381b4b9-9a47-427e-ad74-03cd76fcdab5-eb5c1eec3736d823f2c2600fd3c5b1f4.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:02:46.529Z","action":"delete_app","appId":"7381b4b9-9a47-427e-ad74-03cd76fcdab5","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T14:02:46.541Z","action":"create_app","appId":"33ada985-f92f-458c-ba9b-9e993d931b29"}
+{"timestamp":"2026-06-22T14:02:46.551Z","action":"update_retention_policy","appId":"33ada985-f92f-458c-ba9b-9e993d931b29","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T14:02:46.707Z","action":"retention_cleanup_delete_app","appId":"33ada985-f92f-458c-ba9b-9e993d931b29","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T14:19:08.525Z","action":"create_app","appId":"170bc757-4bf7-445b-a567-ca5f75c36861"}
+{"timestamp":"2026-06-22T14:19:08.688Z","action":"create_table","appId":"170bc757-4bf7-445b-a567-ca5f75c36861","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:19:08.712Z","action":"update_retention_policy","appId":"170bc757-4bf7-445b-a567-ca5f75c36861","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T14:19:08.736Z","action":"alter_table","appId":"170bc757-4bf7-445b-a567-ca5f75c36861","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:19:08.790Z","action":"insert_row","appId":"170bc757-4bf7-445b-a567-ca5f75c36861","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T14:19:08.826Z","action":"insert_row","appId":"170bc757-4bf7-445b-a567-ca5f75c36861","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T14:19:08.880Z","action":"create_app","appId":"84a8d6ed-6199-4d1c-a221-f994601c2898"}
+{"timestamp":"2026-06-22T14:19:08.889Z","action":"create_storage_upgrade_checkout","appId":"84a8d6ed-6199-4d1c-a221-f994601c2898","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T14:19:08.919Z","action":"upload_file","appId":"170bc757-4bf7-445b-a567-ca5f75c36861","details":{"fileName":"170bc757-4bf7-445b-a567-ca5f75c36861-071f09ca224543df34aedf6097f86bc0.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:19:08.974Z","action":"insert_row","appId":"170bc757-4bf7-445b-a567-ca5f75c36861","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T14:19:08.994Z","action":"create_app","appId":"18586e9c-e17e-445d-a02b-2d5693db2033"}
+{"timestamp":"2026-06-22T14:19:09.007Z","action":"create_table","appId":"18586e9c-e17e-445d-a02b-2d5693db2033","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:19:09.018Z","action":"upload_file","appId":"18586e9c-e17e-445d-a02b-2d5693db2033","details":{"fileName":"18586e9c-e17e-445d-a02b-2d5693db2033-3f5ad8dcf19bada1fcdb40ff4167a413.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:19:09.027Z","action":"insert_row","appId":"18586e9c-e17e-445d-a02b-2d5693db2033","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T14:19:09.036Z","action":"delete_row","appId":"18586e9c-e17e-445d-a02b-2d5693db2033","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T14:19:09.076Z","action":"create_app","appId":"42be3e47-b44b-468c-9a6c-6d2a7bd29303"}
+{"timestamp":"2026-06-22T14:19:09.099Z","action":"create_storage_upgrade_checkout","appId":"42be3e47-b44b-468c-9a6c-6d2a7bd29303","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T14:19:09.112Z","action":"activate_paid_storage","appId":"42be3e47-b44b-468c-9a6c-6d2a7bd29303","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T14:19:09.122Z","action":"upload_file","appId":"42be3e47-b44b-468c-9a6c-6d2a7bd29303","details":{"fileName":"42be3e47-b44b-468c-9a6c-6d2a7bd29303-b8bfa5c8fb3574d7f25a4e38b09999fc.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:19:09.253Z","action":"create_app","appId":"13e171ae-d278-4912-8017-0db160f8a9c2"}
+{"timestamp":"2026-06-22T14:19:09.276Z","action":"upload_file","appId":"13e171ae-d278-4912-8017-0db160f8a9c2","details":{"fileName":"13e171ae-d278-4912-8017-0db160f8a9c2-2359d4901aead33261aae34876d625ad.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:19:09.287Z","action":"delete_app","appId":"13e171ae-d278-4912-8017-0db160f8a9c2","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T14:19:09.301Z","action":"create_app","appId":"bbe7786e-c68e-4f7a-8cbc-12f91935156f"}
+{"timestamp":"2026-06-22T14:19:09.318Z","action":"update_retention_policy","appId":"bbe7786e-c68e-4f7a-8cbc-12f91935156f","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T14:19:09.676Z","action":"retention_cleanup_delete_app","appId":"bbe7786e-c68e-4f7a-8cbc-12f91935156f","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T14:21:42.301Z","action":"create_app","appId":"be7ef964-355d-4d6d-adfe-dc6ba13ee7e5"}
+{"timestamp":"2026-06-22T14:21:42.427Z","action":"create_table","appId":"be7ef964-355d-4d6d-adfe-dc6ba13ee7e5","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:21:42.441Z","action":"update_retention_policy","appId":"be7ef964-355d-4d6d-adfe-dc6ba13ee7e5","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T14:21:42.451Z","action":"alter_table","appId":"be7ef964-355d-4d6d-adfe-dc6ba13ee7e5","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:21:42.487Z","action":"insert_row","appId":"be7ef964-355d-4d6d-adfe-dc6ba13ee7e5","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T14:21:42.506Z","action":"insert_row","appId":"be7ef964-355d-4d6d-adfe-dc6ba13ee7e5","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T14:21:42.530Z","action":"create_app","appId":"9f6c5a7a-7936-41be-9cf9-0a3f7ef33f5b"}
+{"timestamp":"2026-06-22T14:21:42.536Z","action":"create_storage_upgrade_checkout","appId":"9f6c5a7a-7936-41be-9cf9-0a3f7ef33f5b","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T14:21:42.608Z","action":"upload_file","appId":"be7ef964-355d-4d6d-adfe-dc6ba13ee7e5","details":{"fileName":"be7ef964-355d-4d6d-adfe-dc6ba13ee7e5-3daf643f9737db42cdfdefbcee9c1c5c.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:21:42.644Z","action":"insert_row","appId":"be7ef964-355d-4d6d-adfe-dc6ba13ee7e5","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T14:21:42.658Z","action":"create_app","appId":"7c5add96-848b-4299-8a5e-d8b735e6a4f9"}
+{"timestamp":"2026-06-22T14:21:42.665Z","action":"create_table","appId":"7c5add96-848b-4299-8a5e-d8b735e6a4f9","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:21:42.675Z","action":"upload_file","appId":"7c5add96-848b-4299-8a5e-d8b735e6a4f9","details":{"fileName":"7c5add96-848b-4299-8a5e-d8b735e6a4f9-db1884c4565301ac2929ac9c5bf9a7d5.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:21:42.683Z","action":"insert_row","appId":"7c5add96-848b-4299-8a5e-d8b735e6a4f9","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T14:21:42.689Z","action":"delete_row","appId":"7c5add96-848b-4299-8a5e-d8b735e6a4f9","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T14:21:42.711Z","action":"create_app","appId":"8a9b47c0-40b9-4103-9a1a-8b1b35c3bfa6"}
+{"timestamp":"2026-06-22T14:21:42.726Z","action":"create_storage_upgrade_checkout","appId":"8a9b47c0-40b9-4103-9a1a-8b1b35c3bfa6","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T14:21:42.736Z","action":"activate_paid_storage","appId":"8a9b47c0-40b9-4103-9a1a-8b1b35c3bfa6","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T14:21:42.746Z","action":"upload_file","appId":"8a9b47c0-40b9-4103-9a1a-8b1b35c3bfa6","details":{"fileName":"8a9b47c0-40b9-4103-9a1a-8b1b35c3bfa6-bfd8aa1898b26beb73bf27d215db6042.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:21:42.817Z","action":"create_app","appId":"fe87c348-defc-4963-bf59-0562b8af01d3"}
+{"timestamp":"2026-06-22T14:21:42.826Z","action":"upload_file","appId":"fe87c348-defc-4963-bf59-0562b8af01d3","details":{"fileName":"fe87c348-defc-4963-bf59-0562b8af01d3-c751062c80c715c92037452659536e90.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:21:42.832Z","action":"delete_app","appId":"fe87c348-defc-4963-bf59-0562b8af01d3","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T14:21:42.844Z","action":"create_app","appId":"731c86ab-6d7b-482e-b459-007e9d2f6b26"}
+{"timestamp":"2026-06-22T14:21:42.857Z","action":"update_retention_policy","appId":"731c86ab-6d7b-482e-b459-007e9d2f6b26","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T14:21:43.025Z","action":"retention_cleanup_delete_app","appId":"731c86ab-6d7b-482e-b459-007e9d2f6b26","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T14:31:47.963Z","action":"insert_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:13.456Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:17.137Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:17.998Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:20.821Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:21.397Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:21.637Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:21.825Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:22.058Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:35.145Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:35.743Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:35.901Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:36.096Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:57.547Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:58.072Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:58.252Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:58.432Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:58.605Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:58.803Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:58.980Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:59.175Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:59.362Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:59.528Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:59.714Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:32:59.917Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:03.915Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:04.116Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:04.311Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:04.514Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:10.809Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:19.307Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:19.990Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:40.860Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:41.243Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:41.490Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:41.723Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:41.918Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:42.127Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:46.920Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:47.430Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:50.461Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:50.857Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:51.023Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:33:51.210Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:38:59.693Z","action":"insert_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"2"}
+{"timestamp":"2026-06-22T14:39:20.842Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"2"}
+{"timestamp":"2026-06-22T14:39:25.221Z","action":"update_row","appId":"4c7b49fa-6534-4473-b1d9-b53cfa630bfa","tableName":"work_items","rowId":"1"}
+{"timestamp":"2026-06-22T14:52:47.518Z","action":"create_app","appId":"48454df3-0c37-4e6d-8a82-a881cea8033b"}
+{"timestamp":"2026-06-22T14:52:47.678Z","action":"create_table","appId":"48454df3-0c37-4e6d-8a82-a881cea8033b","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:52:47.712Z","action":"update_retention_policy","appId":"48454df3-0c37-4e6d-8a82-a881cea8033b","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T14:52:47.731Z","action":"alter_table","appId":"48454df3-0c37-4e6d-8a82-a881cea8033b","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:52:47.803Z","action":"insert_row","appId":"48454df3-0c37-4e6d-8a82-a881cea8033b","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T14:52:47.847Z","action":"insert_row","appId":"48454df3-0c37-4e6d-8a82-a881cea8033b","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T14:52:47.883Z","action":"create_app","appId":"8b133ec3-5be3-4f74-8995-4df8356ed1cb"}
+{"timestamp":"2026-06-22T14:52:47.894Z","action":"create_storage_upgrade_checkout","appId":"8b133ec3-5be3-4f74-8995-4df8356ed1cb","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T14:52:47.918Z","action":"upload_file","appId":"48454df3-0c37-4e6d-8a82-a881cea8033b","details":{"fileName":"48454df3-0c37-4e6d-8a82-a881cea8033b-02802a060a3e5ce936be5eebb8362f4b.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:52:47.950Z","action":"insert_row","appId":"48454df3-0c37-4e6d-8a82-a881cea8033b","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T14:52:47.975Z","action":"create_app","appId":"80d8f80b-c201-4836-a5e5-cbf4b2782070"}
+{"timestamp":"2026-06-22T14:52:47.987Z","action":"create_table","appId":"80d8f80b-c201-4836-a5e5-cbf4b2782070","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:52:47.995Z","action":"upload_file","appId":"80d8f80b-c201-4836-a5e5-cbf4b2782070","details":{"fileName":"80d8f80b-c201-4836-a5e5-cbf4b2782070-f037b89d7e71055eb775b3649fcea30d.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:52:48.007Z","action":"insert_row","appId":"80d8f80b-c201-4836-a5e5-cbf4b2782070","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T14:52:48.028Z","action":"delete_row","appId":"80d8f80b-c201-4836-a5e5-cbf4b2782070","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T14:52:48.058Z","action":"create_app","appId":"53794353-c593-459d-8228-fc676345aae0"}
+{"timestamp":"2026-06-22T14:52:48.078Z","action":"create_storage_upgrade_checkout","appId":"53794353-c593-459d-8228-fc676345aae0","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T14:52:48.087Z","action":"activate_paid_storage","appId":"53794353-c593-459d-8228-fc676345aae0","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T14:52:48.098Z","action":"upload_file","appId":"53794353-c593-459d-8228-fc676345aae0","details":{"fileName":"53794353-c593-459d-8228-fc676345aae0-2ee791b7cc2e66b91f2491f7c9f7e76b.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:52:48.207Z","action":"create_app","appId":"dbd3deaa-dde8-4b6b-9d33-7d8a1c79de75"}
+{"timestamp":"2026-06-22T14:52:48.222Z","action":"upload_file","appId":"dbd3deaa-dde8-4b6b-9d33-7d8a1c79de75","details":{"fileName":"dbd3deaa-dde8-4b6b-9d33-7d8a1c79de75-b17b8d9991aac0d145f8fa63ca50c028.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:52:48.226Z","action":"delete_app","appId":"dbd3deaa-dde8-4b6b-9d33-7d8a1c79de75","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T14:52:48.247Z","action":"create_app","appId":"4c2861ad-e203-43ff-909e-c1434cbf3d89"}
+{"timestamp":"2026-06-22T14:52:48.262Z","action":"update_retention_policy","appId":"4c2861ad-e203-43ff-909e-c1434cbf3d89","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T14:52:48.639Z","action":"retention_cleanup_delete_app","appId":"4c2861ad-e203-43ff-909e-c1434cbf3d89","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T14:56:24.820Z","action":"create_app","appId":"ab45c4f6-6f68-48ba-b570-2d9d2cbfcad1"}
+{"timestamp":"2026-06-22T14:56:25.021Z","action":"create_table","appId":"ab45c4f6-6f68-48ba-b570-2d9d2cbfcad1","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:56:25.045Z","action":"update_retention_policy","appId":"ab45c4f6-6f68-48ba-b570-2d9d2cbfcad1","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T14:56:25.074Z","action":"alter_table","appId":"ab45c4f6-6f68-48ba-b570-2d9d2cbfcad1","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:56:25.213Z","action":"insert_row","appId":"ab45c4f6-6f68-48ba-b570-2d9d2cbfcad1","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T14:56:25.243Z","action":"insert_row","appId":"ab45c4f6-6f68-48ba-b570-2d9d2cbfcad1","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T14:56:25.303Z","action":"create_app","appId":"8a256d2c-a0b9-4c6d-a3b5-dfd747c8fcb3"}
+{"timestamp":"2026-06-22T14:56:25.315Z","action":"create_storage_upgrade_checkout","appId":"8a256d2c-a0b9-4c6d-a3b5-dfd747c8fcb3","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T14:56:25.362Z","action":"upload_file","appId":"ab45c4f6-6f68-48ba-b570-2d9d2cbfcad1","details":{"fileName":"ab45c4f6-6f68-48ba-b570-2d9d2cbfcad1-a0ded93e3ef7e985faa3d1926f06bd46.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:56:25.416Z","action":"insert_row","appId":"ab45c4f6-6f68-48ba-b570-2d9d2cbfcad1","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T14:56:25.448Z","action":"create_app","appId":"c2de6c6c-ac63-4fb0-a9fe-b4826ab24d56"}
+{"timestamp":"2026-06-22T14:56:25.463Z","action":"create_table","appId":"c2de6c6c-ac63-4fb0-a9fe-b4826ab24d56","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:56:25.478Z","action":"upload_file","appId":"c2de6c6c-ac63-4fb0-a9fe-b4826ab24d56","details":{"fileName":"c2de6c6c-ac63-4fb0-a9fe-b4826ab24d56-ce68f5962c537bea3ae131ccec0f90e5.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:56:25.494Z","action":"insert_row","appId":"c2de6c6c-ac63-4fb0-a9fe-b4826ab24d56","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T14:56:25.522Z","action":"delete_row","appId":"c2de6c6c-ac63-4fb0-a9fe-b4826ab24d56","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T14:56:25.610Z","action":"create_app","appId":"ec2e7d14-8f43-467b-8903-27f794f5b567"}
+{"timestamp":"2026-06-22T14:56:25.640Z","action":"create_storage_upgrade_checkout","appId":"ec2e7d14-8f43-467b-8903-27f794f5b567","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T14:56:25.650Z","action":"activate_paid_storage","appId":"ec2e7d14-8f43-467b-8903-27f794f5b567","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T14:56:25.668Z","action":"upload_file","appId":"ec2e7d14-8f43-467b-8903-27f794f5b567","details":{"fileName":"ec2e7d14-8f43-467b-8903-27f794f5b567-c617ae2f24353c66604cee187c0e75e1.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:56:25.769Z","action":"create_app","appId":"0a27fbda-13f5-4469-999b-952f74744931"}
+{"timestamp":"2026-06-22T14:56:25.792Z","action":"upload_file","appId":"0a27fbda-13f5-4469-999b-952f74744931","details":{"fileName":"0a27fbda-13f5-4469-999b-952f74744931-6ab4b39789adfce269d8450d28f74fbd.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:56:25.798Z","action":"delete_app","appId":"0a27fbda-13f5-4469-999b-952f74744931","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T14:56:25.815Z","action":"create_app","appId":"15914094-4b0a-4056-8a3b-52682f2ee657"}
+{"timestamp":"2026-06-22T14:56:25.825Z","action":"update_retention_policy","appId":"15914094-4b0a-4056-8a3b-52682f2ee657","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T14:56:26.137Z","action":"retention_cleanup_delete_app","appId":"15914094-4b0a-4056-8a3b-52682f2ee657","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T14:56:58.466Z","action":"create_app","appId":"218a3608-d3d5-4137-a67a-85affea8314b"}
+{"timestamp":"2026-06-22T14:56:58.629Z","action":"create_table","appId":"218a3608-d3d5-4137-a67a-85affea8314b","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:56:58.646Z","action":"update_retention_policy","appId":"218a3608-d3d5-4137-a67a-85affea8314b","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T14:56:58.658Z","action":"alter_table","appId":"218a3608-d3d5-4137-a67a-85affea8314b","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:56:58.717Z","action":"insert_row","appId":"218a3608-d3d5-4137-a67a-85affea8314b","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T14:56:58.734Z","action":"insert_row","appId":"218a3608-d3d5-4137-a67a-85affea8314b","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T14:56:58.757Z","action":"create_app","appId":"47935779-a79a-4af8-a7e8-57b591ff985b"}
+{"timestamp":"2026-06-22T14:56:58.766Z","action":"create_storage_upgrade_checkout","appId":"47935779-a79a-4af8-a7e8-57b591ff985b","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T14:56:58.794Z","action":"upload_file","appId":"218a3608-d3d5-4137-a67a-85affea8314b","details":{"fileName":"218a3608-d3d5-4137-a67a-85affea8314b-be620c8db6dffbccc8133703ac91d077.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:56:58.933Z","action":"insert_row","appId":"218a3608-d3d5-4137-a67a-85affea8314b","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T14:56:58.958Z","action":"create_app","appId":"628de57e-7bb0-4e47-941a-80540ba26cd9"}
+{"timestamp":"2026-06-22T14:56:58.972Z","action":"create_table","appId":"628de57e-7bb0-4e47-941a-80540ba26cd9","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T14:56:58.989Z","action":"upload_file","appId":"628de57e-7bb0-4e47-941a-80540ba26cd9","details":{"fileName":"628de57e-7bb0-4e47-941a-80540ba26cd9-6df38e1efcc8472e9ae8ce242ae3f28d.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:56:58.999Z","action":"insert_row","appId":"628de57e-7bb0-4e47-941a-80540ba26cd9","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T14:56:59.010Z","action":"delete_row","appId":"628de57e-7bb0-4e47-941a-80540ba26cd9","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T14:56:59.042Z","action":"create_app","appId":"e156c093-43d3-49b6-b6e1-24349cbcfc5e"}
+{"timestamp":"2026-06-22T14:56:59.058Z","action":"create_storage_upgrade_checkout","appId":"e156c093-43d3-49b6-b6e1-24349cbcfc5e","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T14:56:59.067Z","action":"activate_paid_storage","appId":"e156c093-43d3-49b6-b6e1-24349cbcfc5e","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T14:56:59.079Z","action":"upload_file","appId":"e156c093-43d3-49b6-b6e1-24349cbcfc5e","details":{"fileName":"e156c093-43d3-49b6-b6e1-24349cbcfc5e-783849c2a8d2d899b797f683f63d4ff6.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:56:59.180Z","action":"create_app","appId":"c2f1eae3-7836-4bab-bb87-1ec281938d50"}
+{"timestamp":"2026-06-22T14:56:59.192Z","action":"upload_file","appId":"c2f1eae3-7836-4bab-bb87-1ec281938d50","details":{"fileName":"c2f1eae3-7836-4bab-bb87-1ec281938d50-c030bf736b54e93a0c493608a3cd8c01.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T14:56:59.199Z","action":"delete_app","appId":"c2f1eae3-7836-4bab-bb87-1ec281938d50","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T14:56:59.221Z","action":"create_app","appId":"42336889-866b-4f48-9bde-1d9b9a2e40df"}
+{"timestamp":"2026-06-22T14:56:59.237Z","action":"update_retention_policy","appId":"42336889-866b-4f48-9bde-1d9b9a2e40df","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T14:56:59.578Z","action":"retention_cleanup_delete_app","appId":"42336889-866b-4f48-9bde-1d9b9a2e40df","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T15:33:26.524Z","action":"insert_row","appId":"6ad86d43-9dc3-43f2-8aec-9594a4b46053","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T15:33:26.537Z","action":"insert_row","appId":"6ad86d43-9dc3-43f2-8aec-9594a4b46053","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T15:33:26.551Z","action":"insert_row","appId":"6ad86d43-9dc3-43f2-8aec-9594a4b46053","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T15:33:44.092Z","action":"insert_row","appId":"6ad86d43-9dc3-43f2-8aec-9594a4b46053","tableName":"submissions","rowId":"4"}
+{"timestamp":"2026-06-22T15:34:17.930Z","action":"update_row","appId":"6ad86d43-9dc3-43f2-8aec-9594a4b46053","tableName":"submissions","rowId":"4"}
+{"timestamp":"2026-06-22T15:35:26.338Z","action":"update_row","appId":"6ad86d43-9dc3-43f2-8aec-9594a4b46053","tableName":"submissions","rowId":"4"}
+{"timestamp":"2026-06-22T16:08:04.787Z","action":"create_app","appId":"e5fee474-5950-4548-b211-e01aed6d983d"}
+{"timestamp":"2026-06-22T16:08:04.909Z","action":"create_table","appId":"e5fee474-5950-4548-b211-e01aed6d983d","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T16:08:04.924Z","action":"update_retention_policy","appId":"e5fee474-5950-4548-b211-e01aed6d983d","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T16:08:04.934Z","action":"alter_table","appId":"e5fee474-5950-4548-b211-e01aed6d983d","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T16:08:04.970Z","action":"insert_row","appId":"e5fee474-5950-4548-b211-e01aed6d983d","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T16:08:04.986Z","action":"insert_row","appId":"e5fee474-5950-4548-b211-e01aed6d983d","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T16:08:05.000Z","action":"create_app","appId":"b39d0a2f-b47f-4968-b0ab-fabd52ead4ac"}
+{"timestamp":"2026-06-22T16:08:05.006Z","action":"create_storage_upgrade_checkout","appId":"b39d0a2f-b47f-4968-b0ab-fabd52ead4ac","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T16:08:05.023Z","action":"upload_file","appId":"e5fee474-5950-4548-b211-e01aed6d983d","details":{"fileName":"e5fee474-5950-4548-b211-e01aed6d983d-f935115ed6bf5652fb2e2bd9f800c76a.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T16:08:05.052Z","action":"insert_row","appId":"e5fee474-5950-4548-b211-e01aed6d983d","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T16:08:05.066Z","action":"create_app","appId":"0887f5aa-388c-401f-9951-18163f5aa4bc"}
+{"timestamp":"2026-06-22T16:08:05.071Z","action":"create_table","appId":"0887f5aa-388c-401f-9951-18163f5aa4bc","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T16:08:05.078Z","action":"upload_file","appId":"0887f5aa-388c-401f-9951-18163f5aa4bc","details":{"fileName":"0887f5aa-388c-401f-9951-18163f5aa4bc-12aeeeeead153892b49cf53b44f3c05d.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T16:08:05.085Z","action":"insert_row","appId":"0887f5aa-388c-401f-9951-18163f5aa4bc","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T16:08:05.095Z","action":"delete_row","appId":"0887f5aa-388c-401f-9951-18163f5aa4bc","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T16:08:05.119Z","action":"create_app","appId":"e7b32bf2-b282-44f7-8d31-1cf38bcde26e"}
+{"timestamp":"2026-06-22T16:08:05.134Z","action":"create_storage_upgrade_checkout","appId":"e7b32bf2-b282-44f7-8d31-1cf38bcde26e","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T16:08:05.144Z","action":"activate_paid_storage","appId":"e7b32bf2-b282-44f7-8d31-1cf38bcde26e","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T16:08:05.152Z","action":"upload_file","appId":"e7b32bf2-b282-44f7-8d31-1cf38bcde26e","details":{"fileName":"e7b32bf2-b282-44f7-8d31-1cf38bcde26e-1aaa18761ee0fc2ae79ead0746ccb0c7.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T16:08:05.249Z","action":"create_app","appId":"87217f02-9cd9-4d87-bc73-a5e6b2129e7b"}
+{"timestamp":"2026-06-22T16:08:05.261Z","action":"upload_file","appId":"87217f02-9cd9-4d87-bc73-a5e6b2129e7b","details":{"fileName":"87217f02-9cd9-4d87-bc73-a5e6b2129e7b-d2af92bd60b3c5e2b422f9c856a79553.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T16:08:05.267Z","action":"delete_app","appId":"87217f02-9cd9-4d87-bc73-a5e6b2129e7b","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T16:08:05.279Z","action":"create_app","appId":"ac691faa-7700-49d8-98b8-951a9cafb279"}
+{"timestamp":"2026-06-22T16:08:05.287Z","action":"update_retention_policy","appId":"ac691faa-7700-49d8-98b8-951a9cafb279","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T16:08:05.453Z","action":"retention_cleanup_delete_app","appId":"ac691faa-7700-49d8-98b8-951a9cafb279","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T16:25:34.154Z","action":"insert_row","appId":"b3fc95ef-e37e-463a-b720-7ac3770cf16d","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T16:25:44.059Z","action":"update_row","appId":"b3fc95ef-e37e-463a-b720-7ac3770cf16d","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T16:40:48.411Z","action":"create_app","appId":"edeba891-fb49-458f-9390-40df1fcd51b6"}
+{"timestamp":"2026-06-22T16:40:48.582Z","action":"create_table","appId":"edeba891-fb49-458f-9390-40df1fcd51b6","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T16:40:48.597Z","action":"update_retention_policy","appId":"edeba891-fb49-458f-9390-40df1fcd51b6","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T16:40:48.610Z","action":"alter_table","appId":"edeba891-fb49-458f-9390-40df1fcd51b6","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T16:40:48.698Z","action":"insert_row","appId":"edeba891-fb49-458f-9390-40df1fcd51b6","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T16:40:48.722Z","action":"insert_row","appId":"edeba891-fb49-458f-9390-40df1fcd51b6","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T16:40:48.735Z","action":"insert_row","appId":"edeba891-fb49-458f-9390-40df1fcd51b6","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T16:40:48.760Z","action":"create_app","appId":"a39df91a-a423-42bb-abc0-c88ced426717"}
+{"timestamp":"2026-06-22T16:40:48.776Z","action":"create_storage_upgrade_checkout","appId":"a39df91a-a423-42bb-abc0-c88ced426717","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T16:40:48.816Z","action":"upload_file","appId":"edeba891-fb49-458f-9390-40df1fcd51b6","details":{"fileName":"edeba891-fb49-458f-9390-40df1fcd51b6-38375567f496248569a7c11719169785.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T16:40:48.848Z","action":"insert_row","appId":"edeba891-fb49-458f-9390-40df1fcd51b6","tableName":"submissions","rowId":"4"}
+{"timestamp":"2026-06-22T16:40:48.866Z","action":"create_app","appId":"58e8e716-ab1d-44f8-bb92-8a2f63824be1"}
+{"timestamp":"2026-06-22T16:40:48.872Z","action":"create_table","appId":"58e8e716-ab1d-44f8-bb92-8a2f63824be1","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T16:40:48.883Z","action":"upload_file","appId":"58e8e716-ab1d-44f8-bb92-8a2f63824be1","details":{"fileName":"58e8e716-ab1d-44f8-bb92-8a2f63824be1-33874f913955c265cbb08f6e02dbe111.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T16:40:48.891Z","action":"insert_row","appId":"58e8e716-ab1d-44f8-bb92-8a2f63824be1","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T16:40:48.900Z","action":"delete_row","appId":"58e8e716-ab1d-44f8-bb92-8a2f63824be1","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T16:40:48.930Z","action":"create_app","appId":"d77d69d3-48ae-4c28-8371-f9af268011d2"}
+{"timestamp":"2026-06-22T16:40:48.953Z","action":"create_storage_upgrade_checkout","appId":"d77d69d3-48ae-4c28-8371-f9af268011d2","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T16:40:48.980Z","action":"activate_paid_storage","appId":"d77d69d3-48ae-4c28-8371-f9af268011d2","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T16:40:48.992Z","action":"upload_file","appId":"d77d69d3-48ae-4c28-8371-f9af268011d2","details":{"fileName":"d77d69d3-48ae-4c28-8371-f9af268011d2-c8504c7559f9ac9ecd8980368325121d.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T16:40:49.201Z","action":"create_app","appId":"f5df0927-84df-4d87-8c5e-ea47fc42058d"}
+{"timestamp":"2026-06-22T16:40:49.218Z","action":"upload_file","appId":"f5df0927-84df-4d87-8c5e-ea47fc42058d","details":{"fileName":"f5df0927-84df-4d87-8c5e-ea47fc42058d-ca54eb4e8788f5d518261ac31926d37a.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T16:40:49.224Z","action":"delete_app","appId":"f5df0927-84df-4d87-8c5e-ea47fc42058d","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T16:40:49.242Z","action":"create_app","appId":"de8b1aab-6964-4707-b618-63200f2e5a27"}
+{"timestamp":"2026-06-22T16:40:49.261Z","action":"update_retention_policy","appId":"de8b1aab-6964-4707-b618-63200f2e5a27","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T16:40:49.509Z","action":"retention_cleanup_delete_app","appId":"de8b1aab-6964-4707-b618-63200f2e5a27","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T16:45:24.675Z","action":"create_app","appId":"e7175df3-3c6d-41c3-82a3-d06b79133eb4"}
+{"timestamp":"2026-06-22T16:45:24.853Z","action":"create_table","appId":"e7175df3-3c6d-41c3-82a3-d06b79133eb4","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T16:45:24.873Z","action":"update_retention_policy","appId":"e7175df3-3c6d-41c3-82a3-d06b79133eb4","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T16:45:24.890Z","action":"alter_table","appId":"e7175df3-3c6d-41c3-82a3-d06b79133eb4","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T16:45:24.961Z","action":"insert_row","appId":"e7175df3-3c6d-41c3-82a3-d06b79133eb4","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T16:45:25.002Z","action":"insert_row","appId":"e7175df3-3c6d-41c3-82a3-d06b79133eb4","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T16:45:25.069Z","action":"insert_row","appId":"e7175df3-3c6d-41c3-82a3-d06b79133eb4","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T16:45:25.106Z","action":"create_app","appId":"1c3226f4-dff4-4d58-b42b-74fe3dece9f7"}
+{"timestamp":"2026-06-22T16:45:25.121Z","action":"create_storage_upgrade_checkout","appId":"1c3226f4-dff4-4d58-b42b-74fe3dece9f7","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T16:45:25.157Z","action":"upload_file","appId":"e7175df3-3c6d-41c3-82a3-d06b79133eb4","details":{"fileName":"e7175df3-3c6d-41c3-82a3-d06b79133eb4-36358f9382e090b0c4e1b177a1318eb7.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T16:45:25.210Z","action":"insert_row","appId":"e7175df3-3c6d-41c3-82a3-d06b79133eb4","tableName":"submissions","rowId":"4"}
+{"timestamp":"2026-06-22T16:45:25.237Z","action":"create_app","appId":"0241e4b1-df96-4a5e-b053-09ac6cc6d8f8"}
+{"timestamp":"2026-06-22T16:45:25.248Z","action":"create_table","appId":"0241e4b1-df96-4a5e-b053-09ac6cc6d8f8","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T16:45:25.265Z","action":"upload_file","appId":"0241e4b1-df96-4a5e-b053-09ac6cc6d8f8","details":{"fileName":"0241e4b1-df96-4a5e-b053-09ac6cc6d8f8-bdb15e2ef497d774d9f8b2ab9765ac05.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T16:45:25.276Z","action":"insert_row","appId":"0241e4b1-df96-4a5e-b053-09ac6cc6d8f8","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T16:45:25.283Z","action":"delete_row","appId":"0241e4b1-df96-4a5e-b053-09ac6cc6d8f8","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T16:45:25.325Z","action":"create_app","appId":"c6b8592a-266b-4948-aecc-b880f5839d52"}
+{"timestamp":"2026-06-22T16:45:25.345Z","action":"create_storage_upgrade_checkout","appId":"c6b8592a-266b-4948-aecc-b880f5839d52","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T16:45:25.365Z","action":"activate_paid_storage","appId":"c6b8592a-266b-4948-aecc-b880f5839d52","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T16:45:25.376Z","action":"upload_file","appId":"c6b8592a-266b-4948-aecc-b880f5839d52","details":{"fileName":"c6b8592a-266b-4948-aecc-b880f5839d52-8c2029ef9881e9d118d8de9a4e693254.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T16:45:25.497Z","action":"create_app","appId":"993892e7-610a-47f3-82b5-eca13a7248f5"}
+{"timestamp":"2026-06-22T16:45:25.507Z","action":"upload_file","appId":"993892e7-610a-47f3-82b5-eca13a7248f5","details":{"fileName":"993892e7-610a-47f3-82b5-eca13a7248f5-f3b793ea723f5cd18ff5f7e3b99fd475.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T16:45:25.514Z","action":"delete_app","appId":"993892e7-610a-47f3-82b5-eca13a7248f5","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T16:45:25.535Z","action":"create_app","appId":"efc283b3-302d-4bf1-90b6-511407b611dd"}
+{"timestamp":"2026-06-22T16:45:25.554Z","action":"update_retention_policy","appId":"efc283b3-302d-4bf1-90b6-511407b611dd","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T16:45:25.898Z","action":"retention_cleanup_delete_app","appId":"efc283b3-302d-4bf1-90b6-511407b611dd","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T20:45:29.265Z","action":"create_app","appId":"729ca13a-c2fa-441b-82be-5e0b4c1c9fb5"}
+{"timestamp":"2026-06-22T20:45:29.389Z","action":"create_table","appId":"729ca13a-c2fa-441b-82be-5e0b4c1c9fb5","tableName":"submissions","details":{"warnings":[{"field":"student_name","category":"identity","message":"Field 'student_name' may contain identity data. Collect only what is necessary and define a retention period."},{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."},{"field":"photo_url","category":"photos and media","message":"Field 'photo_url' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T20:45:29.402Z","action":"update_retention_policy","appId":"729ca13a-c2fa-441b-82be-5e0b4c1c9fb5","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2026-12-31","note":"Keep until the end of the pilot, then review and delete."}}}
+{"timestamp":"2026-06-22T20:45:29.412Z","action":"alter_table","appId":"729ca13a-c2fa-441b-82be-5e0b4c1c9fb5","tableName":"submissions","details":{"warnings":[{"field":"health_status","category":"health","message":"Field 'health_status' may contain health data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T20:45:29.444Z","action":"insert_row","appId":"729ca13a-c2fa-441b-82be-5e0b4c1c9fb5","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T20:45:29.460Z","action":"insert_row","appId":"729ca13a-c2fa-441b-82be-5e0b4c1c9fb5","tableName":"submissions","rowId":"2"}
+{"timestamp":"2026-06-22T20:45:29.470Z","action":"insert_row","appId":"729ca13a-c2fa-441b-82be-5e0b4c1c9fb5","tableName":"submissions","rowId":"3"}
+{"timestamp":"2026-06-22T20:45:29.499Z","action":"create_app","appId":"cc252fed-9866-4202-82b5-afc9e5a46277"}
+{"timestamp":"2026-06-22T20:45:29.507Z","action":"create_storage_upgrade_checkout","appId":"cc252fed-9866-4202-82b5-afc9e5a46277","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T20:45:29.530Z","action":"upload_file","appId":"729ca13a-c2fa-441b-82be-5e0b4c1c9fb5","details":{"fileName":"729ca13a-c2fa-441b-82be-5e0b4c1c9fb5-6c2fb86fa768855cd76b4fc85953923b.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T20:45:29.556Z","action":"insert_row","appId":"729ca13a-c2fa-441b-82be-5e0b4c1c9fb5","tableName":"submissions","rowId":"4"}
+{"timestamp":"2026-06-22T20:45:29.574Z","action":"create_app","appId":"c50f0d36-6b45-44c8-9057-bafd349e9bbc"}
+{"timestamp":"2026-06-22T20:45:29.581Z","action":"create_table","appId":"c50f0d36-6b45-44c8-9057-bafd349e9bbc","tableName":"submissions","details":{"warnings":[{"field":"photo_file_name","category":"photos and media","message":"Field 'photo_file_name' may contain photos and media data. Collect only what is necessary and define a retention period."}]}}
+{"timestamp":"2026-06-22T20:45:29.587Z","action":"upload_file","appId":"c50f0d36-6b45-44c8-9057-bafd349e9bbc","details":{"fileName":"c50f0d36-6b45-44c8-9057-bafd349e9bbc-ce5f716fdc8c66349c981f49ee28b156.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T20:45:29.593Z","action":"insert_row","appId":"c50f0d36-6b45-44c8-9057-bafd349e9bbc","tableName":"submissions","rowId":"1"}
+{"timestamp":"2026-06-22T20:45:29.599Z","action":"delete_row","appId":"c50f0d36-6b45-44c8-9057-bafd349e9bbc","tableName":"submissions","rowId":"1","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T20:45:29.622Z","action":"create_app","appId":"d008e770-4c61-4e02-a672-a7822319f4ea"}
+{"timestamp":"2026-06-22T20:45:29.638Z","action":"create_storage_upgrade_checkout","appId":"d008e770-4c61-4e02-a672-a7822319f4ea","details":{"checkoutUrlConfigured":true}}
+{"timestamp":"2026-06-22T20:45:29.649Z","action":"activate_paid_storage","appId":"d008e770-4c61-4e02-a672-a7822319f4ea","details":{"paymentProvider":"test","externalPaymentId":"pay_123"}}
+{"timestamp":"2026-06-22T20:45:29.660Z","action":"upload_file","appId":"d008e770-4c61-4e02-a672-a7822319f4ea","details":{"fileName":"d008e770-4c61-4e02-a672-a7822319f4ea-32932df3598b9fe54fdf040fc18e8372.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T20:45:29.747Z","action":"create_app","appId":"8548a863-9f44-4439-b25a-ce75a33b15b3"}
+{"timestamp":"2026-06-22T20:45:29.753Z","action":"upload_file","appId":"8548a863-9f44-4439-b25a-ce75a33b15b3","details":{"fileName":"8548a863-9f44-4439-b25a-ce75a33b15b3-f91db212f12926904a5e637cd104a576.png","size":12,"mimetype":"image/png"}}
+{"timestamp":"2026-06-22T20:45:29.758Z","action":"delete_app","appId":"8548a863-9f44-4439-b25a-ce75a33b15b3","details":{"deletedFiles":1}}
+{"timestamp":"2026-06-22T20:45:29.770Z","action":"create_app","appId":"57ebdc7f-9970-4c13-a762-70f3b04c239f"}
+{"timestamp":"2026-06-22T20:45:29.776Z","action":"update_retention_policy","appId":"57ebdc7f-9970-4c13-a762-70f3b04c239f","details":{"retentionPolicy":{"policy":"custom","retainUntil":"2000-01-01","note":"Expired test data."}}}
+{"timestamp":"2026-06-22T20:45:29.940Z","action":"retention_cleanup_delete_app","appId":"57ebdc7f-9970-4c13-a762-70f3b04c239f","details":{"deletedFiles":0}}
+{"timestamp":"2026-06-22T22:42:39.332Z","action":"upload_file","appId":"bc0c7472-80dc-4f26-b474-ee19db9cef74","details":{"fileName":"bc0c7472-80dc-4f26-b474-ee19db9cef74-b66c21d52c13164223d5e9e37c0cc4ce.jpg","size":19702,"mimetype":"image/jpeg"}}
+{"timestamp":"2026-06-22T22:42:39.345Z","action":"insert_row","appId":"bc0c7472-80dc-4f26-b474-ee19db9cef74","tableName":"projects","rowId":"1"}
+{"timestamp":"2026-06-22T22:43:07.096Z","action":"update_row","appId":"bc0c7472-80dc-4f26-b474-ee19db9cef74","tableName":"projects","rowId":"1"}
+{"timestamp":"2026-06-22T23:41:26.230Z","action":"upload_file","appId":"6a38f2d7-687c-4168-903a-d89162766a03","details":{"fileName":"6a38f2d7-687c-4168-903a-d89162766a03-c3497fc6a371d4d5edf437989ae23b6b.jpg","size":19702,"mimetype":"image/jpeg"}}
+{"timestamp":"2026-06-22T23:41:26.244Z","action":"insert_row","appId":"6a38f2d7-687c-4168-903a-d89162766a03","tableName":"projects","rowId":"1"}
+{"timestamp":"2026-06-22T23:42:03.716Z","action":"update_row","appId":"6a38f2d7-687c-4168-903a-d89162766a03","tableName":"projects","rowId":"1"}
+{"timestamp":"2026-06-23T00:11:00.253Z","action":"upload_file","appId":"33d1da1f-c565-4bb1-8f97-786c59c7d980","details":{"fileName":"33d1da1f-c565-4bb1-8f97-786c59c7d980-ad827e1acef6f9dd5052b5a79dc640dc.jpg","size":19702,"mimetype":"image/jpeg"}}
+{"timestamp":"2026-06-23T00:14:55.808Z","action":"upload_file","appId":"33d1da1f-c565-4bb1-8f97-786c59c7d980","details":{"fileName":"33d1da1f-c565-4bb1-8f97-786c59c7d980-0efcb6c53623f1d15b199f27721f8019.jpg","size":19702,"mimetype":"image/jpeg"}}
+{"timestamp":"2026-06-23T00:14:55.820Z","action":"insert_row","appId":"33d1da1f-c565-4bb1-8f97-786c59c7d980","tableName":"projects","rowId":"1"}
+{"timestamp":"2026-06-23T00:15:38.788Z","action":"update_row","appId":"33d1da1f-c565-4bb1-8f97-786c59c7d980","tableName":"projects","rowId":"1"}
+{"timestamp":"2026-06-23T00:51:42.204Z","action":"upload_file","appId":"5a97d1a4-048d-4687-93f0-e7b224489c29","details":{"fileName":"5a97d1a4-048d-4687-93f0-e7b224489c29-c37c7f7879e1258f585d5c83f8bdf304.jpg","size":19702,"mimetype":"image/jpeg"}}
+{"timestamp":"2026-06-23T00:51:42.216Z","action":"insert_row","appId":"5a97d1a4-048d-4687-93f0-e7b224489c29","tableName":"projects","rowId":"1"}
+{"timestamp":"2026-06-23T00:52:11.021Z","action":"update_row","appId":"5a97d1a4-048d-4687-93f0-e7b224489c29","tableName":"projects","rowId":"1"}
+{"timestamp":"2026-06-23T09:23:32.308Z","action":"upload_file","appId":"6a38f2d7-687c-4168-903a-d89162766a03","details":{"fileName":"6a38f2d7-687c-4168-903a-d89162766a03-69027d412ee726b0827da6a2445bdb09.jpg","size":13013,"mimetype":"image/jpeg"}}
+{"timestamp":"2026-06-23T09:23:32.323Z","action":"insert_row","appId":"6a38f2d7-687c-4168-903a-d89162766a03","tableName":"projects","rowId":"2"}
+{"timestamp":"2026-06-23T09:23:56.512Z","action":"update_row","appId":"6a38f2d7-687c-4168-903a-d89162766a03","tableName":"projects","rowId":"2"}
+{"timestamp":"2026-06-23T09:24:06.800Z","action":"update_row","appId":"6a38f2d7-687c-4168-903a-d89162766a03","tableName":"projects","rowId":"1"}
+{"timestamp":"2026-06-23T09:24:55.428Z","action":"upload_file","appId":"5a97d1a4-048d-4687-93f0-e7b224489c29","details":{"fileName":"5a97d1a4-048d-4687-93f0-e7b224489c29-a56c0e2fe487aab278bf4eaadb8f3657.jpg","size":19729,"mimetype":"image/jpeg"}}
+{"timestamp":"2026-06-23T09:24:55.449Z","action":"insert_row","appId":"5a97d1a4-048d-4687-93f0-e7b224489c29","tableName":"projects","rowId":"2"}
+{"timestamp":"2026-06-23T09:25:13.164Z","action":"update_row","appId":"5a97d1a4-048d-4687-93f0-e7b224489c29","tableName":"projects","rowId":"2"}
+{"timestamp":"2026-06-23T09:25:46.987Z","action":"upload_file","appId":"33d1da1f-c565-4bb1-8f97-786c59c7d980","details":{"fileName":"33d1da1f-c565-4bb1-8f97-786c59c7d980-fbe98f5dedea023648d0b943f62b5f3b.jpg","size":10976,"mimetype":"image/jpeg"}}
+{"timestamp":"2026-06-23T09:25:47.004Z","action":"insert_row","appId":"33d1da1f-c565-4bb1-8f97-786c59c7d980","tableName":"projects","rowId":"2"}
+{"timestamp":"2026-06-23T09:26:06.321Z","action":"update_row","appId":"33d1da1f-c565-4bb1-8f97-786c59c7d980","tableName":"projects","rowId":"2"}
+{"timestamp":"2026-06-23T09:36:49.472Z","action":"upload_file","appId":"6a38f2d7-687c-4168-903a-d89162766a03","details":{"fileName":"6a38f2d7-687c-4168-903a-d89162766a03-676bda428fe0244aacf1fed05e564e53.jpeg","size":2107521,"mimetype":"image/jpeg"}}
+{"timestamp":"2026-06-23T09:36:49.512Z","action":"insert_row","appId":"6a38f2d7-687c-4168-903a-d89162766a03","tableName":"projects","rowId":"3"}
+{"timestamp":"2026-06-23T09:38:18.865Z","action":"upload_file","appId":"5a97d1a4-048d-4687-93f0-e7b224489c29","details":{"fileName":"5a97d1a4-048d-4687-93f0-e7b224489c29-fde07ef0da98a75af9f372f131e0bfc4.jpeg","size":2107521,"mimetype":"image/jpeg"}}
+{"timestamp":"2026-06-23T09:38:18.892Z","action":"insert_row","appId":"5a97d1a4-048d-4687-93f0-e7b224489c29","tableName":"projects","rowId":"3"}
+{"timestamp":"2026-06-23T09:39:18.987Z","action":"insert_row","appId":"33d1da1f-c565-4bb1-8f97-786c59c7d980","tableName":"projects","rowId":"3"}
+{"timestamp":"2026-06-23T10:04:05.961Z","action":"update_row","appId":"5a97d1a4-048d-4687-93f0-e7b224489c29","tableName":"projects","rowId":"3"}
+{"timestamp":"2026-06-23T10:04:39.666Z","action":"update_row","appId":"33d1da1f-c565-4bb1-8f97-786c59c7d980","tableName":"projects","rowId":"3"}
+{"timestamp":"2026-06-23T10:05:36.542Z","action":"update_row","appId":"6a38f2d7-687c-4168-903a-d89162766a03","tableName":"projects","rowId":"3"}

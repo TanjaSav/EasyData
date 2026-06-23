@@ -26,15 +26,15 @@
       </a>
       <div class="flex items-center gap-3 text-lg font-bold text-muted">
         <div class="inline-flex p-1" aria-label="Language selector">
-          <button class="rounded-md bg-transparent px-2 py-1 text-xs font-extrabold text-ink" id="lang-en" type="button" onclick="changeLanguage('en')">EN</button>
-          <button class="rounded-md bg-transparent px-2 py-1 text-xs font-extrabold text-muted" id="lang-is" type="button" onclick="changeLanguage('is')">ÍS</button>
+          <button class="rounded-md bg-transparent px-2 py-1 text-sm font-extrabold text-ink" id="lang-en" type="button" onclick="changeLanguage('en')">EN</button>
+          <button class="rounded-md bg-transparent px-2 py-1 text-sm font-extrabold text-muted" id="lang-is" type="button" onclick="changeLanguage('is')">ÍS</button>
         </div>
       </div>
     </nav>
   </header>
 
   <main id="main-content">
-    <section class="min-h-[64vh] items-center border-b border-line bg-[linear-gradient(90deg,rgba(255,255,255,.96)_0%,rgba(255,255,255,.88)_42%,rgba(255,255,255,.35)_78%),url('/assets/easydata-hero.png')] bg-cover bg-center bg-no-repeat pt-40 " aria-label="Hero section">
+    <section class="min-h-[420px] items-center lg:min-h-[420px] border-b border-line bg-[linear-gradient(90deg,rgba(255,255,255,.96)_0%,rgba(255,255,255,.88)_42%,rgba(255,255,255,.35)_78%),url('/assets/easydata-hero.png')] bg-cover bg-center bg-no-repeat pt-40 " aria-label="Hero section">
       <div class="mx-4 max-w-[1180px] sm:mx-auto">
           <h1 class=" mx-[40px] text-5xl font-black font-semibold leading-[.96] tracking-normal sm:text-5xl lg:text-6xl"><span data-i18n="hero-title">Simple database platform for educators</span></h1>
           <!-- <p class="mt-6 max-w-2xl text-lg leading-8 text-muted sm:text-xl">EasyData lets teachers and small teams create data-backed web apps without managing servers, dashboards, or database credentials</p> -->
@@ -44,19 +44,32 @@
 
     <section id="mcp" class="border-t border-line bg-white py-14 sm:py-16">
 
-<div class="guide-platform-wrap mx-auto mt-12 max-w-[1180px] px-4">
-      <div class="guide-platform-selector inline-flex gap-1  p-1" aria-label="Platform guide selector">
-        <button class="guide-platform-btn active min-h-9 cursor-pointer rounded-md border-0 bg-transparent px-3.5 font-extrabold text-ink" id="guide-platform-claude" type="button" onclick="guideSelectPlatform('claude')">Claude</button>
-        <button class="guide-platform-btn min-h-9 cursor-pointer rounded-md border-0 bg-transparent px-3.5 font-extrabold text-muted" id="guide-platform-gemini" type="button" onclick="guideSelectPlatform('gemini')">Gemini</button>
-        <button class="guide-platform-btn min-h-9 cursor-pointer rounded-md border-0 bg-transparent px-3.5 font-extrabold text-muted" id="guide-platform-chatgpt" type="button" onclick="guideSelectPlatform('chatgpt')">ChatGPT</button>
+      <div class="guide-platform-wrap mx-auto max-w-[1180px] px-4">
+        <div class="guide-platform-selector inline-flex gap-1  p-1" aria-label="Platform guide selector">
+          <button class="guide-platform-btn active min-h-9 cursor-pointer rounded-md border-0 bg-transparent px-3.5 font-extrabold text-ink" id="guide-platform-claude" type="button" onclick="guideSelectPlatform('claude')">Claude</button>
+          <button class="guide-platform-btn min-h-9 cursor-pointer rounded-md border-0 bg-transparent px-3.5 font-extrabold text-muted" id="guide-platform-gemini" type="button" onclick="guideSelectPlatform('gemini')">Gemini</button>
+          <button class="guide-platform-btn min-h-9 cursor-pointer rounded-md border-0 bg-transparent px-3.5 font-extrabold text-muted" id="guide-platform-chatgpt" type="button" onclick="guideSelectPlatform('chatgpt')">ChatGPT</button>
+        </div>
       </div>
-    </div>
 
     <!-- Hero Section -->
-    <section class="mx-4 max-w-[1180px] py-10 sm:mx-auto">
-      <div class="">
-        <h2 class="max-w-4xl text-3xl font-black leading-none tracking-normal sm:text-4xl" id="guide-hero-title">Connect MCP via Claude Settings</h2>
-        <p class="mt-4 max-w-3xl text-lg leading-8 text-muted" id="guide-hero-desc">Follow the steps below to configure a custom database connection directly within your Claude settings interface using remote MCP URLs</p>
+    <section class="mx-4 max-w-[1180px] py-10 pb-0 text-center sm:mx-auto">
+      <div>
+        <h2 class="text-xl font-black leading-tight tracking-normal text-ink sm:text-2xl" id="guide-hero-title">Connect MCP via Claude Settings</h2>
+        <p class="mx-auto mt-3 max-w-4xl text-left text-[.98rem] leading-7 text-muted" id="guide-hero-desc">Follow the steps below to configure a custom database connection directly within your Claude settings interface using remote MCP URLs</p>
+        <div class="mx-auto mt-5 flex max-w-4xl justify-start gap-1 p-1" aria-label="Guide view selector">
+          <button class="guide-mode-btn active min-h-9 min-w-[150px] cursor-pointer rounded-md border-0 bg-transparent px-3.5 text-left font-extrabold text-ink" id="guide-mode-video" type="button" onclick="guideSelectMode('video')">Video instruction</button>
+          <button class="guide-mode-btn min-h-9 min-w-[150px] cursor-pointer rounded-md border-0 bg-transparent px-3.5 text-left font-extrabold text-muted" id="guide-mode-instructions" type="button" onclick="guideSelectMode('instructions')">Slide instruction</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Platform Video Section -->
+    <section class="mx-4 mb-8 max-w-[980px] text-center sm:mx-auto" id="guide-video-section">
+      <div class="mx-auto mt-5 overflow-hidden rounded-lg border border-line">
+        <video class="block aspect-video w-full object-contain" id="guide-platform-video" controls muted playsinline preload="metadata">
+          <source id="guide-platform-video-source" src="/assets/videos/claude.mp4" type="video/mp4" />
+        </video>
       </div>
     </section>
 
@@ -139,21 +152,9 @@
 
     </section>
 
-    <!-- Support Callout Grid -->
-    <section class="guide-info-grid mx-4 mt-6 grid max-w-[1180px] gap-5 sm:mx-auto lg:grid-cols-2">
-      <!-- Path Lookup Card -->
-      <div class="guide-info-card p-5" id="guide-quick-paths">
-        <h4 class="text-[1.1rem] font-black">Hosted vs Local MCP</h4>
-        <p class="mt-3 text-[.95rem] leading-relaxed text-muted"><strong>Cloud URLs (Connectors GUI):</strong> Ideal for hosted environments. Claude's cloud models connect directly via HTTP/SSE. The URL must be public and secure: <span class="guide-code-tag rounded bg-white px-1.5 py-0.5 font-mono text-[.85em] text-ink">https://easydata.is/mcp</span></p>
-        <p class="mt-3 text-[.95rem] leading-relaxed text-muted"><strong>Local stdio (Config File):</strong> Ideal for local-only scripts. Requires setting up command hooks in the local configuration JSON files</p>
-      </div>
-
-      <!-- Troubleshooting Info Card -->
-      <div class="guide-info-card trouble  p-5" id="guide-troubleshooting">
-        <h4 class="text-[1.1rem] font-black">Integration Tips</h4>
-        <p class="mt-3 text-[.95rem] leading-relaxed text-muted"><strong>Explicit Activation:</strong> When starting a new conversation with Claude, state clearly: <code>"Use the EasyData MCP connector"</code> to ensure Claude binds the connection.</p>
-        <p class="mt-3 text-[.95rem] leading-relaxed text-muted"><strong>Permission Prompts:</strong> Claude will ask for explicit confirmation before reading or writing data. Choose <strong>Always Allow</strong> to bypass repeated clicks</p>
-      </div>
+    <section class="guide-prompt-note mx-4 mt-12 max-w-[1180px] text-center sm:mx-auto" id="guide-prompt-note">
+      <h3 class="text-xl font-black leading-tight tracking-normal text-ink sm:text-2xl" id="guide-prompt-note-title">How to write the prompt</h3>
+      <p class="mx-auto mt-3 max-w-4xl text-left text-[.98rem] leading-7 text-muted" id="guide-prompt-note-text">Write the prompt like a short product brief. Start with the app goal and who will use it, then list the data you need to store as tables and fields, including field types when you know them. Describe the main actions users should be able to do, such as submit, edit, review, score, upload files, filter, or delete records. Mention any images or documents that should be uploaded, what should be shown on each page, and any rules such as required fields, score ranges, teacher-only comments, or sorting by newest first.</p>
     </section>
     </section>
   </main>
@@ -176,7 +177,7 @@
       }
     };
 
-    let currentLang = localStorage.getItem("easydata-lang") || "en";
+    let currentLang = "en";
 
     function t(key) {
       return translations[currentLang][key] || translations.en[key] || key;
@@ -226,6 +227,10 @@
         heroDescGemini: "Install the EasyData Chrome extension to let Gemini create hosted database-backed apps from selected chat text.",
         heroTitleChatgpt: "Connect MCP inside ChatGPT",
         heroDescChatgpt: "Use ChatGPT Apps and developer mode to add EasyData as a custom remote MCP connector for database-backed app creation.",
+        modeVideo: "Video instruction",
+        modeInstructions: "Slide instruction",
+        promptNoteTitle: "How to write the prompt",
+        promptNote: "Write the prompt like a short product brief. Start with the app goal and who will use it, then list the data you need to store as tables and fields, including field types when you know them. Describe the main actions users should be able to do, such as submit, edit, review, score, upload files, filter, or delete records. Mention any images or documents that should be uploaded, what should be shown on each page, and any rules such as required fields, score ranges, teacher-only comments, or sorting by newest first.",
         urlLabel: "EasyData Remote URL:",
         urlHeading: "Connection URL",
         promptLabel: "Sample Prompt to Activate:",
@@ -236,12 +241,6 @@
         prev: "← Prev",
         next: "Next →",
         promptContent: "Use EasyData MCP. Create a simple table called workouts with columns: exercise_name TEXT, duration_minutes INTEGER",
-        infoMcpTitle: "Hosted vs Local MCP",
-        infoMcp1: `<strong>Cloud URLs (Connectors GUI):</strong> Ideal for hosted environments. Claude's cloud models connect directly via HTTP/SSE. The URL must be public and secure: <span class="guide-code-tag rounded bg-white px-1.5 py-0.5 font-mono text-[.85em] text-ink">https://easydata.is/mcp</span>`,
-        infoMcp2: "<strong>Local stdio (Config File):</strong> Ideal for local-only scripts. Requires setting up command hooks in the local configuration JSON files",
-        tipsTitle: "Integration Tips",
-        tips1: `<strong>Explicit Activation:</strong> When starting a new conversation with Claude, state clearly: <code>"Use the EasyData MCP connector"</code> to ensure Claude binds the connection.`,
-        tips2: "<strong>Permission Prompts:</strong> Claude will ask for explicit confirmation before reading or writing data. Choose <strong>Always Allow</strong> to bypass repeated clicks",
         footer: "&copy; 2026 EasyData. Supporting open-source Model Context Protocol standards"
       },
       is: {
@@ -255,6 +254,10 @@
         heroDescGemini: "Settu upp EasyData Chrome viðbótina til að láta Gemini búa til hýst gagnadrifin öpp úr völdum spjalltexta.",
         heroTitleChatgpt: "Tengja MCP inni í ChatGPT",
         heroDescChatgpt: "Notaðu ChatGPT Apps og developer mode til að bæta EasyData við sem sérsniðnu ytra MCP tengi fyrir gagnadrifna appsmíði.",
+        modeVideo: "Vídeóleiðbeining",
+        modeInstructions: "Glæruleiðbeining",
+        promptNoteTitle: "Hvernig skrifa á prompt",
+        promptNote: "Skrifaðu promptið eins og stutta vöru-lýsingu. Byrjaðu á markmiði appsins og hverjir nota það, og skráðu síðan gögnin sem þarf að geyma sem töflur og dálka, ásamt dálkagerðum ef þú veist þær. Lýstu helstu aðgerðum sem notendur eiga að geta framkvæmt, til dæmis senda inn, breyta, yfirfara, gefa einkunn, hlaða upp skrám, sía eða eyða færslum. Nefndu hvaða myndir eða skjöl eigi að vera hlaðin upp, hvað eigi að sýna á hverri síðu, og reglur eins og skyldureiti, einkunnabil, athugasemdir kennara eða röðun eftir nýjustu færslum.",
         urlLabel: "Ytri EasyData vefslóð:",
         urlHeading: "Tengivefslóð",
         promptLabel: "Dæmi um fyrirmæli:",
@@ -265,12 +268,6 @@
         prev: "← Fyrra",
         next: "Næsta →",
         promptContent: "Notaðu EasyData MCP. Búðu til einfalda töflu sem heitir workouts með dálkunum: exercise_name TEXT, duration_minutes INTEGER",
-        infoMcpTitle: "Hýst eða staðbundið MCP",
-        infoMcp1: `<strong>Skýjavefslóðir (Connectors GUI):</strong> Hentar vel fyrir hýst umhverfi. Skýjalíkön Claude tengjast beint með HTTP/SSE. Vefslóðin þarf að vera opinber og örugg: <span class="guide-code-tag rounded bg-white px-1.5 py-0.5 font-mono text-[.85em] text-ink">https://easydata.is/mcp</span>`,
-        infoMcp2: "<strong>Staðbundið stdio (stillingarskrá):</strong> Hentar fyrir staðbundin script. Krefst þess að skipanir séu stilltar í staðbundnum JSON stillingarskrám.",
-        tipsTitle: "Ábendingar",
-        tips1: `<strong>Skýr virkjun:</strong> Þegar nýtt spjall er hafið við Claude, segðu skýrt: <code>"Notaðu EasyData MCP tengið"</code> til að tryggja að Claude virki tenginguna.`,
-        tips2: "<strong>Heimildarbeiðnir:</strong> Claude biður um skýra staðfestingu áður en gögn eru lesin eða skrifuð. Veldu <strong>Always Allow</strong> til að sleppa endurteknum smellum.",
         footer: "&copy; 2026 EasyData. Styður opna staðla fyrir Model Context Protocol"
       }
     };
@@ -383,40 +380,40 @@
       },
       gemini: {
         en: [
-          { number: 1, title: "Install Extension", heading: "1. Install the Chrome extension", text: "Open <code>chrome://extensions/</code>, enable <strong>Developer mode</strong>, click <strong>Load unpacked</strong>, and select the <code>chrome-extention</code> folder from this project.", mockup: "extension", interactive: null },
+          { number: 1, title: "Install Extension", heading: "1. Install the Chrome extension", text: "Open <code>chromewebstore.google.com/</code>, search <strong>Easydata MCP Connector</strong>, and click <strong>Add to Chrome</strong>.", imageName: "chrome_store_easydata.jpg", interactive: null },
           { number: 2, title: "Open Gemini", heading: "2. Open Gemini", text: "Open <code>gemini.google.com</code> or <code>aistudio.google.com</code> and write the app you want Gemini to create.", mockup: "prompt", interactive: null },
-          { number: 3, title: "Select Prompt", heading: "3. Select your prompt", text: "Highlight the prompt text, right-click it, and choose <strong>Create App with EasyData</strong> from the context menu.", mockup: "context", interactive: null },
+          { number: 3, title: "Select Prompt", heading: "3. Select your prompt", text: "Highlight the prompt text, right-click it, and choose <strong>Create App with EasyData</strong> from the context menu.", imageName: "4-highlight-prompt.png", interactive: null },
           { number: 4, title: "Build App", heading: "4. EasyData builds the app", text: "The extension sends the selected prompt to EasyData. EasyData creates the database schema, writes the HTML app, and publishes it.", mockup: "build", interactive: null },
-          { number: 5, title: "Open Result", heading: "5. Open the generated app", text: "When the app is ready, the extension inserts the hosted URL and summary back into the Gemini page.", mockup: "result", interactive: null }
+          { number: 5, title: "Open Result", heading: "5. Open the generated app", text: "When the app is ready, the extension inserts the hosted URL and summary back into the Gemini page.", imageName: "5-generated-app.png", interactive: null }
         ],
         is: [
-          { number: 1, title: "Setja upp", heading: "1. Settu upp Chrome viðbótina", text: "Opnaðu <code>chrome://extensions/</code>, virkjaðu <strong>Developer mode</strong>, smelltu á <strong>Load unpacked</strong> og veldu <code>chrome-extention</code> möppuna úr verkefninu.", mockup: "extension", interactive: null },
-          { number: 2, title: "Opna Gemini", heading: "2. Opnaðu Gemini", text: "Opnaðu <code>gemini.google.com</code> eða <code>aistudio.google.com</code> og skrifaðu lýsingu á appinu sem þú vilt búa til.", mockup: "prompt", interactive: null },
-          { number: 3, title: "Velja texta", heading: "3. Veldu fyrirmælin", text: "Ljósaðu textann, hægrismelltu og veldu <strong>Create App with EasyData</strong> í samhengisvalmyndinni.", mockup: "context", interactive: null },
+          { number: 1, title: "Setja upp", heading: "1. Settu upp Chrome viðbótina", text: "Opnaðu <code>chromewebstore.google.com/</code>, leitaðu að <strong>Easydata MCP Connector</strong> og smelltu á <strong>Add to Chrome</strong>.", imageName: "chrome_store_easydata.jpg", interactive: null },
+          { number: 2, title: "Opna Gemini", heading: "2. Opnaðu Gemini", text: "Opnaðu <code>gemini.google.com</code> eða <code>aistudio.google.com</code> og skrifaðu lýsingu á appinu sem þú vilt að Gemini búi til.", mockup: "prompt", interactive: null },
+          { number: 3, title: "Velja texta", heading: "3. Veldu fyrirmælin", text: "Ljósaðu textann í spjallinu, hægrismelltu á hann og veldu <strong>Create App with EasyData</strong> úr samhengisvalmyndinni.", imageName: "4-highlight-prompt.png", interactive: null },
           { number: 4, title: "Smíða", heading: "4. EasyData smíðar appið", text: "Viðbótin sendir valda textann til EasyData. EasyData býr til gagnagrunn, skrifar HTML appið og birtir það.", mockup: "build", interactive: null },
-          { number: 5, title: "Opna app", heading: "5. Opnaðu tilbúna appið", text: "Þegar appið er tilbúið setur viðbótin hýstu vefslóðina og samantektina aftur inn á Gemini síðuna.", mockup: "result", interactive: null }
+          { number: 5, title: "Opna app", heading: "5. Opnaðu tilbúna appið", text: "Þegar appið er tilbúið setur viðbótin hýstu vefslóðina og samantektina aftur inn á Gemini spjallsíðuna.", imageName: "5-generated-app.png", interactive: null }
         ]
       },
       chatgpt: {
         en: [
-          { number: 1, title: "Check Plan", imageName: "ChatGPT/1.png", heading: "1. Check your tariff plan", text: "Full MCP support, including write and modify actions, works on ChatGPT Business, Enterprise, and Edu plans. Some MCP access connectors may also be available on Plus and Pro when connectors are enabled.", interactive: null },
-          { number: 2, title: "Open Settings", imageName: "ChatGPT/2.png", heading: "2. Open settings", text: "Open ChatGPT in the browser, click your profile menu, and go to <strong>Settings</strong>.", interactive: null },
-          { number: 3, title: "Go to Apps", imageName: "ChatGPT/3.png", heading: "3. Go to Apps", text: "In <strong>Apps</strong>, go to <strong>Advanced settings</strong> and choose <strong>Create app</strong>.", interactive: null },
-          { number: 4, title: "Create App", imageName: "ChatGPT/4.png", heading: "4. Choose Create app", text: "Select <strong>Create app</strong> to start adding EasyData as a custom MCP connector.", interactive: null },
-          { number: 5, title: "Name Connector", imageName: "ChatGPT/5.png", heading: "5. Name the connector", text: "Name the connector <code>EasyData</code> so it is easy to recognize when you use tools in ChatGPT.", interactive: null },
-          { number: 6, title: "Paste URL", imageName: "ChatGPT/6.png", heading: "6. Paste the EasyData MCP URL and click Create", text: "Paste the public HTTPS endpoint below, then click <strong>Create</strong> to save the connector.", interactive: "url" },
-          { number: 7, title: "Connect EasyData", imageName: "ChatGPT/7.png", heading: "7. Choose Connect EasyData to ChatGPT", text: "Select <strong>Connect EasyData to ChatGPT</strong> and approve the connection when ChatGPT asks for confirmation.", interactive: null },
-          { number: 8, title: "Start Chat", imageName: "ChatGPT/8.png", heading: "8. Start a ChatGPT conversation", text: "Open a new chat and explicitly ask ChatGPT to use the EasyData MCP connector. ChatGPT may ask for confirmation before write or modify actions.", interactive: "prompt" }
+          { number: 1, title: "Check Plan", imageName: "1.png", heading: "1. Check your tariff plan", text: "Full MCP support, including write and modify actions, works on ChatGPT Business, Enterprise, and Edu plans. Some MCP access connectors may also be available on Plus and Pro when connectors are enabled.", interactive: null },
+          { number: 2, title: "Open Settings", imageName: "2.png", heading: "2. Open settings", text: "Open ChatGPT in the browser, click your profile menu, and go to <strong>Settings</strong>.", interactive: null },
+          { number: 3, title: "Go to Apps", imageName: "3.png", heading: "3. Go to Apps", text: "In <strong>Apps</strong>, go to <strong>Advanced settings</strong> and choose <strong>Create app</strong>.", interactive: null },
+          { number: 4, title: "Create App", imageName: "4.png", heading: "4. Choose Create app", text: "Select <strong>Create app</strong> to start adding EasyData as a custom MCP connector.", interactive: null },
+          { number: 5, title: "Name Connector", imageName: "5.png", heading: "5. Name the connector", text: "Name the connector <code>EasyData</code> so it is easy to recognize when you use tools in ChatGPT.", interactive: null },
+          { number: 6, title: "Paste URL", imageName: "6.png", heading: "6. Paste the EasyData MCP URL and click Create", text: "Paste the public HTTPS endpoint below, then click <strong>Create</strong> to save the connector.", interactive: "url" },
+          { number: 7, title: "Connect EasyData", imageName: "7.png", heading: "7. Choose Connect EasyData to ChatGPT", text: "Select <strong>Connect EasyData to ChatGPT</strong> and approve the connection when ChatGPT asks for confirmation.", interactive: null },
+          { number: 8, title: "Start Chat", imageName: "8.png", heading: "8. Start a ChatGPT conversation", text: "Open a new chat and explicitly ask ChatGPT to use the EasyData MCP connector. ChatGPT may ask for confirmation before write or modify actions.", interactive: "prompt" }
         ],
         is: [
-          { number: 1, title: "Áætlun", imageName: "ChatGPT/1.png", heading: "1. Athugaðu áskriftarleiðina", text: "Fullur MCP stuðningur, þar á meðal skrif- og breytingaraðgerðir, virkar í ChatGPT Business, Enterprise og Edu. Sum MCP aðgangstengi geta einnig verið tiltæk í Plus og Pro þegar connectors eru virk.", interactive: null },
-          { number: 2, title: "Stillingar", imageName: "ChatGPT/2.png", heading: "2. Opnaðu stillingar", text: "Opnaðu ChatGPT í vafra, smelltu á prófílvalmyndina og farðu í <strong>Settings</strong>.", interactive: null },
-          { number: 3, title: "Apps", imageName: "ChatGPT/3.png", heading: "3. Farðu í Apps", text: "Í <strong>Apps</strong>, farðu í <strong>Advanced settings</strong> og veldu <strong>Create app</strong>.", interactive: null },
-          { number: 4, title: "Create app", imageName: "ChatGPT/4.png", heading: "4. Veldu Create app", text: "Veldu <strong>Create app</strong> til að byrja að bæta EasyData við sem sérsniðnu MCP tengi.", interactive: null },
-          { number: 5, title: "Nafn", imageName: "ChatGPT/5.png", heading: "5. Gefðu tenginu nafn", text: "Gefðu tenginu nafnið <code>EasyData</code> svo auðvelt sé að þekkja það þegar þú notar tól í ChatGPT.", interactive: null },
-          { number: 6, title: "Vefslóð", imageName: "ChatGPT/6.png", heading: "6. Límdu EasyData MCP vefslóðina og smelltu á Create", text: "Límdu opinberu HTTPS vefslóðina hér að neðan og smelltu síðan á <strong>Create</strong> til að vista tengið.", interactive: "url" },
-          { number: 7, title: "Tengja", imageName: "ChatGPT/7.png", heading: "7. Veldu Connect EasyData to ChatGPT", text: "Veldu <strong>Connect EasyData to ChatGPT</strong> og samþykktu tenginguna þegar ChatGPT biður um staðfestingu.", interactive: null },
-          { number: 8, title: "Spjall", imageName: "ChatGPT/8.png", heading: "8. Byrjaðu ChatGPT spjall", text: "Opnaðu nýtt spjall og biddu ChatGPT skýrt um að nota EasyData MCP tengið. ChatGPT gæti beðið um staðfestingu áður en skrif- eða breytingaraðgerðir eru keyrðar.", interactive: "prompt" }
+          { number: 1, title: "Áætlun", imageName: "1.png", heading: "1. Athugaðu áskriftarleiðina", text: "Fullur MCP stuðningur, þar á meðal skrif- og breytingaraðgerðir, virkar í ChatGPT Business, Enterprise og Edu. Sum MCP aðgangstengi geta einnig verið tiltæk í Plus og Pro þegar connectors eru virk.", interactive: null },
+          { number: 2, title: "Stillingar", imageName: "2.png", heading: "2. Opnaðu stillingar", text: "Opnaðu ChatGPT í vafra, smelltu á prófílvalmyndina og farðu í <strong>Settings</strong>.", interactive: null },
+          { number: 3, title: "Apps", imageName: "3.png", heading: "3. Farðu í Apps", text: "Í <strong>Apps</strong>, farðu í <strong>Advanced settings</strong> og veldu <strong>Create app</strong>.", interactive: null },
+          { number: 4, title: "Create app", imageName: "4.png", heading: "4. Veldu Create app", text: "Veldu <strong>Create app</strong> til að byrja að bæta EasyData við sem sérsniðnu MCP tengi.", interactive: null },
+          { number: 5, title: "Nafn", imageName: "5.png", heading: "5. Gefðu tenginu nafn", text: "Gefðu tenginu nafnið <code>EasyData</code> svo auðvelt sé að þekkja það þegar þú notar tól í ChatGPT.", interactive: null },
+          { number: 6, title: "Vefslóð", imageName: "6.png", heading: "6. Límdu EasyData MCP vefslóðina og smelltu á Create", text: "Límdu opinberu HTTPS vefslóðina hér að neðan og smelltu síðan á <strong>Create</strong> til að vista tengið.", interactive: "url" },
+          { number: 7, title: "Tengja", imageName: "7.png", heading: "7. Veldu Connect EasyData to ChatGPT", text: "Veldu <strong>Connect EasyData to ChatGPT</strong> og samþykktu tenginguna þegar ChatGPT biður um staðfestingu.", interactive: null },
+          { number: 8, title: "Spjall", imageName: "8.png", heading: "8. Byrjaðu ChatGPT spjall", text: "Opnaðu nýtt spjall og biddu ChatGPT skýrt um að nota EasyData MCP tengið. ChatGPT gæti beðið um staðfestingu áður en skrif- eða breytingaraðgerðir eru keyrðar.", interactive: "prompt" }
         ]
       }
     };
@@ -426,10 +423,12 @@
     let guideUrlParams = new URLSearchParams(window.location.search);
     let guideCurrentLang = currentLang;
     let guideCurrentPlatform = guideUrlParams.get("platform") || localStorage.getItem("easydata-platform") || "claude";
+    let guideCurrentMode = guideUrlParams.get("view") || localStorage.getItem("easydata-guide-view") || "video";
     if (!["en", "is"].includes(guideCurrentLang)) guideCurrentLang = "en";
-    if (guideUrlParams.has("lang")) localStorage.setItem("easydata-lang", guideCurrentLang);
-    if (guideUrlParams.has("platform")) localStorage.setItem("easydata-platform", guideCurrentPlatform);
+        if (guideUrlParams.has("platform")) localStorage.setItem("easydata-platform", guideCurrentPlatform);
     if (!guideStepsData[guideCurrentPlatform]) guideCurrentPlatform = "claude";
+    if (!["video", "instructions"].includes(guideCurrentMode)) guideCurrentMode = "video";
+    if (guideUrlParams.has("view")) localStorage.setItem("easydata-guide-view", guideCurrentMode);
     let guideSteps = guideStepsData[guideCurrentPlatform][guideCurrentLang] || guideStepsData.claude.en;
     let guideActiveUi = guideUiText[guideCurrentLang];
 
@@ -511,6 +510,12 @@
         (active ? 'active text-ink' : 'text-muted');
     }
 
+
+    function guideModeClass(active) {
+      return 'guide-mode-btn min-h-9 min-w-[150px] cursor-pointer rounded-md border-0 bg-transparent px-3.5 text-left font-extrabold ' +
+        (active ? 'active text-ink' : 'text-muted');
+    }
+
     // Load elements
     const menuEl = document.querySelector('#guide-visual .steps-menu');
     const dotsEl = document.getElementById('guide-dots-container');
@@ -518,6 +523,8 @@
     const svgEl = document.getElementById('guide-mockup-svg');
     const descTitleEl = document.getElementById('guide-step-desc-title');
     const descTextEl = document.getElementById('guide-step-desc-text');
+    const videoEl = document.getElementById('guide-platform-video');
+    const videoSourceEl = document.getElementById('guide-platform-video-source');
     
     const urlBoxEl = document.getElementById('guide-url-copy-box');
     const promptBoxEl = document.getElementById('guide-prompt-copy-box');
@@ -620,7 +627,8 @@
         imgEl.classList.remove('loaded', 'opacity-100', 'translate-y-0');
         imgEl.classList.add('opacity-0', 'translate-y-1');
         setTimeout(() => {
-          imgEl.src = `assets/Screenshot-claude-mcp/${step.imageName}`;
+          const screenshotFolder = guideCurrentPlatform === "gemini" ? "Screenshot-gemini-mcp" : guideCurrentPlatform === "chatgpt" ? "Screenshot-ChatGPT-mcp" : "Screenshot-claude-mcp";
+          imgEl.src = `assets/${screenshotFolder}/${step.imageName}`;
           imgEl.onload = () => {
             imgEl.classList.add('loaded', 'opacity-100', 'translate-y-0');
             imgEl.classList.remove('opacity-0', 'translate-y-1');
@@ -702,6 +710,13 @@
       document.getElementById('guide-platform-claude').className = guidePlatformClass(guideCurrentPlatform === 'claude');
       document.getElementById('guide-platform-gemini').className = guidePlatformClass(guideCurrentPlatform === 'gemini');
       document.getElementById('guide-platform-chatgpt').className = guidePlatformClass(guideCurrentPlatform === 'chatgpt');
+      document.getElementById('guide-mode-video').textContent = guideActiveUi.modeVideo;
+      document.getElementById('guide-mode-instructions').textContent = guideActiveUi.modeInstructions;
+      document.getElementById('guide-mode-video').className = guideModeClass(guideCurrentMode === 'video');
+      document.getElementById('guide-mode-instructions').className = guideModeClass(guideCurrentMode === 'instructions');
+      const showVideo = guideCurrentMode === 'video';
+      document.getElementById('guide-video-section').classList.toggle('hidden', !showVideo);
+      document.getElementById('guide-visual').classList.toggle('hidden', showVideo);
             const heroByPlatform = {
         claude: [guideActiveUi.heroTitleClaude, guideActiveUi.heroDescClaude],
         gemini: [guideActiveUi.heroTitleGemini, guideActiveUi.heroDescGemini],
@@ -710,6 +725,16 @@
       const activeHero = heroByPlatform[guideCurrentPlatform] || heroByPlatform.claude;
       document.getElementById('guide-hero-title').textContent = activeHero[0];
       document.getElementById('guide-hero-desc').textContent = activeHero[1];
+      const videoByPlatform = {
+        claude: '/assets/videos/claude.mp4',
+        gemini: '/assets/videos/gemini.mp4',
+        chatgpt: '/assets/videos/chatgpt.mp4'
+      };
+      const activeVideo = videoByPlatform[guideCurrentPlatform] || videoByPlatform.claude;
+      if (videoSourceEl && videoSourceEl.getAttribute('src') !== activeVideo) {
+        videoSourceEl.setAttribute('src', activeVideo);
+        videoEl.load();
+      }
       document.getElementById('guide-url-label').textContent = guideActiveUi.urlLabel;
       document.getElementById('guide-url-heading').textContent = guideActiveUi.urlHeading;
       document.getElementById('guide-btn-copy-url').textContent = guideActiveUi.copyUrl;
@@ -719,12 +744,8 @@
       document.getElementById('guide-prompt-content').textContent = guideActiveUi.promptContent;
       document.getElementById('guide-btn-prev').textContent = guideActiveUi.prev;
       document.getElementById('guide-btn-next').textContent = guideActiveUi.next;
-      document.querySelector('#guide-quick-paths h4').textContent = guideActiveUi.infoMcpTitle;
-      document.querySelectorAll('#guide-quick-paths p')[0].innerHTML = guideActiveUi.infoMcp1;
-      document.querySelectorAll('#guide-quick-paths p')[1].innerHTML = guideActiveUi.infoMcp2;
-      document.querySelector('#guide-troubleshooting h4').textContent = guideActiveUi.tipsTitle;
-      document.querySelectorAll('#guide-troubleshooting p')[0].innerHTML = guideActiveUi.tips1;
-      document.querySelectorAll('#guide-troubleshooting p')[1].innerHTML = guideActiveUi.tips2;
+      document.getElementById('guide-prompt-note-title').textContent = guideActiveUi.promptNoteTitle;
+      document.getElementById('guide-prompt-note-text').textContent = guideActiveUi.promptNote;
           }
 
     function guideReloadCurrentGuide() {
@@ -741,6 +762,14 @@
         guideCurrentStepIdx = 0;
         localStorage.setItem('easydata-platform', platform);
         guideReloadCurrentGuide();
+      });
+    }
+
+    function guideSelectMode(mode) {
+      preserveScrollPosition(() => {
+        guideCurrentMode = mode;
+        localStorage.setItem('easydata-guide-view', mode);
+        guideApplyUiText();
       });
     }
 

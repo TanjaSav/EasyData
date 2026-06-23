@@ -7,6 +7,18 @@ import {
   getGeneratedAppFullUrl,
   writeGeneratedApp,
 } from "../services/generated-app.service.js";
+import { getClientErrors } from "../services/client-error.service.js";
+import {
+  createGameTemplate,
+  getTemplate,
+  getPublishedAppSource,
+  listPublishedAppVersions,
+  patchPublishedApp,
+  rollbackPublishedApp,
+  runPublishedAppHealthCheck,
+  savePublishedAppVersion,
+  validateEasyDataHtml,
+} from "../services/published-app-observability.service.js";
 import {
   getAppSchema,
   createTable,
@@ -435,6 +447,300 @@ export function createEasyDataMcpServer() {
           },
         ],
       };
+    }
+  );
+
+
+  server.tool(
+    "get_published_app_source",
+    {
+      appId: z.string().min(1).describe("The EasyData app id"),
+    },
+    async ({ appId }) => {
+      const source = getPublishedAppSource(appId);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(source, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+  server.tool(
+    "validate_easydata_html",
+    {
+      appId: z.string().min(1).describe("The EasyData app id"),
+      html: z.string().min(1).describe("The HTML to validate before publishing"),
+    },
+    async ({ appId, html }) => {
+      const result = validateEasyDataHtml(appId, html);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+  server.tool(
+    "run_app_health_check",
+    {
+      appId: z.string().min(1).describe("The EasyData app id"),
+    },
+    async ({ appId }) => {
+      const result = runPublishedAppHealthCheck(appId);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+  server.tool(
+    "test_rest_call",
+    {
+      appId: z.string().min(1).describe("The EasyData app id"),
+      method: z.enum(["GET", "POST", "PUT", "DELETE"]).describe("The REST method to test"),
+      path: z.string().min(1).describe("The EasyData REST path, for example /apps/{appId}/tables/scores/rows"),
+      body: z.record(z.string(), z.unknown()).optional().describe("Optional JSON request body"),
+    },
+    async ({ appId, method, path: requestPath, body }) => {
+      const prefix = `/apps/${appId}/tables/`;
+      if (!requestPath.startsWith(prefix)) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify(
+                {
+                  status: 400,
+                  response: {
+                    error: "Only /apps/{appId}/tables/{table}/rows paths are supported by test_rest_call.",
+                  },
+                },
+                null,
+                2
+              ),
+            },
+          ],
+        };
+      }
+
+      const suffix = requestPath.slice(prefix.length);
+      const match = suffix.match(/^([^/]+)\/rows(?:\/([^/?#]+))?/);
+      if (!match?.[1]) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({ status: 400, response: { error: "Invalid rows path" } }, null, 2),
+            },
+          ],
+        };
+      }
+
+      const tableName = match[1];
+      const rowId = match[2];
+      let status = 200;
+      let response: unknown;
+
+      try {
+        if (method === "GET") {
+          const url = new URL(`https://easydata.local${requestPath}`);
+          response = {
+            appId,
+            table: tableName,
+            rows: getRows(appId, tableName, {
+              ...(url.searchParams.get("where") && { where: url.searchParams.get("where") as string }),
+              ...(url.searchParams.get("order") && { order: url.searchParams.get("order") as string }),
+              ...(url.searchParams.get("limit") && { limit: url.searchParams.get("limit") as string }),
+            }),
+          };
+        } else if (method === "POST") {
+          status = 201;
+          response = insertRow(appId, tableName, body ?? {});
+        } else if (method === "PUT") {
+          if (!rowId) throw new Error("PUT requires a row id in the path");
+          response = updateRow(appId, tableName, rowId, body ?? {});
+        } else {
+          if (!rowId) throw new Error("DELETE requires a row id in the path");
+          response = deleteRow(appId, tableName, rowId);
+        }
+      } catch (error: any) {
+        status = 400;
+        response = { error: error.message };
+      }
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({ status, response }, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+  server.tool(
+    "publish_app_versioned",
+    {
+      appId: z.string().uuid().describe("The EasyData app id returned by create_app"),
+      html: z.string().min(1).describe("A complete single-file HTML app to publish as index.html"),
+    },
+    async ({ appId, html }) => {
+      let backupVersionId: string | null = null;
+      try {
+        backupVersionId = savePublishedAppVersion(appId, "before publish").versionId;
+      } catch {
+        backupVersionId = null;
+      }
+      const validation = validateEasyDataHtml(appId, html);
+      if (!validation.valid) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({ appId, published: false, validation }, null, 2),
+            },
+          ],
+        };
+      }
+      const appUrl = writeGeneratedApp(appId, html);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(
+              {
+                appId,
+                appUrl,
+                fullUrl: getGeneratedAppFullUrl(appUrl),
+                backupVersionId,
+                validation,
+              },
+              null,
+              2
+            ),
+          },
+        ],
+      };
+    }
+  );
+
+  server.tool(
+    "list_app_versions",
+    {
+      appId: z.string().min(1).describe("The EasyData app id"),
+    },
+    async ({ appId }) => {
+      const result = listPublishedAppVersions(appId);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+  server.tool(
+    "rollback_app",
+    {
+      appId: z.string().min(1).describe("The EasyData app id"),
+      versionId: z.string().min(1).describe("The version id to restore"),
+    },
+    async ({ appId, versionId }) => {
+      const result = rollbackPublishedApp(appId, versionId);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+  server.tool(
+    "patch_published_app",
+    {
+      appId: z.string().min(1).describe("The EasyData app id"),
+      replacements: z
+        .array(
+          z.object({
+            find: z.string().min(1).describe("Exact text to find"),
+            replace: z.string().describe("Replacement text"),
+          })
+        )
+        .min(1)
+        .describe("Exact string replacements. The tool fails if any find text is not present."),
+    },
+    async ({ appId, replacements }) => {
+      const result = patchPublishedApp(appId, replacements);
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(result, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+
+  server.tool(
+    "get_client_errors",
+    {
+      appId: z.string().min(1).describe("The EasyData app id"),
+      since: z.string().optional().describe("Optional ISO timestamp; only errors at or after this time are returned"),
+      limit: z.number().int().positive().max(200).optional().describe("Maximum number of errors to return"),
+    },
+    async ({ appId, since, limit }) => {
+      const result = getClientErrors(appId, since, limit ?? 50);
+      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    }
+  );
+
+  server.tool(
+    "get_template",
+    {
+      kind: z.string().min(1).describe("Template kind, for example shared-highscore-game"),
+    },
+    async ({ kind }) => {
+      const result = getTemplate(kind);
+      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    }
+  );
+
+  server.tool(
+    "create_game_template",
+    {
+      appId: z.string().min(1).describe("The EasyData app id"),
+      tableName: z.string().min(1).optional().describe("Scores table name; defaults to scores"),
+      template: z.string().optional().describe("Template kind; defaults to shared-highscore-game"),
+    },
+    async ({ appId, tableName, template }) => {
+      const result = createGameTemplate({
+        appId,
+        ...(tableName && { tableName }),
+        ...(template && { template }),
+      });
+      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
     }
   );
 

@@ -19,18 +19,14 @@ Tool responses are returned as JSON-formatted text content so assistants can rea
 
 ## Tools
 
-### `list_apps`
+### Admin app listing
 
-Returns all EasyData apps currently available on the server.
+`list_apps` is intentionally not exposed through teacher-facing MCP. Listing every app on the server is an operator task and is available only through the admin-protected REST endpoint:
 
-Inputs: none
-
-Returns:
-
-- `count`: number of apps
-- `apps`: app metadata objects, including `id`, `name`, `description`, `apiToken`, and `createdAt`
-
-Use when an assistant needs to find an existing app before creating or modifying tables.
+```http
+GET /apps
+Authorization: Bearer {EASYDATA_ADMIN_TOKEN}
+```
 
 ### `create_app`
 
@@ -74,6 +70,7 @@ Inputs:
 
 - `appId`: string, required
 - `tableName`: string, required
+- `confirmSensitiveData`: boolean, optional; required when sensitivity warnings are returned
 - `columns`: array of column definitions
 
 Column definition:
@@ -85,6 +82,7 @@ Returns:
 
 - `success`: boolean
 - `table`: created table name
+- `warnings`: sensitivity warnings for fields such as `student_name`, `photo`, `health`, `address`, or `national_id`
 
 EasyData adds `id INTEGER PRIMARY KEY AUTOINCREMENT` automatically. Do not include an `id` column in the input.
 
@@ -96,6 +94,7 @@ Inputs:
 
 - `appId`: string, required
 - `tableName`: string, required
+- `confirmSensitiveData`: boolean, optional; required when sensitivity warnings are returned
 - `columns`: array of column definitions to add
 
 Returns:
@@ -103,6 +102,7 @@ Returns:
 - `success`: boolean
 - `table`: updated table name
 - `addedColumns`: columns that were added
+- `warnings`: sensitivity warnings for newly added fields
 
 Use when the teacher asks to track an additional field after the app already exists.
 
@@ -203,8 +203,10 @@ Returns:
 - `method`: `POST`
 - `fieldName`: `file`
 - `note`: local storage mode instructions
+- `limits`: max file size, allowed MIME types/extensions, storage quota, and current usage
+- `billing` and `upgrade`: current storage plan and upgrade metadata
 
-The current implementation uses local uploads with `multipart/form-data`. Uploaded files are served from `/uploads/{fileName}`.
+The current implementation uses local uploads with `multipart/form-data`. Uploaded files are not public `/uploads` assets. The upload response returns a stable `fileName` plus a signed, expiring `viewUrl`. Generated apps should store `fileName` in SQLite and call `POST /apps/{appId}/files/{fileName}/view-url` to refresh an expiring view URL when rendering older records.
 
 ## Typical Assistant Workflow
 
@@ -221,8 +223,9 @@ The current implementation uses local uploads with `multipart/form-data`. Upload
 - Query filtering supports one equality filter in `column:value` format.
 - Ordering supports one column and `asc` or `desc` direction.
 - `limit` is capped at 500 rows.
-- File uploads use local disk storage, not presigned object storage yet.
-- Table names and column names should be generated from trusted assistant logic and kept simple: lowercase letters, numbers, and underscores.
+- File uploads use local disk storage with app-owned signed view URLs, not Cloudflare R2 presigned object storage.
+- Table names and column names must be simple identifiers: start with a letter, then letters, numbers, or underscores.
+- Schema changes that appear to collect sensitive student data require explicit `confirmSensitiveData: true`.
 
 ## Connecting to ChatGPT, Claude, and Gemini
 

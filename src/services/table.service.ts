@@ -296,6 +296,44 @@ export function exportAppData(appId: string) {
   };
 }
 
+function csvEscape(value: unknown) {
+  if (value === null || value === undefined) {
+    return "";
+  }
+
+  const text = String(value);
+  if (/[",\r\n]/.test(text)) {
+    return `"${text.replace(/"/g, '""')}"`;
+  }
+
+  return text;
+}
+
+export function exportAppDataAsCsv(appId: string) {
+  const exported = exportAppData(appId);
+  const sections: string[] = [];
+
+  for (const table of exported.schema) {
+    const columns = table.columns.map((column: any) => column.name);
+    const rows = exported.tables[table.table] as Record<string, unknown>[];
+
+    sections.push(`# table: ${table.table}`);
+    sections.push(columns.map(csvEscape).join(","));
+
+    for (const row of rows) {
+      sections.push(columns.map((column) => csvEscape(row[column])).join(","));
+    }
+
+    sections.push("");
+  }
+
+  return {
+    appId,
+    exportedAt: exported.exportedAt,
+    csv: sections.join("\n"),
+  };
+}
+
 // Deletes a row by its id
 export function deleteRow(appId: string, tableName: string, rowId: string) {
   validateIdentifier(tableName, "Table name");

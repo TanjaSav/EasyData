@@ -57,7 +57,7 @@ function executeRemoteTool(name, args) {
   };
 
   const url = "https://easydata.is/mcp";
-  const timeoutMs = 25000;
+  const timeoutMs = 90000;
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 

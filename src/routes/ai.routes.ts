@@ -166,7 +166,9 @@ The html must be a complete single-file app. It must load Tailwind CSS with <scr
 - Update row: PUT /apps/{appId}/tables/{tableName}/rows/{rowId}
 - Delete row: DELETE /apps/{appId}/tables/{tableName}/rows/{rowId}
 
-Use relative URLs built as "/apps/" + appId + "/tables/" + tableName + "/rows". Do not use /api/apps, /apps/{appId}/api, or /api/{appId} routes; those paths do not exist and return HTML instead of JSON.
+Use relative URLs built as "/apps/" + appId + "/tables/" + tableName + "/rows". Do not use /api/apps, /apps/{appId}/api, or /api/{appId} routes; those paths do not exist and return HTML instead of JSON. For POST and PUT row requests, send column fields directly with JSON.stringify(data); never wrap them as { row: data }, { fields: data }, or { data: data }.
+
+If the app handles photos or other uploads, use the EasyData file upload endpoint /apps/{appId}/files with multipart/form-data. Store the returned fileName or signed view URL in the row. Do not embed base64 images in table rows, do not use FileReader.readAsDataURL for persistence, and do not invent a client-side 2MB database limit.
 
 The html may embed the created appId and apiToken so the page works immediately. Keep the UI simple, useful, and focused on the requested workflow. Do not include explanations outside JSON.
 

@@ -1,7 +1,7 @@
 {
   "name": "easydata",
   "version": "1.0.0",
-  "description": "",
+  "description": "A simple database platform for educators using REST, SQLite, and MCP.",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -14,7 +14,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
     "better-sqlite3": "^12.10.0",

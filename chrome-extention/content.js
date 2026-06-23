@@ -166,9 +166,9 @@ if (!window.mcpListenerAdded) {
 
     if (tool === "publish_app" && args && typeof args.html === "string") {
       args.html = args.html
-        .replace(/https?:\/\/(?:api\.)?easydata\.(?:is|dev)(?:\/v1)?\/apps/g, "/apps")
-        .replace(/https?:\/\/(?:api\.)?easydata\.(?:is|dev)(?:\/v1)?\/api/g, "/apps")
-        .replace(/https?:\/\/(?:api\.)?easydata\.(?:is|dev)(?:\/v1)?/g, "")
+        .replace(/https?:\/\/(?:api\.)?easydata\.is(?:\/v1)?\/apps/g, "/apps")
+        .replace(/https?:\/\/(?:api\.)?easydata\.is(?:\/v1)?\/api/g, "/apps")
+        .replace(/https?:\/\/(?:api\.)?easydata\.is(?:\/v1)?/g, "")
         .replace(/\/api\/apps\//g, "/apps/")
         .replace(/\/api\/(?=\$\{[^}]+\}\/tables\/)/g, "/apps/")
         .replace(/\/api\/([0-9a-f-]{36})\/tables\//gi, "/apps/$1/tables/")
@@ -375,9 +375,10 @@ CRITICAL PROTOCOL:
       hideLoading();
     } else if (request.action === "startGeneration") {
       const prompt = request.prompt;
+      const baseUrl = request.baseUrl || "https://easydata.is";
       showLoading("Contacting EasyData AI services...");
       
-      const url = "https://easydata.is/ai/create-app";
+      const url = `${baseUrl}/ai/create-app`;
 
       const performFetch = async (url) => {
         const res = await fetch(url, {

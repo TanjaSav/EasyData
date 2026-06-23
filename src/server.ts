@@ -5,6 +5,7 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import appRoutes, { legacyRowsRouter, mcpRateLimit } from "./routes/app.routes.js";
 import aiRoutes from "./routes/ai.routes.js";
+import oauthRoutes from "./routes/oauth.routes.js";
 import { createEasyDataMcpServer } from "./mcp/server.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 
@@ -12,6 +13,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 dotenv.config();
 
 const app = express();
+app.set("trust proxy", 1);
 const PORT = Number(process.env.PORT) || 3000;
 
 // Core middleware
@@ -29,6 +31,7 @@ app.use(
     },
   })
 );
+app.use(express.urlencoded({ extended: false }));
 
 // Error handler for JSON parsing errors
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -76,6 +79,8 @@ app.get("/health", (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+app.use(oauthRoutes);
 
 async function handleMcpRequest(req: express.Request, res: express.Response) {
   // Enforce Accept header for MCP streamable HTTP compatibility
@@ -155,6 +160,8 @@ app.use("/api", appRoutes);
 // Compatibility aliases for generated clients that omit /tables and address rows directly.
 app.use("/api/apps", legacyRowsRouter);
 app.use("/api", legacyRowsRouter);
+// Compatibility aliases for generated clients that use singular /app/{appId}/{table}.
+app.use("/app", legacyRowsRouter);
 app.use("/ai", aiRoutes);
 
 app.listen(PORT, "0.0.0.0", () => {

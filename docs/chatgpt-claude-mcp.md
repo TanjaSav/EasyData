@@ -73,7 +73,6 @@ Use EasyData MCP.
 
 EasyData exposes these MCP tools:
 
-- `list_apps`
 - `create_app`
 - `get_schema`
 - `create_table`
@@ -84,6 +83,8 @@ EasyData exposes these MCP tools:
 - `delete_row`
 - `get_upload_url`
 - `publish_app`
+
+App listing is intentionally admin-only and is not exposed as a teacher-facing MCP tool.
 
 The assistant should use MCP tools to create the app, create tables, insert sample rows, inspect schema, and publish the generated HTML page.
 

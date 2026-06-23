@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Project Review</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f4f8; color: #333; min-height: 100vh; }
+  header { background: #2c7be5; color: white; padding: 16px 24px; }
+  header h1 { font-size: 1.4rem; font-weight: 700; }
+  .tabs { display: flex; background: #1a5cbf; }
+  .tab-btn { flex: 1; padding: 12px; border: none; background: none; color: rgba(255,255,255,0.7); font-size: 1rem; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+  .tab-btn.active { color: white; background: rgba(255,255,255,0.15); border-bottom: 3px solid white; }
+  .tab-content { display: none; padding: 20px; max-width: 800px; margin: 0 auto; }
+  .tab-content.active { display: block; }
+  .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .card h2 { font-size: 1.1rem; color: #2c7be5; margin-bottom: 16px; font-weight: 700; }
+  label { display: block; font-size: 0.85rem; font-weight: 600; color: #555; margin-bottom: 4px; }
+  input[type=text], input[type=number], textarea, select {
+    width: 100%; padding: 10px 12px; border: 1.5px solid #dde3ed; border-radius: 8px;
+    font-size: 0.95rem; margin-bottom: 14px; background: #fafbfc; transition: border 0.2s;
+  }
+  input:focus, textarea:focus { outline: none; border-color: #2c7be5; background: white; }
+  textarea { min-height: 80px; resize: vertical; }
+  input[type=file] { border: 1.5px dashed #2c7be5; padding: 12px; background: #eef4fd; border-radius: 8px; margin-bottom: 14px; cursor: pointer; width: 100%; }
+  .btn { display: inline-block; padding: 11px 24px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+  .btn-primary { background: #2c7be5; color: white; }
+  .btn-primary:hover { background: #1a5cbf; }
+  .btn-primary:disabled { background: #a0b8dd; cursor: not-allowed; }
+  .btn-success { background: #28a745; color: white; }
+  .btn-success:hover { background: #1e7e34; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; }
+  .badge-waiting { background: #fff3cd; color: #856404; }
+  .badge-done { background: #d4edda; color: #155724; }
+  .project-card { background: white; border-radius: 12px; padding: 18px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 4px solid #2c7be5; }
+  .project-card h3 { font-size: 1rem; color: #1a1a2e; margin-bottom: 6px; }
+  .project-card p { font-size: 0.88rem; color: #666; margin-bottom: 8px; line-height: 1.5; }
+  .project-img { width: 100%; max-height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 10px; }
+  .scores-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+  .score-box { background: #f0f4f8; border-radius: 8px; padding: 8px 14px; flex: 1; min-width: 100px; text-align: center; }
+  .score-box .score-label { font-size: 0.75rem; color: #888; font-weight: 600; }
+  .score-box .score-val { font-size: 1.5rem; font-weight: 800; color: #2c7be5; }
+  .score-box.final .score-val { color: #28a745; }
+  .teacher-comment-box { background: #f8f9fa; border-radius: 8px; padding: 10px 14px; margin-top: 8px; font-size: 0.88rem; color: #444; border-left: 3px solid #2c7be5; }
+  .password-gate { text-align: center; padding: 40px 20px; }
+  .password-gate input { max-width: 220px; text-align: center; font-size: 1.2rem; letter-spacing: 4px; }
+  .alert { padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 0.88rem; }
+  .alert-success { background: #d4edda; color: #155724; }
+  .alert-error { background: #f8d7da; color: #721c24; }
+  .loading { text-align: center; color: #888; padding: 30px; font-size: 0.95rem; }
+  .spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid #dde3ed; border-top-color: #2c7be5; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .range-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .range-wrap input[type=range] { flex: 1; margin-bottom: 0; border: none; background: none; padding: 0; }
+  .range-val { font-size: 1.3rem; font-weight: 800; color: #2c7be5; min-width: 30px; text-align: center; }
+  .meta { font-size: 0.75rem; color: #aaa; margin-top: 4px; }
+  .teacher-form { margin-top: 12px; border-top: 1px solid #eee; padding-top: 12px; }
+  .teacher-form label { font-size: 0.8rem; }
+  .teacher-form .range-wrap input[type=range] { accent-color: #28a745; }
+  .teacher-form .range-val { color: #28a745; }
+  .teacher-form textarea { min-height: 60px; margin-bottom: 8px; }
+  .btn-sm { padding: 7px 16px; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+
+<header><h1>📚 Student Project Review</h1></header>
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('student')">🎓 Student</button>
+  <button class="tab-btn" onclick="switchTab('teacher')">👩‍🏫 Teacher</button>
+</div>
+
+<!-- STUDENT TAB -->
+<div id="tab-student" class="tab-content active">
+  <div class="card">
+    <h2>Submit Your Project</h2>
+    <div id="msg-student"></div>
+    <label>Project Title *</label>
+    <input type="text" id="s-title" placeholder="Enter your project title">
+    <label>Project Description *</label>
+    <textarea id="s-desc" placeholder="Describe your project..."></textarea>
+    <label>Project Image</label>
+    <input type="file" id="s-image" accept="image/*">
+    <div id="s-img-preview"></div>
+    <label>Your Score (1–10) *</label>
+    <div class="range-wrap">
+      <input type="range" id="s-score" min="1" max="10" value="5" oninput="document.getElementById('s-score-val').textContent=this.value">
+      <span class="range-val" id="s-score-val">5</span>
+    </div>
+    <button class="btn btn-primary" id="s-submit-btn" onclick="submitProject()">Submit Project</button>
+  </div>
+
+  <div class="card">
+    <h2>Submitted Projects</h2>
+    <div id="student-projects-list"><div class="loading"><span class="spinner"></span>Loading projects...</div></div>
+  </div>
+</div>
+
+<!-- TEACHER TAB -->
+<div id="tab-teacher" class="tab-content">
+  <div id="teacher-gate" class="card password-gate">
+    <h2>🔒 Teacher Access</h2>
+    <p style="color:#666;margin-bottom:18px;">Enter the teacher password to continue.</p>
+    <label>Password</label>
+    <input type="password" id="t-password" placeholder="••••" onkeydown="if(event.key==='Enter')teacherLogin()">
+    <br><br>
+    <button class="btn btn-primary" onclick="teacherLogin()">Unlock</button>
+    <div id="t-login-err" style="color:#c00;margin-top:10px;font-size:0.88rem;"></div>
+  </div>
+  <div id="teacher-panel" style="display:none;">
+    <div class="card">
+      <h2>All Projects — Teacher Review</h2>
+      <div id="msg-teacher"></div>
+      <div id="teacher-projects-list"><div class="loading"><span class="spinner"></span>Loading projects...</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var APP_ID = '6a38f2d7-687c-4168-903a-d89162766a03';
+var API_TOKEN = 'app_512ea3a25e79f710b4bf2863b1cf9db0998bac2c6d78db38';
+var BASE = '/apps/' + APP_ID;
+var JSON_HEADERS = { 'Authorization': 'Bearer ' + API_TOKEN, 'Content-Type': 'application/json' };
+var AUTH_HEADER = { 'Authorization': 'Bearer ' + API_TOKEN };
+
+var teacherUnlocked = false;
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(function(b, i) {
+    b.classList.toggle('active', (i===0 && tab==='student') || (i===1 && tab==='teacher'));
+  });
+  document.getElementById('tab-student').classList.toggle('active', tab==='student');
+  document.getElementById('tab-teacher').classList.toggle('active', tab==='teacher');
+  if(tab==='student') loadStudentProjects();
+  if(tab==='teacher' && teacherUnlocked) loadTeacherProjects();
+}
+
+function teacherLogin() {
+  var pw = document.getElementById('t-password').value;
+  if(pw === '1234') {
+    teacherUnlocked = true;
+    document.getElementById('teacher-gate').style.display = 'none';
+    document.getElementById('teacher-panel').style.display = 'block';
+    loadTeacherProjects();
+  } else {
+    document.getElementById('t-login-err').textContent = 'Incorrect password. Try again.';
+  }
+}
+
+function apiGet(path) {
+  return fetch(path, { headers: AUTH_HEADER }).then(function(r) {
+    if(!r.ok) return r.text().then(function(t) { throw new Error(t); });
+    return r.json();
+  });
+}
+
+function apiPost(path, body) {
+  return fetch(path, { method: 'POST', headers: JSON_HEADERS, body: JSON.stringify(body) }).then(function(r) {
+    if(!r.ok) return r.text().then(function(t) { throw new Error(t); });
+    return r.json();
+  });
+}
+
+function apiPut(path, body) {
+  return fetch(path, { method: 'PUT', headers: JSON_HEADERS, body: JSON.stringify(body) }).then(function(r) {
+    if(!r.ok) return r.text().then(function(t) { throw new Error(t); });
+    return r.json();
+  });
+}
+
+function uploadImage(file) {
+  var fd = new FormData();
+  fd.append('file', file);
+  return fetch(BASE + '/files', { method: 'POST', headers: AUTH_HEADER, body: fd }).then(function(r) {
+    if(!r.ok) return r.text().then(function(t) { throw new Error(t); });
+    return r.json();
+  });
+}
+
+function refreshImageUrl(fileName) {
+  return fetch(BASE + '/files/' + encodeURIComponent(fileName) + '/view-url', {
+    method: 'POST', headers: AUTH_HEADER
+  }).then(function(r) {
+    if(!r.ok) return null;
+    return r.json().then(function(d) { return d.viewUrl || d.url || null; });
+  }).catch(function() { return null; });
+}
+
+function submitProject() {
+  var title = document.getElementById('s-title').value.trim();
+  var desc = document.getElementById('s-desc').value.trim();
+  var score = parseInt(document.getElementById('s-score').value);
+  var imageFile = document.getElementById('s-image').files[0];
+  var msgEl = document.getElementById('msg-student');
+
+  if(!title) { showMsg(msgEl,'error','Please enter a project title.'); return; }
+  if(!desc) { showMsg(msgEl,'error','Please enter a project description.'); return; }
+
+  var btn = document.getElementById('s-submit-btn');
+  btn.disabled = true; btn.textContent = 'Submitting...';
+  showMsg(msgEl,'','');
+
+  var imagePromise = imageFile ? uploadImage(imageFile) : Promise.resolve(null);
+
+  if(imageFile) showMsg(msgEl,'info','Uploading image...');
+
+  imagePromise.then(function(up) {
+    var imageFileName = up ? up.fileName : null;
+    var imageUrl = up ? up.viewUrl : null;
+
+    return apiPost(BASE + '/tables/projects/rows', {
+      project_title: title,
+      project_description: desc,
+      project_image_file_name: imageFileName,
+      project_image_url: imageUrl,
+      student_score: score,
+      teacher_score: null,
+      teacher_comment: null,
+      created_at: new Date().toISOString()
+    });
+  }).then(function() {
+    showMsg(msgEl,'success','Project submitted successfully!');
+    document.getElementById('s-title').value = '';
+    document.getElementById('s-desc').value = '';
+    document.getElementById('s-image').value = '';
+    document.getElementById('s-score').value = 5;
+    document.getElementById('s-score-val').textContent = '5';
+    document.getElementById('s-img-preview').innerHTML = '';
+    loadStudentProjects();
+  }).catch(function(e) {
+    showMsg(msgEl,'error','Error: ' + e.message);
+  }).finally(function() {
+    btn.disabled = false; btn.textContent = 'Submit Project';
+  });
+}
+
+function loadStudentProjects() {
+  var el = document.getElementById('student-projects-list');
+  el.innerHTML = '<div class="loading"><span class="spinner"></span>Loading...</div>';
+  apiGet(BASE + '/tables/projects/rows').then(function(data) {
+    var rows = data.rows || data;
+    if(!rows.length) { el.innerHTML = '<p style="color:#888;text-align:center;padding:20px;">No projects submitted yet.</p>'; return; }
+    var promises = rows.map(function(r) { return renderStudentCard(r); });
+    return Promise.all(promises).then(function(htmls) { el.innerHTML = htmls.join(''); });
+  }).catch(function(e) {
+    el.innerHTML = '<div class="alert alert-error">Failed to load projects: ' + escHtml(e.message) + '</div>';
+  });
+}
+
+function renderStudentCard(r) {
+  var imgPromise = r.project_image_file_name ? refreshImageUrl(r.project_image_file_name) : Promise.resolve(null);
+  return imgPromise.then(function(url) {
+    var imgHtml = url ? '<img class="project-img" src="' + url + '" alt="Project image">' : '';
+    var hasTeacher = r.teacher_score !== null && r.teacher_score !== undefined && r.teacher_score !== '';
+    var finalScore = hasTeacher ? ((parseInt(r.student_score) + parseInt(r.teacher_score)) / 2).toFixed(1) : null;
+    var statusBadge = hasTeacher
+      ? '<span class="badge badge-done">Reviewed</span>'
+      : '<span class="badge badge-waiting">Awaiting Review</span>';
+    var teacherCommentHtml = r.teacher_comment
+      ? '<div class="teacher-comment-box"><strong>Teacher:</strong> ' + escHtml(r.teacher_comment) + '</div>' : '';
+    var waitingMsg = hasTeacher ? '' : '<p style="color:#856404;font-size:0.82rem;margin-top:8px;">Waiting for teacher review</p>';
+    var dateStr = '';
+    try { dateStr = new Date(r.created_at).toLocaleString(); } catch(e) { dateStr = r.created_at || ''; }
+    return '<div class="project-card">' +
+      imgHtml +
+      '<h3>' + escHtml(r.project_title) + ' ' + statusBadge + '</h3>' +
+      '<p>' + escHtml(r.project_description) + '</p>' +
+      '<div class="scores-row">' +
+        '<div class="score-box"><div class="score-label">My Score</div><div class="score-val">' + r.student_score + '/10</div></div>' +
+        '<div class="score-box"><div class="score-label">Teacher Score</div><div class="score-val">' + (hasTeacher ? r.teacher_score + '/10' : '—') + '</div></div>' +
+        '<div class="score-box final"><div class="score-label">Final Score</div><div class="score-val">' + (finalScore || '—') + '</div></div>' +
+      '</div>' +
+      waitingMsg +
+      teacherCommentHtml +
+      '<div class="meta">Submitted: ' + dateStr + '</div>' +
+    '</div>';
+  });
+}
+
+function loadTeacherProjects() {
+  var el = document.getElementById('teacher-projects-list');
+  el.innerHTML = '<div class="loading"><span class="spinner"></span>Loading...</div>';
+  apiGet(BASE + '/tables/projects/rows').then(function(data) {
+    var rows = data.rows || data;
+    if(!rows.length) { el.innerHTML = '<p style="color:#888;text-align:center;padding:20px;">No projects yet.</p>'; return; }
+    var promises = rows.map(function(r) { return renderTeacherCard(r); });
+    return Promise.all(promises).then(function(htmls) { el.innerHTML = htmls.join(''); });
+  }).catch(function(e) {
+    el.innerHTML = '<div class="alert alert-error">Failed to load: ' + escHtml(e.message) + '</div>';
+  });
+}
+
+function renderTeacherCard(r) {
+  var imgPromise = r.project_image_file_name ? refreshImageUrl(r.project_image_file_name) : Promise.resolve(null);
+  return imgPromise.then(function(url) {
+    var imgHtml = url ? '<img class="project-img" src="' + url + '" alt="Project image">' : '';
+    var ts = r.teacher_score || 5;
+    var tc = r.teacher_comment || '';
+    var dateStr = '';
+    try { dateStr = new Date(r.created_at).toLocaleString(); } catch(e) { dateStr = r.created_at || ''; }
+    return '<div class="project-card" id="tcard-' + r.id + '">' +
+      imgHtml +
+      '<h3>' + escHtml(r.project_title) + '</h3>' +
+      '<p>' + escHtml(r.project_description) + '</p>' +
+      '<div class="scores-row"><div class="score-box"><div class="score-label">Student Score</div><div class="score-val">' + r.student_score + '/10</div></div></div>' +
+      '<div class="teacher-form">' +
+        '<label>Teacher Score</label>' +
+        '<div class="range-wrap">' +
+          '<input type="range" min="1" max="10" value="' + ts + '" id="ts-' + r.id + '" oninput="document.getElementById(\'tv-' + r.id + '\').textContent=this.value">' +
+          '<span class="range-val" id="tv-' + r.id + '">' + ts + '</span>' +
+        '</div>' +
+        '<label>Teacher Comment</label>' +
+        '<textarea id="tc-' + r.id + '" placeholder="Leave a comment...">' + escHtml(tc) + '</textarea>' +
+        '<button class="btn btn-success btn-sm" onclick="saveTeacherReview(\'' + r.id + '\')">Save Review</button>' +
+        '<span id="tsave-' + r.id + '" style="margin-left:10px;font-size:0.82rem;color:#28a745;"></span>' +
+      '</div>' +
+      '<div class="meta">Submitted: ' + dateStr + '</div>' +
+    '</div>';
+  });
+}
+
+function saveTeacherReview(rowId) {
+  var score = parseInt(document.getElementById('ts-' + rowId).value);
+  var comment = document.getElementById('tc-' + rowId).value.trim();
+  var statusEl = document.getElementById('tsave-' + rowId);
+  statusEl.textContent = 'Saving...';
+  apiPut(BASE + '/tables/projects/rows/' + rowId, {
+    teacher_score: score,
+    teacher_comment: comment
+  }).then(function() {
+    statusEl.textContent = 'Saved!';
+    setTimeout(function() { statusEl.textContent = ''; }, 3000);
+  }).catch(function(e) {
+    statusEl.textContent = 'Error: ' + e.message;
+  });
+}
+
+function showMsg(el, type, msg) {
+  if(!msg) { el.innerHTML = ''; return; }
+  var cls = type === 'success' ? 'alert-success' : type === 'error' ? 'alert-error' : '';
+  var style = cls ? '' : 'style="background:#eef4fd;color:#1a5cbf;"';
+  el.innerHTML = '<div class="alert ' + cls + '" ' + style + '>' + msg + '</div>';
+}
+
+function escHtml(s) {
+  if(!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+document.getElementById('s-image').addEventListener('change', function() {
+  var f = this.files[0];
+  var prev = document.getElementById('s-img-preview');
+  if(f) {
+    var url = URL.createObjectURL(f);
+    prev.innerHTML = '<img src="' + url + '" style="max-width:100%;max-height:160px;border-radius:8px;margin-bottom:10px;object-fit:cover;">';
+  } else { prev.innerHTML = ''; }
+});
+
+loadStudentProjects();
+</script>
+<script>(function(){const appId="6a38f2d7-687c-4168-903a-d89162766a03";function send(type,payload){try{fetch('/apps/'+appId+'/client-errors',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({type,url:location.href,userAgent:navigator.userAgent},payload))});}catch(e){}}window.addEventListener('error',function(event){send('error',{message:event.message,source:event.filename,lineno:event.lineno,colno:event.colno,stack:event.error&&event.error.stack});});window.addEventListener('unhandledrejection',function(event){const reason=event.reason;send('unhandledrejection',{message:reason&&reason.message?reason.message:String(reason),stack:reason&&reason.stack});});})();</script>
+<script>(function(){const appId="6a38f2d7-687c-4168-903a-d89162766a03";const apiToken="app_512ea3a25e79f710b4bf2863b1cf9db0998bac2c6d78db38";const originalFetch=window.fetch.bind(window);function isUuid(value){return typeof value==='string'&&value.length===36&&value.split('-').length===5;}function normalizePath(path){const parts=String(path||'').split('/').filter(Boolean);if(parts[0]==='storage'&&parts[1]==='upload')return '/apps/'+appId+'/files';if(parts[0]==='files')return '/apps/'+appId+'/files';if(parts[0]==='apps'&&isUuid(parts[1])&&parts[2]==='storage'&&parts[3]==='upload')return '/apps/'+parts[1]+'/files';if(parts[0]==='app'&&isUuid(parts[1])&&parts[2])return '/apps/'+parts[1]+'/tables/'+parts[2]+'/rows'+(parts.length>3?'/'+parts.slice(3).join('/'):'');if(parts[0]==='api'&&parts[1]==='apps')return '/apps/'+parts.slice(2).join('/');if(parts[0]==='api'&&isUuid(parts[1])&&parts[2]==='tables')return '/apps/'+parts.slice(1).join('/');if(parts[0]==='api'&&isUuid(parts[1])&&parts[2])return '/apps/'+parts[1]+'/tables/'+parts[2]+'/rows'+(parts.length>3?'/'+parts.slice(3).join('/'):'');if(parts[0]==='apps'&&isUuid(parts[1])&&parts[2]==='api'&&parts[3])return '/apps/'+parts[1]+'/tables/'+parts[3]+'/rows'+(parts.length>4?'/'+parts.slice(4).join('/'):'');return path;}function normalizeUrl(input){const raw=typeof input==='string'?input:input&&typeof input.url==='string'?input.url:String(input);try{const parsed=new URL(raw,location.href);const host=parsed.hostname.toLowerCase();const generatedHost=host.endsWith('.easydata.app');const knownHost=host==='easydata.just-build.it'||host==='easydata.is'||host==='api.easydata.is'||host==='easydata.dev'||host==='api.easydata.dev'||generatedHost||parsed.origin===location.origin;if(!knownHost)return raw;let path=parsed.pathname;if(path.startsWith('/v1/apps'))path=path.slice(3);if(path.startsWith('/v1/api'))path='/api'+path.slice(7);return normalizePath(path)+parsed.search+parsed.hash;}catch(error){return normalizePath(raw);}}function shouldAttachAuth(url){try{const parsed=new URL(url,location.href);const path=parsed.pathname;return parsed.origin===location.origin&&(path.startsWith('/apps/')||path.startsWith('/app/')||path.startsWith('/api/')||path==='/files'||path.startsWith('/files/')||path.startsWith('/storage/'));}catch(error){return url.startsWith('/apps/')||url.startsWith('/app/')||url.startsWith('/api/')||url==='/files'||url.startsWith('/files/')||url.startsWith('/storage/');}}function toHeaders(existing){return new Headers(existing||{});}function maybeUnwrapBody(url,method,body,headers){if(body===undefined||body instanceof FormData)return body;if(!['POST','PUT','PATCH'].includes(method))return body;if(!(url.includes('/tables/')&&url.includes('/rows')))return body;const contentType=headers.get('Content-Type')||headers.get('content-type')||'';if(contentType&&!contentType.toLowerCase().includes('application/json'))return body;if(typeof body!=='string')return body;try{const parsed=JSON.parse(body);const keys=parsed&&typeof parsed==='object'&&!Array.isArray(parsed)?Object.keys(parsed):[];if(keys.length===1&&['row','fields','data'].includes(keys[0])&&parsed[keys[0]]&&typeof parsed[keys[0]]==='object'&&!Array.isArray(parsed[keys[0]])){headers.set('Content-Type','application/json');return JSON.stringify(parsed[keys[0]]);}}catch(error){}return body;}window.fetch=function(input,init){try{const url=normalizeUrl(input);const nextInit=init?Object.assign({},init):{};const headers=toHeaders(nextInit.headers||(input&&input.headers));if(shouldAttachAuth(url))headers.set('Authorization','Bearer '+apiToken);const method=String(nextInit.method||(input&&input.method)||'GET').toUpperCase();const inheritedBody=nextInit.body!==undefined?nextInit.body:input&&input.body!==undefined?input.body:undefined;let body=inheritedBody;if(body!==undefined&&(method==='POST'||method==='PUT'||method==='PATCH'||method==='DELETE')&&!(body instanceof FormData)&&!headers.has('Content-Type'))headers.set('Content-Type','application/json');body=maybeUnwrapBody(url,method,body,headers);nextInit.headers=headers;if(body!==undefined)nextInit.body=body;return originalFetch.call(window,url,nextInit);}catch(error){return originalFetch.call(window,input,init);}};window.easydataFetch=window.fetch;window.easydataAppId=appId;window.easydataApiToken=apiToken;})();</script>
+</body>
+</html>
