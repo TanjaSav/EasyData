@@ -1,6 +1,6 @@
 # EasyData
 
-EasyData is a small open-source platform for creating database-backed classroom apps without asking teachers to manage a database console, API keys, or server infrastructure.
+[EasyData](https://easydata.is) is a small open-source platform for creating database-backed classroom apps without asking teachers to manage a database console, API keys, or server infrastructure.
 
 An AI assistant connects to EasyData through MCP, creates an app database, defines tables, publishes a single-file HTML app, and gives the teacher a working URL.
 
